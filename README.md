@@ -40,7 +40,7 @@ No global install:
 npx @burakboduroglu/portkill --list
 ```
 
-**From source**
+**From Source**
 
 ```bash
 git clone https://github.com/burakboduroglu/portkill.git && cd portkill
@@ -50,7 +50,7 @@ npm link   # optional: puts `portkill` on PATH
 
 ---
 
-## GUI demo
+## GUI Demo
 
 Introduction to **`portkill --gui`** (local web UI on loopback — list listeners, dry-run, kill with browser confirm).
 
@@ -64,7 +64,7 @@ Introduction to **`portkill --gui`** (local web UI on loopback — list listener
 
 ---
 
-## Quick start
+## Quick Start
 
 ```bash
 # What is listening everywhere?
@@ -83,11 +83,11 @@ portkill 9000-9002
 portkill --gui
 ```
 
-Press **Ctrl+C** to stop the GUI server. The printed URL is loopback-only. **Video:** [GUI demo](#gui-demo).
+Press **Ctrl+C** to stop the GUI server. The printed URL is loopback-only. **Video:** [GUI Demo](#gui-demo).
 
 ---
 
-## CLI flags (short)
+## CLI Flags (Short)
 
 | Flag | Meaning |
 | --- | --- |
@@ -109,7 +109,7 @@ Full reference: [CLI reference](https://github.com/burakboduroglu/portkill/blob/
 
 ---
 
-## Docs & product spec
+## Docs & Product Spec
 
 | Doc | What it is |
 | --- | --- |

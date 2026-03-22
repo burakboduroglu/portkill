@@ -7,7 +7,7 @@
 | [RELEASE.md](./RELEASE.md) | Version tag, `npm publish` (2FA), GitHub Release |
 | [security-notes.md](./security-notes.md) | `npm audit`, GUI scope, published tarball contents |
 
-## GUI demo — `portkill --gui`
+## GUI Demo — `portkill --gui`
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=_-Z6zwiEHmg" title="portkill --gui — YouTube">
@@ -17,7 +17,7 @@
 
 **[YouTube](https://www.youtube.com/watch?v=_-Z6zwiEHmg)**
 
-## Top-level sources
+## Top-Level Sources
 
 - [PRD.md](../PRD.md) — product requirements (source of truth)
 - [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) — data fields and GUI API shapes
