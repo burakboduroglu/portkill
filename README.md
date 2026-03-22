@@ -50,6 +50,14 @@ npm link   # optional: puts `portkill` on PATH
 
 ---
 
+## Demo
+
+Screencast of the **local web UI** (`portkill --gui`): [youtu.be/_-Z6zwiEHmg](https://youtu.be/_-Z6zwiEHmg)
+
+[![portkill --gui: local web UI walkthrough](https://img.youtube.com/vi/_-Z6zwiEHmg/hqdefault.jpg)](https://youtu.be/_-Z6zwiEHmg)
+
+---
+
 ## Quick start
 
 ```bash
@@ -69,11 +77,7 @@ portkill 9000-9002
 portkill --gui
 ```
 
-Press **Ctrl+C** to stop the GUI server. The printed URL is loopback-only.
-
-### GUI walkthrough (video)
-
-[![portkill --gui: local web UI walkthrough](https://img.youtube.com/vi/_-Z6zwiEHmg/hqdefault.jpg)](https://youtu.be/_-Z6zwiEHmg)
+Press **Ctrl+C** to stop the GUI server. The printed URL is loopback-only. **Video:** [Demo](#demo).
 
 ---
 
@@ -126,7 +130,7 @@ Terminal colors use [chalk](https://github.com/chalk/chalk); set `NO_COLOR=1` to
 
 ## npm vs GitHub README
 
-This file is the **npm package readme** for [`@burakboduroglu/portkill`](https://www.npmjs.com/package/@burakboduroglu/portkill) (included via `package.json` `"files"`). **Distribution is npm only** (`npm i -g` / `npx`). Full source, `docs/`, and the PRD are on [GitHub](https://github.com/burakboduroglu/portkill); in-repo links use GitHub URLs so they work from the npm package page too.
+**Same file everywhere:** this `README.md` is both the [GitHub repo](https://github.com/burakboduroglu/portkill) front page and the [npm package](https://www.npmjs.com/package/@burakboduroglu/portkill) readme (`package.json` `"files"`). The [demo video](#demo) and install instructions are identical on both sites. **Distribution is npm only** (`npm i -g` / `npx`). Deeper docs (`docs/`, PRD) live on GitHub; links use full GitHub URLs so they still work from the npm page.
 
 ---
 
