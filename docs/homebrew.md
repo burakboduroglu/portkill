@@ -2,25 +2,24 @@
 
 The npm package must be **published first**; the formula installs from `registry.npmjs.org`.
 
-## One-time: create a tap
+## Official tap (this project)
 
-1. On GitHub, create an empty repo, e.g. `homebrew-portkill` (name can be anything).
-2. Clone it locally and add the formula:
+Repository: **[github.com/burakboduroglu/homebrew-portkill](https://github.com/burakboduroglu/homebrew-portkill)**.
 
-   ```bash
-   mkdir -p Formula
-   cp /path/to/portkill/packaging/homebrew/portkill.rb Formula/portkill.rb
-   git add Formula/portkill.rb && git commit -m "Add portkill formula" && git push
-   ```
+Users (after `portkill` is on npm):
 
-3. Users install with:
+```bash
+brew tap burakboduroglu/portkill
+brew install portkill
+```
 
-   ```bash
-   brew tap burakboduroglu/portkill https://github.com/burakboduroglu/homebrew-portkill
-   brew install portkill
-   ```
+Maintainers: update `Formula/portkill.rb` there after each npm release (`url`, `sha256`). The same checksum should match `packaging/homebrew/portkill.rb` in the main repo.
 
-   Replace `burakboduroglu` / URLs with your GitHub username and repo.
+## Fork / your own tap
+
+1. Create an empty repo, e.g. `homebrew-portkill`.
+2. Add `Formula/portkill.rb` (copy from `packaging/homebrew/portkill.rb` in the main repo).
+3. `brew tap YOUR_USER/portkill https://github.com/YOUR_USER/homebrew-portkill` then `brew install portkill`.
 
 ## Publish to npm
 

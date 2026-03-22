@@ -1,3 +1,3 @@
 # Packaging
 
-- **`homebrew/portkill.rb`** — copy into a Homebrew tap as `Formula/portkill.rb`. See [docs/homebrew.md](../docs/homebrew.md).
+- **`homebrew/portkill.rb`** — canonical formula; mirrored in [github.com/burakboduroglu/homebrew-portkill](https://github.com/burakboduroglu/homebrew-portkill). See [docs/homebrew.md](../docs/homebrew.md) and [docs/RELEASE.md](../docs/RELEASE.md).

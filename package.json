@@ -3,9 +3,7 @@
   "version": "0.4.0",
   "description": "Kill processes listening on TCP ports — CLI for macOS/Linux: dry-run, port ranges, --list, optional local web UI (--gui). Node.js 18+.",
   "type": "module",
-  "bin": {
-    "portkill": "./dist/index.js"
-  },
+  "bin": "dist/index.js",
   "files": [
     "dist/index.js",
     "README.md",
@@ -13,7 +11,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/burakboduroglu/portkill.git"
+    "url": "git+https://github.com/burakboduroglu/portkill.git"
   },
   "bugs": {
     "url": "https://github.com/burakboduroglu/portkill/issues"

@@ -13,7 +13,7 @@ class Portkill < Formula
   desc "Kill processes listening on specified TCP ports"
   homepage "https://github.com/burakboduroglu/portkill"
   url "https://registry.npmjs.org/portkill/-/portkill-0.4.0.tgz"
-  sha256 "21b2e1e76dbdff489455c6f34d8d44bc870124aa362d824f8cad7116b3382a7c"
+  sha256 "a84fed2b961f867fb93eb177b90f2a179819da60be4908c771752ea3a660d589"
   license "MIT"
 
   depends_on "node"

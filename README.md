@@ -36,7 +36,14 @@ No global install:
 npx portkill --list
 ```
 
-**Homebrew (your own tap)** — after `npm publish`, see [docs/homebrew.md](https://github.com/burakboduroglu/portkill/blob/main/docs/homebrew.md).
+**Homebrew (tap)** — needs [portkill on npm](https://www.npmjs.com/package/portkill). Then:
+
+```bash
+brew tap burakboduroglu/portkill
+brew install portkill
+```
+
+Tap: [github.com/burakboduroglu/homebrew-portkill](https://github.com/burakboduroglu/homebrew-portkill) · [docs/homebrew.md](https://github.com/burakboduroglu/portkill/blob/main/docs/homebrew.md)
 
 **From source**
 
@@ -101,6 +108,7 @@ Full reference: [CLI reference](https://github.com/burakboduroglu/portkill/blob/
 | [Implementation](https://github.com/burakboduroglu/portkill/blob/main/docs/implementation.md) | Architecture & data flow |
 | [Data dictionary](https://github.com/burakboduroglu/portkill/blob/main/DATA_DICTIONARY.md) | Types, GUI API shapes |
 | [Security notes](https://github.com/burakboduroglu/portkill/blob/main/docs/security-notes.md) | GUI scope, `npm audit`, reporting |
+| [Release](https://github.com/burakboduroglu/portkill/blob/main/docs/RELEASE.md) | `npm publish` (2FA), tags, checksums, tap updates |
 
 ---
 
