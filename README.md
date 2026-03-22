@@ -7,15 +7,30 @@ CLI to kill processes listening on given **TCP** ports. See [PRD.md](./PRD.md) f
 - Node.js **≥ 18**
 - macOS or Linux (`lsof`; on Linux, `fuser` as fallback if `lsof` is missing)
 
-## Install (from source)
+## Install
+
+### From npm (after publish)
+
+```bash
+npm i -g portkill
+portkill --version
+```
+
+Run without global install:
+
+```bash
+npx portkill --list
+```
+
+See [PRD.md](./PRD.md) §7 for release steps (`npm publish`, Homebrew tap).
+
+### From source
 
 ```bash
 npm install
 npm run build
 node dist/index.js --help
 ```
-
-Link globally during development:
 
 ```bash
 npm link
@@ -26,10 +41,13 @@ portkill --version
 
 ```bash
 portkill <port> [port2] ...
+portkill 3000-3005
+portkill 3000 8080 9000-9002 --dry-run
 portkill --list
-portkill 3000 --dry-run
 portkill 3000 --force
 ```
+
+Port arguments can be single numbers or **inclusive ranges** (`start-end`, max 4096 ports per range). Duplicates are removed while keeping order.
 
 ## Docs
 

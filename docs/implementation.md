@@ -28,6 +28,7 @@ flowchart LR
 | Module | Responsibility |
 | --- | --- |
 | `index.ts` | `commander` setup, global flags, `process.exitCode` / PRD exit codes. |
+| `utils/parse-ports.ts` | Expand positional args: single ports and inclusive ranges (`3000-3005`). |
 | `commands/kill.ts` | Validate ports; `--dry-run` / confirm / `--force`; call `finder` + `killer` per port; aggregate exit code. |
 | `core/finder.ts` | Listeners per port: PID(s), command name when available; parse shell output here or via `platform`. |
 | `core/killer.ts` | Send signal (`process.kill`); distinguish EPERM vs other errors. |

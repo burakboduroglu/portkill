@@ -7,6 +7,7 @@ import { Command } from "commander";
 
 import { runKill } from "./commands/kill.js";
 import { runList } from "./commands/list.js";
+import { parsePortArguments } from "./utils/parse-ports.js";
 import { getSupportedPlatform, UnsupportedPlatformError } from "./utils/platform.js";
 
 function readPackageVersion(): string {
@@ -21,25 +22,16 @@ function readPackageVersion(): string {
   }
 }
 
-function parsePorts(raw: string[]): number[] {
-  const ports: number[] = [];
-  for (const token of raw) {
-    const n = Number.parseInt(token, 10);
-    if (!Number.isFinite(n) || n < 1 || n > 65535) {
-      throw new Error(`invalid port: ${token}`);
-    }
-    ports.push(n);
-  }
-  return ports;
-}
-
 async function main(): Promise<void> {
   const program = new Command();
 
   program
     .name("portkill")
     .description("Kill processes listening on given TCP ports")
-    .argument("[ports...]", "one or more TCP ports (1–65535)")
+    .argument(
+      "[ports...]",
+      "TCP ports and/or ranges (e.g. 3000 8080 3000-3005); 1–65535, max 4096 ports per range",
+    )
     .option("-f, --force", "do not prompt for confirmation", false)
     .option("-n, --dry-run", "show targets only; do not send signals", false)
     .option("-s, --signal <name>", "signal to send (default: SIGTERM)", "SIGTERM")
@@ -84,7 +76,7 @@ async function main(): Promise<void> {
 
       let ports: number[];
       try {
-        ports = parsePorts(portsArg);
+        ports = parsePortArguments(portsArg);
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         process.stderr.write(`${msg}\n`);

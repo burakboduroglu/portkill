@@ -7,8 +7,10 @@ Stdout lines are colorized with **chalk** when supported. Set `NO_COLOR=1` to di
 ## Usage
 
 ```bash
-portkill <port> [port2] [port3] ...
+portkill <port> [port2] [range] ...
 ```
+
+Each argument is either a single TCP port (`3000`) or an **inclusive range** (`3000-3005`). Ranges are capped at **4096** ports per token. Duplicates are dropped (first occurrence wins).
 
 ## Options
 
@@ -44,6 +46,7 @@ portkill <port> [port2] [port3] ...
 ```bash
 portkill 3000
 portkill 3000 8080
+portkill 3000-3002
 portkill 3000 --force
 portkill 3000 --dry-run
 portkill --list

@@ -8,7 +8,7 @@ This document defines concepts, fields, and (planned) API payloads used across t
 
 | Field | Type | Validation | Description |
 | --- | --- | --- | --- |
-| `ports` | `number[]` | Each value integer 1–65535 | Positional arguments; at least one port required (except `--help` / `--version`). |
+| `ports` | `number[]` | Each value integer 1–65535 | Expanded from positional args: single `3000` or inclusive range `3000-3005` (max 4096 ports per range); deduped in order. |
 | `force` | `boolean` | — | `--force` / `-f`. |
 | `dryRun` | `boolean` | — | `--dry-run` / `-n`. |
 | `signal` | `string` | Signal name or number accepted by Node/OS | `--signal` / `-s`; default `SIGTERM`. |

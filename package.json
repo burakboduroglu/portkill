@@ -1,11 +1,15 @@
 {
   "name": "portkill",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Kill processes listening on given TCP ports (CLI)",
   "type": "module",
   "bin": {
     "portkill": "./dist/index.js"
   },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -17,7 +21,8 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepublishOnly": "npm run build && npm test"
   },
   "keywords": ["cli", "port", "kill", "lsof", "dev"],
   "license": "MIT",

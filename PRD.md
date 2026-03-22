@@ -62,7 +62,7 @@ Existing approaches fall short because:
 ### 5.1 Basic usage
 
 ```bash
-portkill <port> [port2] [port3] ...
+portkill <port> [port2] [range] ...
 ```
 
 **Examples:**
@@ -70,6 +70,7 @@ portkill <port> [port2] [port3] ...
 ```bash
 portkill 3000              # single port
 portkill 3000 8080         # multiple ports
+portkill 3000-3005         # inclusive port range (v0.3+)
 portkill 3000 --force      # kill without confirmation
 portkill 3000 --dry-run    # show what would be killed; do not kill
 ```
@@ -260,7 +261,7 @@ End-user installs are **out of scope for v0.1–v0.2**; both channels are target
 class Portkill < Formula
   desc "Kill processes running on specified ports"
   homepage "https://github.com/<user>/portkill"
-  url "https://registry.npmjs.org/portkill/-/portkill-0.1.0.tgz"
+  url "https://registry.npmjs.org/portkill/-/portkill-0.3.0.tgz"
   sha256 "<sha256>"
   license "MIT"
 
@@ -299,9 +300,9 @@ end
 
 ### v0.3.0
 
-- [ ] Port ranges: `portkill 3000-3005`
+- [x] Port ranges: `portkill 3000-3005` (inclusive; max 4096 ports per range token)
 - [x] List listeners: `portkill --list`
-- [ ] **npm:** `npm publish` to the public registry; documented install via `npm i -g portkill` and/or `npx portkill` (see §7.1)
+- [x] **npm:** Package layout for registry (`files`, `prepublishOnly`); install docs for `npm i -g` / `npx` (see §7.1; run `npm publish` when ready)
 - [ ] **Homebrew:** tap + formula; `brew install portkill` (see §7.2)
 
 ### v0.4.0 — Simple GUI
