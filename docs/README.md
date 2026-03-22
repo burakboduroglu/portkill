@@ -7,9 +7,11 @@
 | [RELEASE.md](./RELEASE.md) | Version tag, `npm publish` (2FA), GitHub Release |
 | [security-notes.md](./security-notes.md) | `npm audit`, GUI scope, published tarball contents |
 
-## Demo — `portkill --gui`
+## GUI demo — `portkill --gui`
 
-[![portkill --gui walkthrough](https://img.youtube.com/vi/_-Z6zwiEHmg/hqdefault.jpg)](https://youtu.be/_-Z6zwiEHmg)
+**[Watch on YouTube](https://www.youtube.com/watch?v=_-Z6zwiEHmg)**
+
+[![portkill --gui introduction (video)](https://img.youtube.com/vi/_-Z6zwiEHmg/hqdefault.jpg)](https://www.youtube.com/watch?v=_-Z6zwiEHmg)
 
 ## Top-level sources
 
