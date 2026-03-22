@@ -7,6 +7,10 @@
 | [RELEASE.md](./RELEASE.md) | Version tag, `npm publish` (2FA), GitHub Release |
 | [security-notes.md](./security-notes.md) | `npm audit`, GUI scope, published tarball contents |
 
+## Demo — `portkill --gui`
+
+[![portkill --gui walkthrough](https://img.youtube.com/vi/_-Z6zwiEHmg/hqdefault.jpg)](https://youtu.be/_-Z6zwiEHmg)
+
 ## Top-level sources
 
 - [PRD.md](../PRD.md) — product requirements (source of truth)

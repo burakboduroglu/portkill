@@ -71,6 +71,10 @@ portkill --gui
 
 Press **Ctrl+C** to stop the GUI server. The printed URL is loopback-only.
 
+### GUI walkthrough (video)
+
+[![portkill --gui: local web UI walkthrough](https://img.youtube.com/vi/_-Z6zwiEHmg/hqdefault.jpg)](https://youtu.be/_-Z6zwiEHmg)
+
 ---
 
 ## CLI flags (short)
