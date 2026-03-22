@@ -8,6 +8,8 @@
 
 > The name reads like **`.portkill`** — a small, local dev utility (think `.env`-style prefix). The CLI binary is still `portkill`.
 
+**Published on npm:** [`@burakboduroglu/portkill`](https://www.npmjs.com/package/@burakboduroglu/portkill) — install with `npm i -g @burakboduroglu/portkill` or `npx @burakboduroglu/portkill` (see [Install](#install)).
+
 When Node or another stack prints `EADDRINUSE`, **`.portkill`** shows who owns the port, lets you **preview** (`--dry-run`), then stops only what you intend — or opens a **calm local web UI** on loopback.
 
 ---
@@ -25,6 +27,8 @@ When Node or another stack prints `EADDRINUSE`, **`.portkill`** shows who owns t
 
 ## Install
 
+Registry page: [npmjs.com/package/@burakboduroglu/portkill](https://www.npmjs.com/package/@burakboduroglu/portkill).
+
 ```bash
 npm i -g @burakboduroglu/portkill
 portkill --version
@@ -36,7 +40,7 @@ No global install:
 npx @burakboduroglu/portkill --list
 ```
 
-**Homebrew (tap)** — needs [@burakboduroglu/portkill on npm](https://www.npmjs.com/package/@burakboduroglu/portkill). Then:
+**Homebrew (tap)** — formula installs from the published npm tarball ([@burakboduroglu/portkill](https://www.npmjs.com/package/@burakboduroglu/portkill)). Then:
 
 ```bash
 brew tap burakboduroglu/portkill
@@ -127,7 +131,7 @@ Terminal colors use [chalk](https://github.com/chalk/chalk); set `NO_COLOR=1` to
 
 ## npm vs GitHub README
 
-**The same `README.md` is what npm shows** on [npmjs.com/package/@burakboduroglu/portkill](https://www.npmjs.com/package/@burakboduroglu/portkill) — it is listed in `package.json` `"files"`. Links to deep docs use **GitHub URLs** so they still work from the npm page (the `docs/` folder is not inside the published tarball).
+This file is the **package readme on npm** ([`@burakboduroglu/portkill`](https://www.npmjs.com/package/@burakboduroglu/portkill)); it is shipped via `package.json` `"files"`. Extra docs (`docs/`, PRD, etc.) live only on [GitHub](https://github.com/burakboduroglu/portkill), so links below point there on purpose.
 
 ---
 
