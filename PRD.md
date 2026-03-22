@@ -259,7 +259,7 @@ End-user installs ship through **npm** only, as `@burakboduroglu/portkill` (unsc
 | 5 | Verify: `npm i -g @burakboduroglu/portkill` then `portkill --version`; optional `npx @burakboduroglu/portkill --help`. |
 | 6 | Tag release in Git (`vX.Y.Z`) aligned with `package.json` version. |
 
-**Deliverable:** documented install path (`README` + registry page) and a repeatable release checklist (`docs/RELEASE.md`).
+**Deliverable:** documented install path (`README` + registry page) and a repeatable release checklist ([`RELEASE.md`](RELEASE.md) at repo root).
 
 ---
 

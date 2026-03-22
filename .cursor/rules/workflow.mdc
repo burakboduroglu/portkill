@@ -32,8 +32,8 @@ Current tree: [PRD.md](PRD.md) §6.2 and [docs/implementation.md](docs/implement
 
 ## 4. Release / distribution (PRD §7)
 
-- Before `npm publish`, bump if the version already exists on npm: `npm run release:bump-patch` (see `docs/RELEASE.md`). `prepublishOnly` blocks duplicate versions when the registry is reachable.
-- npm publish follows PRD §7 and `docs/RELEASE.md`.
+- Before `npm publish`, bump if the version already exists on npm: `npm run release:bump-patch` (see `RELEASE.md`). `prepublishOnly` blocks duplicate versions when the registry is reachable.
+- npm publish follows PRD §7 and `RELEASE.md`.
 
 ## 5. Short agent checklist
 
