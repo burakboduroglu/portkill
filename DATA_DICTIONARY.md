@@ -112,7 +112,7 @@ Served only when running `portkill --gui`. Server binds **`127.0.0.1`** (random 
 
 | Field | Location | Description |
 | --- | --- | --- |
-| `version` | `package.json` | `--version` output; aligned with npm/Homebrew. |
+| `version` | `package.json` | `--version` output; aligned with npm release. |
 
 ---
 

@@ -8,7 +8,7 @@
 
 ## 1. Summary
 
-`portkill` is a CLI tool that terminates processes listening on given port(s) in a single command; an optional lightweight browser UI may be added later. It is aimed at developers who hit “port already in use” errors. It is written in TypeScript, runs on Node.js, and is distributed via Homebrew.
+`portkill` is a CLI tool that terminates processes listening on given port(s) in a single command; an optional lightweight browser UI may be added later. It is aimed at developers who hit “port already in use” errors. It is written in TypeScript, runs on Node.js, and is distributed via **npm** (`@burakboduroglu/portkill`). Homebrew is not offered for now.
 
 ---
 
@@ -32,7 +32,7 @@ Existing approaches fall short because:
 ## 3. Target users
 
 - Developers at any level doing local development
-- macOS and Linux users (primary: macOS + Homebrew)
+- macOS and Linux users (primary: macOS + Node/npm)
 - People who prefer a terminal-first workflow
 
 ---
@@ -44,7 +44,7 @@ Existing approaches fall short because:
 | 1 | Kill a single port in one command: `portkill 3000` |
 | 2 | Kill multiple ports at once: `portkill 3000 8080 5432` |
 | 3 | Tell the user which process was killed |
-| 4 | Installable via Homebrew (`brew install`) |
+| 4 | Installable via npm (`npm i -g @burakboduroglu/portkill`) |
 | 5 | Work reliably on macOS and Linux |
 
 ### Out of scope (v0.1.0)
@@ -176,7 +176,7 @@ sequenceDiagram
 | Layer | Choice | Rationale |
 | --- | --- | --- |
 | Language | TypeScript | Type safety, modern ecosystem |
-| Runtime | Node.js ≥ 18 | LTS, straightforward Homebrew packaging |
+| Runtime | Node.js ≥ 18 | LTS; install via npm |
 | CLI | `commander` | Mature, small API |
 | Build | `tsup` | Zero-config TypeScript bundler |
 | Tests | `vitest` | Fast, TS-native |
@@ -226,9 +226,9 @@ Detection uses `process.platform`; abstraction lives in `platform.ts`.
 
 ---
 
-## 7. Distribution plan (npm + Homebrew)
+## 7. Distribution plan (npm)
 
-End-user installs are **out of scope for v0.1–v0.2**; both channels are targeted in **v0.3.0** (see §8). Order of operations: publish to **npm first** (Homebrew formula often consumes the npm tarball).
+End-user installs ship through **npm** as `@burakboduroglu/portkill` (unscoped `portkill` is blocked on the registry as too similar to `port-kill`). **Homebrew / tap is not maintained** for now; see `docs/homebrew.md`.
 
 ### 7.1 npm — `npm publish` and global install
 
@@ -241,42 +241,7 @@ End-user installs are **out of scope for v0.1–v0.2**; both channels are target
 | 5 | Verify: `npm i -g @burakboduroglu/portkill` then `portkill --version`; optional `npx @burakboduroglu/portkill --help`. |
 | 6 | Tag release in Git (`vX.Y.Z`) aligned with `package.json` version. |
 
-**v0.3 deliverable:** documented install path (`README` + registry page) and a repeatable release checklist.
-
-### 7.2 Homebrew — tap and `brew install`
-
-| Step | Action |
-| --- | --- |
-| 1 | (After npm) Note tarball URL and SHA256 from registry or release artifact. |
-| 2 | Create a versioned GitHub release if you mirror artifacts there. |
-| 3 | Open a `homebrew-portkill` (or user) tap repository. |
-| 4 | Add formula `portkill.rb` (see §7.3). |
-| 5 | Test: `brew tap <user>/portkill && brew install portkill` and `portkill --version`. |
-
-**v0.3 deliverable:** tap URL in README; formula maintained alongside npm versions.
-
-### 7.3 Example Homebrew formula
-
-```ruby
-class Portkill < Formula
-  desc "Kill processes running on specified ports"
-  homepage "https://github.com/<user>/portkill"
-  url "https://registry.npmjs.org/@burakboduroglu/portkill/-/portkill-0.4.1.tgz"
-  sha256 "<sha256>"
-  license "MIT"
-
-  depends_on "node"
-
-  def install
-    system "npm", "install", *std_npm_args
-    bin.install_symlink Dir["#{libexec}/bin/*"]
-  end
-
-  test do
-    system "#{bin}/portkill", "--version"
-  end
-end
-```
+**Deliverable:** documented install path (`README` + registry page) and a repeatable release checklist (`docs/RELEASE.md`).
 
 ---
 
@@ -289,7 +254,7 @@ end
 - [x] macOS support
 - [x] `--dry-run` flag
 - [x] `--force` flag
-- [ ] Distribution (npm + Homebrew): deferred to **v0.3.0** (§7)
+- [x] Distribution (npm): primary channel; see **v0.3.0** / §7
 
 ### v0.2.0
 
@@ -303,7 +268,7 @@ end
 - [x] Port ranges: `portkill 3000-3005` (inclusive; max 4096 ports per range token)
 - [x] List listeners: `portkill --list`
 - [x] **npm:** Package layout for registry (`files`, `prepublishOnly`); install docs for `npm i -g` / `npx` (see §7.1; run `npm publish` when ready)
-- [x] **Homebrew:** formula in repo (`packaging/homebrew/portkill.rb`); maintainer creates a tap and updates `sha256` per release (see `docs/homebrew.md`, §7.2)
+- [ ] **Homebrew:** not offered; npm-only install (see `docs/homebrew.md`)
 
 ### v0.4.0 — Simple GUI
 
@@ -322,7 +287,7 @@ end
 | macOS + Linux compatibility | 100% |
 | Test coverage | ≥ 80% |
 | npm global / `npx` install | Documented; package published to registry |
-| Homebrew tap install | Works without friction (v0.3) |
+| Optional Homebrew later | Out of scope until revisited |
 
 ---
 

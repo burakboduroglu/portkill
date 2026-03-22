@@ -1,3 +1,3 @@
 # Packaging
 
-- **`homebrew/portkill.rb`** — canonical formula; mirrored in [github.com/burakboduroglu/homebrew-portkill](https://github.com/burakboduroglu/homebrew-portkill). See [docs/homebrew.md](../docs/homebrew.md) and [docs/RELEASE.md](../docs/RELEASE.md).
+No active Homebrew formula is maintained in this repo. End users install via **`npm i -g @burakboduroglu/portkill`**. See [docs/homebrew.md](../docs/homebrew.md).

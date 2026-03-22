@@ -40,14 +40,7 @@ No global install:
 npx @burakboduroglu/portkill --list
 ```
 
-**Homebrew (tap)** — formula installs from the published npm tarball ([@burakboduroglu/portkill](https://www.npmjs.com/package/@burakboduroglu/portkill)). Then:
-
-```bash
-brew tap burakboduroglu/portkill
-brew install portkill
-```
-
-Tap: [github.com/burakboduroglu/homebrew-portkill](https://github.com/burakboduroglu/homebrew-portkill) · [docs/homebrew.md](https://github.com/burakboduroglu/portkill/blob/main/docs/homebrew.md)
+**Homebrew:** not supported right now — use npm/npx above. (Homebrew does not install npm scoped packages as `brew install @scope/name`.)
 
 **From source**
 
@@ -112,7 +105,7 @@ Full reference: [CLI reference](https://github.com/burakboduroglu/portkill/blob/
 | [Implementation](https://github.com/burakboduroglu/portkill/blob/main/docs/implementation.md) | Architecture & data flow |
 | [Data dictionary](https://github.com/burakboduroglu/portkill/blob/main/DATA_DICTIONARY.md) | Types, GUI API shapes |
 | [Security notes](https://github.com/burakboduroglu/portkill/blob/main/docs/security-notes.md) | GUI scope, `npm audit`, reporting |
-| [Release](https://github.com/burakboduroglu/portkill/blob/main/docs/RELEASE.md) | `npm publish` (2FA), tags, checksums, tap updates |
+| [Release](https://github.com/burakboduroglu/portkill/blob/main/docs/RELEASE.md) | `npm publish` (2FA), tags, GitHub Release |
 
 ---
 

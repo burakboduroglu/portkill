@@ -4,8 +4,8 @@
 | --- | --- |
 | [implementation.md](./implementation.md) | Target architecture, module roles, data flow, tests, GUI notes |
 | [cli-reference.md](./cli-reference.md) | CLI flags, sample output, exit codes |
-| [homebrew.md](./homebrew.md) | npm publish, tap repo, formula checksum updates |
-| [RELEASE.md](./RELEASE.md) | Version tag, `npm publish` (2FA), registry checksum, GitHub Release |
+| [homebrew.md](./homebrew.md) | Why there is no `brew install` path yet; use npm |
+| [RELEASE.md](./RELEASE.md) | Version tag, `npm publish` (2FA), GitHub Release |
 | [security-notes.md](./security-notes.md) | `npm audit`, GUI scope, published tarball contents |
 
 ## Top-level sources

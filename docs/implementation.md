@@ -68,7 +68,7 @@ Windows is out of scope; `platform.ts` should error clearly on unsupported `proc
 
 ## Distribution (v0.3+)
 
-Publishing to **npm** (`npm publish`) and **Homebrew** (`brew install` via a tap) is planned together for v0.3.0. See [PRD.md](../PRD.md) §7 for ordered steps (npm first, then formula tarball/SHA).
+Publishing to **npm** (`npm publish`) as `@burakboduroglu/portkill`. Homebrew is not maintained in-repo; see [PRD.md](../PRD.md) §7 and [homebrew.md](./homebrew.md).
 
 ## Related docs
 
