@@ -1,6 +1,6 @@
 # portkill — Implementation guide
 
-Describes the **target** architecture and implementation order aligned with [PRD.md](../PRD.md). Use this for module boundaries and data flow even before all code exists.
+Describes the architecture and data flow aligned with [PRD.md](../PRD.md): CLI, shared core, and GUI.
 
 ## Goal
 
@@ -59,14 +59,14 @@ Windows is out of scope; `platform.ts` should error clearly on unsupported `proc
 - `finder` / `killer`: unit tests with mocked `child_process` or a small runner interface (Vitest).
 - Optional integration: temporary listener (`node -e` + `http.createServer`) for real-port dry-run/kill — can be flaky in CI; keep optional.
 
-## GUI (v0.4+)
+## GUI
 
 - `src/gui/server.ts`: `127.0.0.1` HTTP server; `GET /`, `GET /api/listeners`, `POST /api/resolve`.
 - `src/gui/index-html.ts`: embedded single-page UI (no Vite bundle).
 - `src/gui/open-browser.ts`: `open` / `xdg-open`.
 - Reuses `runKill`, `listAllTcpListeners`, `parsePortArguments`. API shapes: [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) §7.
 
-## Distribution (v0.3+)
+## Distribution
 
 Publishing to **npm** only (`npm publish`) as `@burakboduroglu/portkill`. See [PRD.md](../PRD.md) §7 and [RELEASE.md](./RELEASE.md).
 

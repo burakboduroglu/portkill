@@ -10,7 +10,7 @@
 
 **Published on npm:** [`@burakboduroglu/portkill`](https://www.npmjs.com/package/@burakboduroglu/portkill) — install with `npm i -g @burakboduroglu/portkill` or `npx @burakboduroglu/portkill` (see [Install](#install)).
 
-When Node or another stack prints `EADDRINUSE`, **`.portkill`** shows who owns the port, lets you **preview** (`--dry-run`), then stops only what you intend — or opens a **calm local web UI** on loopback.
+When Node or another stack prints `EADDRINUSE`, **`.portkill`** shows who owns the port, lets you **preview** (`--dry-run`), then stops only what you intend — or use the **local web UI** (`--gui` on loopback), same logic as the CLI.
 
 ---
 
@@ -65,7 +65,7 @@ portkill 3000 8080
 # Range (inclusive, max 4096 ports per range token)
 portkill 9000-9002
 
-# Optional local UI — same logic as the CLI
+# Local web UI — same logic as the CLI
 portkill --gui
 ```
 
@@ -103,7 +103,7 @@ Full reference: [CLI reference](https://github.com/burakboduroglu/portkill/blob/
 
 | Doc | What it is |
 | --- | --- |
-| [PRD](https://github.com/burakboduroglu/portkill/blob/main/PRD.md) | Product requirements, roadmap |
+| [PRD](https://github.com/burakboduroglu/portkill/blob/main/PRD.md) | Product requirements & shipped scope |
 | [Implementation](https://github.com/burakboduroglu/portkill/blob/main/docs/implementation.md) | Architecture & data flow |
 | [Data dictionary](https://github.com/burakboduroglu/portkill/blob/main/DATA_DICTIONARY.md) | Types, GUI API shapes |
 | [Security notes](https://github.com/burakboduroglu/portkill/blob/main/docs/security-notes.md) | GUI scope, `npm audit`, reporting |

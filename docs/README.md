@@ -14,6 +14,6 @@
 ## Top-level sources
 
 - [PRD.md](../PRD.md) — product requirements (source of truth)
-- [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) — data fields and planned API shapes
+- [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) — data fields and GUI API shapes
 - [.cursor/rules/generate-rules.mdc](../.cursor/rules/generate-rules.mdc) — coding and PRD alignment
 - [.cursor/rules/workflow.mdc](../.cursor/rules/workflow.mdc) — development workflow

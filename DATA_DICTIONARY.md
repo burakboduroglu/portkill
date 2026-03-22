@@ -116,4 +116,4 @@ Served only when running `portkill --gui`. Server binds **`127.0.0.1`** (random 
 
 ---
 
-*Last aligned with PRD 0.1.0 (2026-03-22).*
+*Aligned with current PRD / `package.json` (2026-03-22).*

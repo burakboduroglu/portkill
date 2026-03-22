@@ -1,14 +1,14 @@
 # portkill — Product Requirements Document (PRD)
 
 **Version:** 0.4.x (see `package.json`; ships as `@burakboduroglu/portkill` on npm)  
-**Status:** Draft  
+**Status:** Active (current scope shipped)  
 **Date:** 2026-03-22
 
 ---
 
 ## 1. Summary
 
-`portkill` is a CLI tool that terminates processes listening on given port(s) in a single command; an optional lightweight browser UI may be added later. It is aimed at developers who hit “port already in use” errors. It is written in TypeScript, runs on Node.js, and is distributed only via **npm** as `@burakboduroglu/portkill`.
+`portkill` is a CLI tool that terminates processes listening on given TCP port(s) in one command, with a **local web UI** (`--gui`, loopback-only) that reuses the same kill/list logic. It is aimed at developers who hit “port already in use” errors. It is written in TypeScript, runs on Node.js ≥ 18, and is distributed only via **npm** as `@burakboduroglu/portkill`.
 
 ---
 
@@ -46,11 +46,11 @@ Existing approaches fall short because:
 | 3 | Tell the user which process was killed |
 | 4 | Installable via npm (`npm i -g @burakboduroglu/portkill`) |
 | 5 | Work reliably on macOS and Linux |
+| 6 | Optional local web UI (`--gui`) with the same kill/list semantics as the CLI |
 
-### Out of scope (v0.1.0)
+### Out of scope (not planned)
 
 - Windows support
-- GUI (simple web UI is a later release; see §5.5)
 - Port monitoring / long-running watch
 - Process whitelist / blacklist
 - Config files
@@ -103,6 +103,8 @@ On error:
 | `--dry-run` | `-n` | Show process info only; do not kill |
 | `--signal <SIG>` | `-s` | Signal to send (default: SIGTERM) |
 | `--verbose` | `-v` | Verbose output |
+| `--list` | `-l` | List all TCP listeners (no port arguments) |
+| `--gui` | | Local web UI on loopback (no port arguments or `--list`) |
 | `--version` | | Print version |
 | `--help` | `-h` | Help |
 
@@ -115,19 +117,19 @@ On error:
 | `2` | No process found on any requested port |
 | `3` | Permission denied |
 
-### 5.5 Simple GUI — design and TypeScript approach
+### 5.5 Simple GUI — shipped behavior
 
-**Goal:** A minimal UI that reuses the same `finder` / `killer` logic as the CLI, without heavy runtimes (no Electron/Tauri). **Not part of v0.1.0 MVP**; add after the CLI is stable.
+**Implemented:** A minimal UI that reuses the same `finder` / `killer` paths as the CLI, without Electron/Tauri — embedded HTML/CSS/TS in `src/gui/` (see implementation doc).
 
-**Suggested entry:** `portkill --gui` or subcommand `portkill gui` — starts a local HTTP server on `127.0.0.1` (fixed or ephemeral port), opens the system browser; bind to localhost only (lower CSRF / network exposure risk).
+**Entry:** `portkill --gui` — starts a local HTTP server on **127.0.0.1** / **::1** (ephemeral port), optionally opens the system browser; loopback only.
 
-**Technology (keep it light):**
+**Technology:**
 
 | Layer | Choice | Rationale |
 | --- | --- | --- |
-| Frontend | TypeScript + HTML/CSS (Vite bundle or single page + modules) | Lightweight; no UI framework required |
-| API | Thin `node:http` handler or minimal router in the same Node process | Import `core/` directly |
-| Shared code | `src/core/*` plus optional thin `src/api/` | Single source of truth |
+| Frontend | Embedded single-page UI (`index-html.ts`) | No separate Vite bundle in the shipped build |
+| API | `node:http` in-process | JSON routes; imports shared command helpers |
+| Shared code | `runKill`, `listAllTcpListeners`, `parsePortArguments` | Same outcomes as CLI |
 
 **Screen layout (wireframe):**
 
@@ -181,7 +183,7 @@ sequenceDiagram
 | Build | `tsup` | Zero-config TypeScript bundler |
 | Tests | `vitest` | Fast, TS-native |
 | Lint | `eslint` + `prettier` | Consistency |
-| GUI (optional) | TypeScript + Vite (or plain bundle) + `node:http` | Lightweight local UI, §5.5 |
+| GUI | Embedded UI + `node:http` | Local UI, §5.5 |
 
 ### 6.2 Project layout
 
@@ -194,10 +196,10 @@ portkill/
 │   ├── core/
 │   │   ├── finder.ts     # Port → PID discovery
 │   │   └── killer.ts     # Process termination
-│   ├── gui/              # (optional, §5.5) local web UI
-│   │   ├── server.ts     # 127.0.0.1 HTTP + static files
-│   │   ├── app.ts        # Frontend logic (TS)
-│   │   └── index.html    # Shell page
+│   ├── gui/              # §5.5 local web UI
+│   │   ├── server.ts     # loopback HTTP + routes
+│   │   ├── index-html.ts # embedded page + client logic
+│   │   └── open-browser.ts
 │   └── utils/
 │       ├── output.ts     # Terminal formatting
 │       └── platform.ts   # macOS / Linux detection
@@ -205,11 +207,9 @@ portkill/
 │   ├── finder.test.ts
 │   └── killer.test.ts
 ├── dist/                 # build output (gitignored)
-├── gui-dist/             # (optional) Vite output — gitignored
 ├── package.json
 ├── tsconfig.json
 ├── tsup.config.ts
-├── vite.config.ts        # (optional) GUI bundle
 └── README.md
 ```
 
@@ -245,35 +245,15 @@ End-user installs ship through **npm** only, as `@burakboduroglu/portkill` (unsc
 
 ---
 
-## 8. Roadmap
+## 8. Shipped capabilities
 
-### v0.1.0 — MVP
+All of the following are implemented and maintained in the current codebase:
 
-- [x] Single-port kill
-- [x] Multi-port support
-- [x] macOS support
-- [x] `--dry-run` flag
-- [x] `--force` flag
-- [x] Distribution (npm): primary channel; see **v0.3.0** / §7
-
-### v0.2.0
-
-- [x] Linux support
-- [x] `--signal` flag
-- [x] Colored, formatted output (chalk)
-- [x] Unit tests (≥ 80% coverage on `src/` except CLI entry)
-
-### v0.3.0
-
-- [x] Port ranges: `portkill 3000-3005` (inclusive; max 4096 ports per range token)
-- [x] List listeners: `portkill --list`
-- [x] **npm:** Package layout for registry (`files`, `prepublishOnly`); install docs for `npm i -g` / `npx` (see §7.1; run `npm publish` when ready)
-
-### v0.4.0 — Simple GUI
-
-- [x] `portkill --gui`: HTTP server on **127.0.0.1** only + optional browser open
-- [x] Single-page UI + JSON API (`/api/listeners`, `/api/resolve`); reuses `runKill` / `listAllTcpListeners` / `parsePortArguments`
-- [x] List all listeners, dry-run and kill (browser confirm) aligned with §5.5 intent
+- CLI: single and multiple ports, inclusive ranges (max 4096 ports per range token), `--dry-run`, `--force`, `--signal`, `--list`, `--verbose`, `--version`, `--help`
+- macOS and Linux (`lsof` / `fuser` / `/proc` as applicable); clear error on unsupported platforms
+- Terminal output (chalk); exit codes per §5.4
+- **`--gui`:** loopback HTTP server, embedded UI, `/api/listeners` and `/api/resolve`; browser confirm for kill; same semantics as CLI
+- npm package `@burakboduroglu/portkill` (`files`, `prepublishOnly`, public scoped publish); install docs in README
 
 ---
 
