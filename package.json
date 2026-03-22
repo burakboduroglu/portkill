@@ -1,6 +1,6 @@
 {
   "name": "@burakboduroglu/portkill",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Kill processes listening on TCP ports — CLI for macOS/Linux: dry-run, port ranges, --list, optional local web UI (--gui). Node.js 18+.",
   "type": "module",
   "bin": {
@@ -34,7 +34,9 @@
     "test:watch": "vitest",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "prepublishOnly": "npm run build && npm test"
+    "release:bump-patch": "npm version patch --no-git-tag-version",
+    "release:bump-minor": "npm version minor --no-git-tag-version",
+    "prepublishOnly": "node scripts/assert-version-not-published.mjs && npm run build && npm test"
   },
   "keywords": [
     "cli",

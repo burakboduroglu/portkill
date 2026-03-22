@@ -30,7 +30,7 @@ GUI (PRD §5.5) only after CLI and `core/` are stable; call the same `finder`/`k
 
 ## 4. Release / distribution (PRD §7)
 
-- Align version with `package.json`; add changelog or release notes if needed.
+- Before `npm publish`, bump if the version already exists on npm: `npm run release:bump-patch` (see `docs/RELEASE.md`). `prepublishOnly` blocks duplicate versions when the registry is reachable.
 - npm publish follows PRD §7 and `docs/RELEASE.md`.
 
 ## 5. Short agent checklist
