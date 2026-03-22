@@ -2,7 +2,7 @@
 
 **Free stuck TCP ports in one command** — without memorizing `lsof`, `fuser`, and `kill` pipelines.
 
-[![npm](https://img.shields.io/npm/v/portkill?style=flat-square&logo=npm&label=npm)](https://www.npmjs.com/package/portkill)
+[![npm](https://img.shields.io/npm/v/@burakboduroglu/portkill?style=flat-square&logo=npm&label=npm)](https://www.npmjs.com/package/@burakboduroglu/portkill)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](https://github.com/burakboduroglu/portkill/blob/main/LICENSE)
 [![Node.js](https://img.shields.io/badge/node.js-%3E%3D18-417E38?style=flat-square&logo=node.js&logoColor=white)](https://github.com/burakboduroglu/portkill/blob/main/package.json)
 
@@ -26,17 +26,17 @@ When Node or another stack prints `EADDRINUSE`, **`.portkill`** shows who owns t
 ## Install
 
 ```bash
-npm i -g portkill
+npm i -g @burakboduroglu/portkill
 portkill --version
 ```
 
 No global install:
 
 ```bash
-npx portkill --list
+npx @burakboduroglu/portkill --list
 ```
 
-**Homebrew (tap)** — needs [portkill on npm](https://www.npmjs.com/package/portkill). Then:
+**Homebrew (tap)** — needs [@burakboduroglu/portkill on npm](https://www.npmjs.com/package/@burakboduroglu/portkill). Then:
 
 ```bash
 brew tap burakboduroglu/portkill
@@ -127,7 +127,7 @@ Terminal colors use [chalk](https://github.com/chalk/chalk); set `NO_COLOR=1` to
 
 ## npm vs GitHub README
 
-**The same `README.md` is what npm shows** on [npmjs.com/package/portkill](https://www.npmjs.com/package/portkill) — it is listed in `package.json` `"files"`. Links to deep docs use **GitHub URLs** so they still work from the npm page (the `docs/` folder is not inside the published tarball).
+**The same `README.md` is what npm shows** on [npmjs.com/package/@burakboduroglu/portkill](https://www.npmjs.com/package/@burakboduroglu/portkill) — it is listed in `package.json` `"files"`. Links to deep docs use **GitHub URLs** so they still work from the npm page (the `docs/` folder is not inside the published tarball).
 
 ---
 

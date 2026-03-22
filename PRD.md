@@ -234,11 +234,11 @@ End-user installs are **out of scope for v0.1–v0.2**; both channels are target
 
 | Step | Action |
 | --- | --- |
-| 1 | Confirm package name (`npm info portkill` / scoped name if needed). |
+| 1 | Confirm package name (`npm view @burakboduroglu/portkill`); unscoped `portkill` is blocked on npm (similar to `port-kill`). |
 | 2 | Ensure `package.json` has correct `version`, `bin.portkill` → built `dist/index.js`, `files` (or `.npmignore`) so `dist/` ships. |
 | 3 | `npm run build` and `npm test` (and `npm run test:coverage`) before release. |
-| 4 | `npm login`; `npm publish` (or `npm publish --access public` for scoped packages). |
-| 5 | Verify: `npm i -g portkill` then `portkill --version`; optional `npx portkill --help`. |
+| 4 | `npm login`; `npm publish` (`publishConfig.access: public` for this scoped package). |
+| 5 | Verify: `npm i -g @burakboduroglu/portkill` then `portkill --version`; optional `npx @burakboduroglu/portkill --help`. |
 | 6 | Tag release in Git (`vX.Y.Z`) aligned with `package.json` version. |
 
 **v0.3 deliverable:** documented install path (`README` + registry page) and a repeatable release checklist.
@@ -261,7 +261,7 @@ End-user installs are **out of scope for v0.1–v0.2**; both channels are target
 class Portkill < Formula
   desc "Kill processes running on specified ports"
   homepage "https://github.com/<user>/portkill"
-  url "https://registry.npmjs.org/portkill/-/portkill-0.4.0.tgz"
+  url "https://registry.npmjs.org/@burakboduroglu/portkill/-/portkill-0.4.1.tgz"
   sha256 "<sha256>"
   license "MIT"
 
@@ -333,5 +333,5 @@ end
 | `lsof` / `fuser` output differs by OS | Medium | Platform abstraction layer |
 | Privileged ports (< 1024) need root | High | Clear error + suggest `sudo` |
 | Node version mismatch | Low | Enforce `>=18` in `engines` |
-| npm package name collision | Low | Check `npm info portkill` early |
+| npm package name collision | Done | Published as `@burakboduroglu/portkill` (unscoped blocked vs `port-kill`) |
 | Local GUI server bound to non-loopback | Low | Listen on loopback (`127.0.0.1` + `::1`); document in README |

@@ -1,5 +1,7 @@
 # Release checklist
 
+Scoped package: **`@burakboduroglu/portkill`** (unscoped `portkill` is blocked by npm as too similar to `port-kill`). The CLI binary remains **`portkill`**.
+
 ## 1. Pre-flight
 
 ```bash
@@ -12,7 +14,7 @@ Requires [2FA](https://docs.npmjs.com/configuring-two-factor-authentication) or 
 
 ```bash
 npm login          # if needed
-npm publish        # runs prepublishOnly (build + test)
+npm publish        # runs prepublishOnly (build + test); publishConfig.access is public
 ```
 
 If publish fails with **403** / two-factor: enable 2FA on npm or create a token at [npmjs.com](https://www.npmjs.com/) → Access Tokens (type **Publish**).
@@ -20,8 +22,8 @@ If publish fails with **403** / two-factor: enable 2FA on npm or create a token 
 ## 3. Verify registry
 
 ```bash
-npm view portkill version
-npm i -g portkill
+npm view @burakboduroglu/portkill version
+npm i -g @burakboduroglu/portkill
 portkill --version
 ```
 
@@ -34,15 +36,15 @@ Run **after** `npm publish` so the registry tarball exists.
 **macOS:**
 
 ```bash
-VERSION=$(npm view portkill version)
-curl -sL "https://registry.npmjs.org/portkill/-/portkill-${VERSION}.tgz" | shasum -a 256
+VERSION=$(npm view @burakboduroglu/portkill version)
+curl -sL "https://registry.npmjs.org/@burakboduroglu/portkill/-/portkill-${VERSION}.tgz" | shasum -a 256
 ```
 
 **Linux** (no `shasum`):
 
 ```bash
-VERSION=$(npm view portkill version)
-curl -sL "https://registry.npmjs.org/portkill/-/portkill-${VERSION}.tgz" | sha256sum
+VERSION=$(npm view @burakboduroglu/portkill version)
+curl -sL "https://registry.npmjs.org/@burakboduroglu/portkill/-/portkill-${VERSION}.tgz" | sha256sum
 ```
 
 Tek satır çıktı: `abcdef...` (bazen dosya adı da yazılır; **ilk alan** SHA-256’dır).
@@ -91,7 +93,7 @@ gh release create vX.Y.Z --generate-notes
 ## 6. Optional: npm link on GitHub “Website”
 
 ```bash
-gh repo edit burakboduroglu/portkill --homepage "https://www.npmjs.com/package/portkill"
+gh repo edit burakboduroglu/portkill --homepage "https://www.npmjs.com/package/@burakboduroglu/portkill"
 ```
 
 ## 7. Tap repo

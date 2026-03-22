@@ -1,9 +1,14 @@
 {
-  "name": "portkill",
-  "version": "0.4.0",
+  "name": "@burakboduroglu/portkill",
+  "version": "0.4.1",
   "description": "Kill processes listening on TCP ports — CLI for macOS/Linux: dry-run, port ranges, --list, optional local web UI (--gui). Node.js 18+.",
   "type": "module",
-  "bin": "dist/index.js",
+  "bin": {
+    "portkill": "dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist/index.js",
     "README.md",

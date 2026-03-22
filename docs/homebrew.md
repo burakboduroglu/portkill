@@ -6,7 +6,7 @@ The npm package must be **published first**; the formula installs from `registry
 
 Repository: **[github.com/burakboduroglu/homebrew-portkill](https://github.com/burakboduroglu/homebrew-portkill)**.
 
-Users (after `portkill` is on npm):
+Users (after `@burakboduroglu/portkill` is on npm):
 
 ```bash
 brew tap burakboduroglu/portkill
@@ -27,10 +27,10 @@ From the portkill repo (after `npm login`):
 
 ```bash
 npm run build && npm test
-npm publish --access public
+npm publish
 ```
 
-Confirm the name is free: `npm view portkill version`. If the package name is taken, use a scoped name (`@yourscope/portkill`) and adjust the formula `url` to the scoped tarball URL from `npm view @yourscope/portkill dist.tarball`.
+Confirm the published version: `npm view @burakboduroglu/portkill version`. The formula `url` must match the registry tarball, e.g. `npm view @burakboduroglu/portkill dist.tarball`.
 
 ## Update the formula after each release
 
@@ -38,7 +38,7 @@ Confirm the name is free: `npm view portkill version`. If the package name is ta
 2. Compute the registry tarball checksum (must match what npm serves):
 
    ```bash
-   curl -sL "https://registry.npmjs.org/portkill/-/portkill-X.Y.Z.tgz" | shasum -a 256
+   curl -sL "https://registry.npmjs.org/@burakboduroglu/portkill/-/portkill-X.Y.Z.tgz" | shasum -a 256
    ```
 
 3. In `Formula/portkill.rb`, set `url` to that version’s `.tgz` URL and `sha256` to the output above.
