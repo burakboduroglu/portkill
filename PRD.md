@@ -1,6 +1,6 @@
 # portkill — Product Requirements Document (PRD)
 
-**Version:** 0.1.0  
+**Version:** 0.4.0  
 **Status:** Draft  
 **Date:** 2026-03-22
 
@@ -261,7 +261,7 @@ End-user installs are **out of scope for v0.1–v0.2**; both channels are target
 class Portkill < Formula
   desc "Kill processes running on specified ports"
   homepage "https://github.com/<user>/portkill"
-  url "https://registry.npmjs.org/portkill/-/portkill-0.3.0.tgz"
+  url "https://registry.npmjs.org/portkill/-/portkill-0.4.0.tgz"
   sha256 "<sha256>"
   license "MIT"
 
@@ -307,9 +307,9 @@ end
 
 ### v0.4.0 — Simple GUI
 
-- [ ] `portkill --gui` / `portkill gui`: localhost server + browser
-- [ ] TypeScript frontend; API reuses `core/`
-- [ ] List, dry-run, force kill aligned with §5.5 wireframe
+- [x] `portkill --gui`: HTTP server on **127.0.0.1** only + optional browser open
+- [x] Single-page UI + JSON API (`/api/listeners`, `/api/resolve`); reuses `runKill` / `listAllTcpListeners` / `parsePortArguments`
+- [x] List all listeners, dry-run and kill (browser confirm) aligned with §5.5 intent
 
 ---
 

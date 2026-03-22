@@ -7,6 +7,7 @@ import { Command } from "commander";
 
 import { runKill } from "./commands/kill.js";
 import { runList } from "./commands/list.js";
+import { attachGuiShutdown, startGuiServer } from "./gui/server.js";
 import { parsePortArguments } from "./utils/parse-ports.js";
 import { getSupportedPlatform, UnsupportedPlatformError } from "./utils/platform.js";
 
@@ -37,9 +38,23 @@ async function main(): Promise<void> {
     .option("-s, --signal <name>", "signal to send (default: SIGTERM)", "SIGTERM")
     .option("-v, --verbose", "verbose stderr logs", false)
     .option("-l, --list", "list all TCP listening ports and processes", false)
+    .option("--gui", "open local web UI (127.0.0.1 only)", false)
     .configureHelp({ helpWidth: 88 })
     .action(async (portsArg: string[], options) => {
       const list = options.list as boolean;
+      const gui = options.gui as boolean;
+
+      if (gui && list) {
+        process.stderr.write("error: do not combine --gui with --list\n");
+        process.exitCode = 1;
+        return;
+      }
+      if (gui && portsArg.length > 0) {
+        process.stderr.write("error: do not pass ports together with --gui\n");
+        process.exitCode = 1;
+        return;
+      }
+
       if (list && portsArg.length > 0) {
         process.stderr.write("error: do not pass ports together with --list\n");
         process.exitCode = 1;
@@ -66,6 +81,25 @@ async function main(): Promise<void> {
           process.stdout.write(`${line}\n`);
         }
         process.exitCode = exitCode;
+        return;
+      }
+
+      if (gui) {
+        let platform;
+        try {
+          platform = getSupportedPlatform();
+        } catch (e) {
+          if (e instanceof UnsupportedPlatformError) {
+            process.stderr.write(`${e.message}\n`);
+            process.exitCode = 1;
+            return;
+          }
+          throw e;
+        }
+        const { url, server } = await startGuiServer({ platform });
+        process.stdout.write(`portkill GUI: ${url}\n`);
+        process.stdout.write("Press Ctrl+C to stop.\n");
+        attachGuiShutdown(server);
         return;
       }
 

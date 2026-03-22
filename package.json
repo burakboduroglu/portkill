@@ -1,6 +1,6 @@
 {
   "name": "portkill",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Kill processes listening on given TCP ports (CLI)",
   "type": "module",
   "bin": {

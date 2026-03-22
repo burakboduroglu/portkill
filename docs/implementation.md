@@ -61,8 +61,10 @@ Windows is out of scope; `platform.ts` should error clearly on unsupported `proc
 
 ## GUI (v0.4+)
 
-- `src/gui/server.ts`: bind `127.0.0.1` only; static bundle + JSON endpoint.
-- Do **not** duplicate business logic; import `core/*`. Request/response shapes: [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) §HTTP API.
+- `src/gui/server.ts`: `127.0.0.1` HTTP server; `GET /`, `GET /api/listeners`, `POST /api/resolve`.
+- `src/gui/index-html.ts`: embedded single-page UI (no Vite bundle).
+- `src/gui/open-browser.ts`: `open` / `xdg-open`.
+- Reuses `runKill`, `listAllTcpListeners`, `parsePortArguments`. API shapes: [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) §7.
 
 ## Distribution (v0.3+)
 

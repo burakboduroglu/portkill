@@ -76,27 +76,35 @@ Raw stdout/stderr from these commands are not part of the persistent model; only
 
 ---
 
-## 7. HTTP API (planned — GUI, PRD §5.5)
+## 7. HTTP API (local GUI, v0.4+)
 
-Schemas below are **design** until v0.4; version with the implementation.
+Served only when running `portkill --gui`. Server binds **`127.0.0.1`** (random port unless fixed). No CORS needed (same origin).
 
-### 7.1 `POST /resolve` request
+### 7.1 `GET /api/listeners`
+
+| Response | Description |
+| --- | --- |
+| `{ ok: true, rows: TcpListenerRow[] }` | Same shape as `listAllTcpListeners` (`port`, `pid`, `commandName`). |
+| `{ ok: false, message: string }` | e.g. `lsof` missing. |
+
+### 7.2 `POST /api/resolve`
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `ports` | `number[]` | yes | Target ports. |
+| `tokens` | `string[]` | yes | Port args as strings (`"3000"`, `"3000-3005"`); parsed with `parsePortArguments`. |
 | `dryRun` | `boolean` | no | Default `false`. |
-| `force` | `boolean` | no | Meaningful when UI has no prompt; default `false`. |
+| `force` | `boolean` | no | Must be `true` for real kill from GUI (no TTY); UI confirms in browser first. |
 | `signal` | `string` | no | Default `SIGTERM`. |
 
-### 7.2 `POST /resolve` response
+### 7.3 `POST /api/resolve` response
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `results` | `PortOutcome[]` | One object per port, aligned with §4 (serialized). |
-| `exitCode` | `number` | Same aggregation as CLI (optional; UI can derive from `results`). |
+| `ok` | `boolean` | `true` on success path. |
+| `exitCode` | `number` | Same aggregation as CLI. |
+| `outcomes` | `PortOutcome[]` | One object per port (§4). |
 
-**Security:** Server should listen on `127.0.0.1` only; auth out of scope (local single-user assumption).
+**Security:** Loopback only; no auth (local single-user). Max JSON body 64 KiB.
 
 ---
 

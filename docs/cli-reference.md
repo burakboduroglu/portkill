@@ -21,6 +21,7 @@ Each argument is either a single TCP port (`3000`) or an **inclusive range** (`3
 | `--signal <SIG>` | `-s` | Signal (default: SIGTERM) |
 | `--verbose` | `-v` | Verbose stderr logs |
 | `--list` | `-l` | List all TCP listeners (uses `lsof`; do not pass ports) |
+| `--gui` | — | Open local web UI on `127.0.0.1` (do not pass ports or `--list`) |
 | `--version` | `-V`, `--version` | Print version |
 | `--help` | `-h` | Help |
 
@@ -50,4 +51,5 @@ portkill 3000-3002
 portkill 3000 --force
 portkill 3000 --dry-run
 portkill --list
+portkill --gui
 ```

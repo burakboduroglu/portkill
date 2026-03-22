@@ -44,8 +44,18 @@ portkill <port> [port2] ...
 portkill 3000-3005
 portkill 3000 8080 9000-9002 --dry-run
 portkill --list
+portkill --gui
 portkill 3000 --force
 ```
+
+### Web UI (`--gui`)
+
+```bash
+npm run build
+node dist/index.js --gui
+```
+
+Opens a page on **127.0.0.1** (ephemeral port printed in the terminal). Use **Ctrl+C** to stop. The browser may open automatically (macOS `open`, Linux `xdg-open`).
 
 Port arguments can be single numbers or **inclusive ranges** (`start-end`, max 4096 ports per range). Duplicates are removed while keeping order.
 
@@ -65,7 +75,7 @@ Colors use [chalk](https://github.com/chalk/chalk); set `NO_COLOR=1` to disable 
 | --- | --- |
 | `npm run build` | Bundle CLI with `tsup` |
 | `npm test` | `vitest run` |
-| `npm run test:coverage` | Vitest + v8 coverage (see thresholds in `vitest.config.ts`; `src/index.ts` and `src/types.ts` excluded) |
+| `npm run test:coverage` | Vitest + v8 coverage (see `vitest.config.ts`; excludes `src/index.ts`, `src/types.ts`, `src/gui/**`) |
 | `npm run lint` | ESLint |
 
 ## License

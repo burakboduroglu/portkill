@@ -49,7 +49,9 @@ type Phase =
   | { kind: "resolved"; outcome: PortOutcome }
   | { kind: "pendingKill"; port: number; processes: ListenerProcess[] };
 
-export async function runKill(opts: KillCommandOptions): Promise<{ exitCode: number; lines: string[] }> {
+export async function runKill(
+  opts: KillCommandOptions,
+): Promise<{ exitCode: number; lines: string[]; outcomes: PortOutcome[] }> {
   const signal = normalizeSignal(opts.signal);
   const phases: Phase[] = [];
 
@@ -80,14 +82,14 @@ export async function runKill(opts: KillCommandOptions): Promise<{ exitCode: num
   if (!opts.dryRun && pending.length > 0 && !opts.force) {
     if (!process.stdin.isTTY) {
       process.stderr.write("Not a TTY: use --force to kill without confirmation, or use --dry-run.\n");
-      return { exitCode: 1, lines: [] };
+      return { exitCode: 1, lines: [], outcomes: [] };
     }
     const lines = pending.map((p) => describe(p.port, p.processes));
     const summary = `Kill process(es)?\n${lines.map((l) => `  - ${l}`).join("\n")}\n`;
     const ok = await confirmKill(summary);
     if (!ok) {
       process.stderr.write("Aborted.\n");
-      return { exitCode: 1, lines: [] };
+      return { exitCode: 1, lines: [], outcomes: [] };
     }
   }
 
@@ -145,5 +147,5 @@ export async function runKill(opts: KillCommandOptions): Promise<{ exitCode: num
 
   const lines = outcomes.map(formatOutcomeLine);
   const exitCode = aggregateExitCode(outcomes);
-  return { exitCode, lines };
+  return { exitCode, lines, outcomes };
 }
