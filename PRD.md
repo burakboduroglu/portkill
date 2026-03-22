@@ -1,6 +1,6 @@
 # portkill — Product Requirements Document (PRD)
 
-**Version:** 0.4.0  
+**Version:** 0.4.x (see `package.json`; ships as `@burakboduroglu/portkill` on npm)  
 **Status:** Draft  
 **Date:** 2026-03-22
 
