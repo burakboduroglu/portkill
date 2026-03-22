@@ -40,8 +40,6 @@ No global install:
 npx @burakboduroglu/portkill --list
 ```
 
-**Homebrew:** not supported right now — use npm/npx above. (Homebrew does not install npm scoped packages as `brew install @scope/name`.)
-
 **From source**
 
 ```bash
@@ -124,7 +122,7 @@ Terminal colors use [chalk](https://github.com/chalk/chalk); set `NO_COLOR=1` to
 
 ## npm vs GitHub README
 
-This file is the **package readme on npm** ([`@burakboduroglu/portkill`](https://www.npmjs.com/package/@burakboduroglu/portkill)); it is shipped via `package.json` `"files"`. Extra docs (`docs/`, PRD, etc.) live only on [GitHub](https://github.com/burakboduroglu/portkill), so links below point there on purpose.
+This file is the **npm package readme** for [`@burakboduroglu/portkill`](https://www.npmjs.com/package/@burakboduroglu/portkill) (included via `package.json` `"files"`). **Distribution is npm only** (`npm i -g` / `npx`). Full source, `docs/`, and the PRD are on [GitHub](https://github.com/burakboduroglu/portkill); in-repo links use GitHub URLs so they work from the npm package page too.
 
 ---
 

@@ -31,7 +31,7 @@ GUI (PRD §5.5) only after CLI and `core/` are stable; call the same `finder`/`k
 ## 4. Release / distribution (PRD §7)
 
 - Align version with `package.json`; add changelog or release notes if needed.
-- npm publish and Homebrew formula SHA updates follow PRD steps.
+- npm publish follows PRD §7 and `docs/RELEASE.md`.
 
 ## 5. Short agent checklist
 

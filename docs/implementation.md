@@ -68,7 +68,7 @@ Windows is out of scope; `platform.ts` should error clearly on unsupported `proc
 
 ## Distribution (v0.3+)
 
-Publishing to **npm** (`npm publish`) as `@burakboduroglu/portkill`. Homebrew is not maintained in-repo; see [PRD.md](../PRD.md) §7 and [homebrew.md](./homebrew.md).
+Publishing to **npm** only (`npm publish`) as `@burakboduroglu/portkill`. See [PRD.md](../PRD.md) §7 and [RELEASE.md](./RELEASE.md).
 
 ## Related docs
 

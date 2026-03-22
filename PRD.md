@@ -8,7 +8,7 @@
 
 ## 1. Summary
 
-`portkill` is a CLI tool that terminates processes listening on given port(s) in a single command; an optional lightweight browser UI may be added later. It is aimed at developers who hit “port already in use” errors. It is written in TypeScript, runs on Node.js, and is distributed via **npm** (`@burakboduroglu/portkill`). Homebrew is not offered for now.
+`portkill` is a CLI tool that terminates processes listening on given port(s) in a single command; an optional lightweight browser UI may be added later. It is aimed at developers who hit “port already in use” errors. It is written in TypeScript, runs on Node.js, and is distributed only via **npm** as `@burakboduroglu/portkill`.
 
 ---
 
@@ -228,7 +228,7 @@ Detection uses `process.platform`; abstraction lives in `platform.ts`.
 
 ## 7. Distribution plan (npm)
 
-End-user installs ship through **npm** as `@burakboduroglu/portkill` (unscoped `portkill` is blocked on the registry as too similar to `port-kill`). **Homebrew / tap is not maintained** for now; see `docs/homebrew.md`.
+End-user installs ship through **npm** only, as `@burakboduroglu/portkill` (unscoped `portkill` is blocked on the registry as too similar to `port-kill`).
 
 ### 7.1 npm — `npm publish` and global install
 
@@ -268,7 +268,6 @@ End-user installs ship through **npm** as `@burakboduroglu/portkill` (unscoped `
 - [x] Port ranges: `portkill 3000-3005` (inclusive; max 4096 ports per range token)
 - [x] List listeners: `portkill --list`
 - [x] **npm:** Package layout for registry (`files`, `prepublishOnly`); install docs for `npm i -g` / `npx` (see §7.1; run `npm publish` when ready)
-- [ ] **Homebrew:** not offered; npm-only install (see `docs/homebrew.md`)
 
 ### v0.4.0 — Simple GUI
 
@@ -287,7 +286,6 @@ End-user installs ship through **npm** as `@burakboduroglu/portkill` (unscoped `
 | macOS + Linux compatibility | 100% |
 | Test coverage | ≥ 80% |
 | npm global / `npx` install | Documented; package published to registry |
-| Optional Homebrew later | Out of scope until revisited |
 
 ---
 
