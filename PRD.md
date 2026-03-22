@@ -190,19 +190,25 @@ sequenceDiagram
 ```
 portkill/
 ├── src/
-│   ├── index.ts          # CLI entry
+│   ├── index.ts              # CLI entry (commander), dispatches kill / list / GUI
+│   ├── types.ts              # Port outcomes, listener types (shared)
 │   ├── commands/
-│   │   └── kill.ts       # Main kill command
+│   │   ├── kill.ts           # Port kill flow: finder + killer, confirm, aggregate exit
+│   │   └── list.ts           # --list: all TCP listeners, formatted lines
 │   ├── core/
-│   │   ├── finder.ts     # Port → PID discovery
-│   │   └── killer.ts     # Process termination
-│   ├── gui/              # §5.5 local web UI
-│   │   ├── server.ts     # loopback HTTP + routes
-│   │   ├── index-html.ts # embedded page + client logic
+│   │   ├── finder.ts         # Port → listener PIDs / names (per-port)
+│   │   ├── killer.ts         # Send signal; permission vs other errors
+│   │   └── lister.ts         # Full TCP LISTEN table via lsof; parse rows
+│   ├── gui/                  # §5.5 local web UI
+│   │   ├── server.ts         # loopback HTTP + `/api/*`; uses kill + lister + parse-ports
+│   │   ├── index-html.ts     # embedded single-page UI
 │   │   └── open-browser.ts
 │   └── utils/
-│       ├── output.ts     # Terminal formatting
-│       └── platform.ts   # macOS / Linux detection
+│       ├── parse-ports.ts    # Positional ports + inclusive ranges
+│       ├── platform.ts       # darwin / linux; build shell commands
+│       ├── output.ts         # PRD-style outcome lines for kill flow
+│       ├── exit-code.ts      # Aggregate exit code from port outcomes
+│       └── style.ts          # chalk helpers (list rows, errors)
 ├── tests/
 │   ├── finder.test.ts
 │   ├── killer.test.ts
@@ -215,10 +221,13 @@ portkill/
 │   ├── output.test.ts
 │   ├── exit-code.test.ts
 │   └── gui-server.test.ts
-├── dist/                 # build output (gitignored)
+├── scripts/
+│   └── assert-version-not-published.mjs   # prepublishOnly registry version check
+├── dist/                   # build output (gitignored)
 ├── package.json
 ├── tsconfig.json
 ├── tsup.config.ts
+├── eslint.config.js
 └── README.md
 ```
 

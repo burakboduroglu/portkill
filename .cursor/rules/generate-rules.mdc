@@ -12,7 +12,7 @@ alwaysApply: true
 ## Stack and layout
 
 - **Stack:** TypeScript, Node.js ≥ 18, `commander`, `tsup`, `vitest`, ESLint + Prettier.
-- **Paths:** `src/index.ts` (CLI entry), `src/commands/kill.ts`, `src/core/finder.ts`, `src/core/killer.ts`, `src/utils/output.ts`, `src/utils/platform.ts`. GUI (shipped): PRD §5.5 / `src/gui/`.
+- **Paths:** See [PRD.md](PRD.md) §6.2 — `src/index.ts`, `src/types.ts`, `src/commands/kill.ts`, `src/commands/list.ts`, `src/core/{finder,killer,lister}.ts`, `src/utils/{parse-ports,platform,output,exit-code,style}.ts`, `src/gui/` (§5.5).
 - **Platforms:** macOS and Linux only; no Windows. Port→PID logic lives in `platform.ts`; macOS uses `lsof`, Linux `fuser` or `/proc/net/tcp`.
 
 ## CLI contract (PRD §5)

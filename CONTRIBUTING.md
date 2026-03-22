@@ -87,7 +87,7 @@ Maintainers will review when they can. Please keep feedback discussions respectf
 ### Do
 
 - Keep changes **focused** on one concern per PR when possible
-- Match existing **TypeScript style** and module layout (`src/commands`, `src/core`, `src/gui`, …)
+- Match existing **TypeScript style** and layout in [PRD.md](PRD.md) §6.2 (`src/commands`, `src/core`, `src/utils`, `src/gui`, `src/types.ts`)
 - Preserve **backward compatibility** for CLI flags and exit codes unless the PRD is updated intentionally
 
 ### Don’t

@@ -1,47 +1,74 @@
 # portkill — Implementation guide
 
-Describes the architecture and data flow aligned with [PRD.md](../PRD.md): CLI, shared core, and GUI.
+Describes the architecture and data flow aligned with [PRD.md](../PRD.md): CLI, shared core, and GUI. Layout matches **§6.2** in the PRD.
 
 ## Goal
 
-Find processes listening on the given TCP port(s) and terminate them; stdout and exit codes must match PRD §5.
+Find processes listening on the given TCP port(s) and terminate them; stdout and exit codes must match PRD §5. **`--list`** and **`--gui`** reuse the same core and utilities where possible.
 
 ## Layers
 
 ```mermaid
-flowchart LR
+flowchart TB
   CLI[index.ts + commander]
-  CMD[commands/kill.ts]
+  KILL[commands/kill.ts]
+  LIST[commands/list.ts]
+  GUI[gui/server.ts]
+  PARSE[utils/parse-ports.ts]
+  FIND[core/finder.ts]
+  LISTER[core/lister.ts]
+  KILLER[core/killer.ts]
   OUT[utils/output.ts]
   PLAT[utils/platform.ts]
-  FIND[core/finder.ts]
-  KILL[core/killer.ts]
+  AGG[utils/exit-code.ts]
+  STY[utils/style.ts]
 
-  CLI --> CMD
-  CMD --> FIND
-  CMD --> KILL
-  CMD --> OUT
+  CLI --> KILL
+  CLI --> LIST
+  CLI --> GUI
+  CLI --> PARSE
+  KILL --> FIND
+  KILL --> KILLER
+  KILL --> OUT
+  KILL --> AGG
+  LIST --> LISTER
+  LIST --> STY
   FIND --> PLAT
-  KILL --> PLAT
+  KILLER --> PLAT
+  LISTER --> PLAT
+  GUI --> KILL
+  GUI --> LISTER
+  GUI --> PARSE
 ```
 
 | Module | Responsibility |
 | --- | --- |
-| `index.ts` | `commander` setup, global flags, `process.exitCode` / PRD exit codes. |
-| `utils/parse-ports.ts` | Expand positional args: single ports and inclusive ranges (`3000-3005`). |
-| `commands/kill.ts` | Validate ports; `--dry-run` / confirm / `--force`; call `finder` + `killer` per port; aggregate exit code. |
-| `core/finder.ts` | Listeners per port: PID(s), command name when available; parse shell output here or via `platform`. |
+| `index.ts` | `commander` setup, global flags, routes `--list` / `--gui` vs default kill action, `process.exitCode`. |
+| `types.ts` | `PortOutcome`, `ListenerProcess` — shared between kill flow and tests. |
+| `utils/parse-ports.ts` | Expand positional args: single ports and inclusive ranges (`3000-3005`); used by CLI and GUI. |
+| `commands/kill.ts` | Per-port `finder` + optional `killer`; `--dry-run` / confirm / `--force`; `aggregateExitCode` from outcomes. |
+| `commands/list.ts` | `--list`: `listAllTcpListeners`, styled table lines via `style`. |
+| `core/finder.ts` | Listeners for one port: PID(s), command name; shell output parsing. |
 | `core/killer.ts` | Send signal (`process.kill`); distinguish EPERM vs other errors. |
-| `utils/platform.ts` | `process.platform`; macOS `lsof`, Linux `fuser` or `/proc/net/tcp`; build command lines. |
-| `utils/output.ts` | PRD §5.2 one-line messages; `--verbose` extras; chalk when stderr is a TTY (`NO_COLOR` respected). |
+| `core/lister.ts` | All TCP LISTEN rows (`lsof`); parse lines for `--list` and GUI. |
+| `utils/platform.ts` | `process.platform`; macOS `lsof`, Linux `fuser` or `/proc/net/tcp`; command builders. |
+| `utils/output.ts` | PRD §5.2 one-line messages for kill outcomes; `formatOutcomeLine`. |
+| `utils/exit-code.ts` | `aggregateExitCode` from `PortOutcome[]` (permission > error > all-not-found > success). |
+| `utils/style.ts` | Chalk wrappers for list rows and errors (`NO_COLOR` / TTY via chalk). |
 
 ## Data flow (summary)
 
-1. CLI parses positional ports (invalid → exit `1`).
+### Default (kill) path
+
+1. CLI parses positional ports via `parsePortArguments` (invalid → exit `1`).
 2. Per port, `finder`: none → **not_found**; else PID list + name.
 3. `--dry-run`: no signals; show what would happen (PRD-style lines).
 4. Otherwise, if not `--force`, interactive confirm (stdin TTY check); then `killer` with SIGTERM (or `--signal`).
-5. After all ports: any **permission denied** → exit `3`; all ports empty → exit `2`; success → `0`.
+5. After all ports: `aggregateExitCode` — any **permission denied** → exit `3`; all ports empty → exit `2`; success → `0`.
+
+### `--list` path
+
+1. `listAllTcpListeners(platform)`; on success print styled rows or “no listeners”.
 
 See [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) for fields and outcome kinds.
 
@@ -56,12 +83,13 @@ Windows is out of scope; `platform.ts` should error clearly on unsupported `proc
 
 ## Testing
 
-- `finder` / `killer`: unit tests with mocked `child_process` or a small runner interface (Vitest).
-- Optional integration: temporary listener (`node -e` + `http.createServer`) for real-port dry-run/kill — can be flaky in CI; keep optional.
+- `finder` / `killer` / `lister`: unit tests with mocked `child_process` or injectable `execFile` (Vitest).
+- Commands and GUI: integration-style tests under `tests/` (see PRD §6.2 file list).
+- Optional: temporary listener (`node -e` + `http.createServer`) for real-port dry-run/kill — can be flaky in CI; keep optional.
 
 ## GUI
 
-- `src/gui/server.ts`: `127.0.0.1` HTTP server; `GET /`, `GET /api/listeners`, `POST /api/resolve`.
+- `src/gui/server.ts`: loopback HTTP; `GET /`, `GET /api/listeners`, `POST /api/resolve`.
 - `src/gui/index-html.ts`: embedded single-page UI (no Vite bundle).
 - `src/gui/open-browser.ts`: `open` / `xdg-open`.
 - Reuses `runKill`, `listAllTcpListeners`, `parsePortArguments`. API shapes: [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) §7.

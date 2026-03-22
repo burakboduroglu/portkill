@@ -12,16 +12,18 @@ Use together with [generate-rules.mdc](.cursor/rules/generate-rules.mdc) for sty
 - Confirm scope in [PRD.md](PRD.md); if missing or unclear, update the PRD, then implement.
 - Exit codes, stdout lines, and flag behavior must stay consistent with PRD §5.
 
-## 2. Suggested implementation order
+## 2. Suggested implementation order (greenfield mental model)
 
-1. **`src/utils/platform.ts`** — `darwin` / `linux` and commands used for port→PID.
-2. **`src/core/finder.ts`** — PID(s) per port and optional process name; typed, testable errors.
-3. **`src/core/killer.ts`** — Send signal; map permission errors to exit `3`.
-4. **`src/utils/output.ts`** — PRD one-line formats.
-5. **`src/commands/kill.ts` + `src/index.ts`** — `commander` args and aggregated exit code.
-6. **Tests** — `tests/finder.test.ts`, `tests/killer.test.ts`; mock shell output.
+Current tree: [PRD.md](PRD.md) §6.2 and [docs/implementation.md](docs/implementation.md).
 
-GUI (PRD §5.5) only after CLI and `core/` are stable; call the same `finder`/`killer` APIs.
+1. **`src/utils/platform.ts`** — `darwin` / `linux` and shell commands for port→PID and `lsof` LISTEN.
+2. **`src/core/finder.ts`** / **`src/core/killer.ts`** — per-port discovery and signals.
+3. **`src/utils/output.ts`**, **`src/utils/exit-code.ts`**, **`src/types.ts`** — outcome lines and aggregation.
+4. **`src/utils/parse-ports.ts`** — positional ports and ranges (CLI + GUI).
+5. **`src/commands/kill.ts` + `src/index.ts`** — default kill flow and `commander` wiring.
+6. **`src/core/lister.ts` + `src/commands/list.ts` + `src/utils/style.ts`** — `--list` output.
+7. **`src/gui/`** (PRD §5.5) — reuse `runKill`, `listAllTcpListeners`, `parsePortArguments`.
+8. **Tests** — mirror modules under `tests/` (see PRD §6.2); mock shell/`execFile` where needed.
 
 ## 3. Validation (once the project builds)
 
