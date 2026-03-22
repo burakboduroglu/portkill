@@ -1,25 +1,25 @@
-# CLI referansı
+# CLI reference
 
-Özet: [PRD.md](../PRD.md) §5 ile aynıdır; hızlı arama için burada toplanmıştır.
+Same as [PRD.md](../PRD.md) §5; duplicated here for quick lookup.
 
-## Kullanım
+## Usage
 
 ```bash
 portkill <port> [port2] [port3] ...
 ```
 
-## Seçenekler
+## Options
 
-| Uzun | Kısa | Açıklama |
+| Long | Short | Description |
 | --- | --- | --- |
-| `--force` | `-f` | Onay sormadan sonlandır |
-| `--dry-run` | `-n` | Süreçleri göster, sonlandırma |
-| `--signal <SIG>` | `-s` | Sinyal (varsayılan: SIGTERM); v0.2+ |
-| `--verbose` | `-v` | Ayrıntılı çıktı |
-| `--version` | — | Sürüm |
-| `--help` | `-h` | Yardım |
+| `--force` | `-f` | Kill without confirmation |
+| `--dry-run` | `-n` | Show targets only; do not send signals |
+| `--signal <SIG>` | `-s` | Signal (default: SIGTERM) |
+| `--verbose` | `-v` | Verbose stderr logs |
+| `--version` | `-V`, `--version` | Print version |
+| `--help` | `-h` | Help |
 
-## Çıktı örnekleri
+## Sample output
 
 ```
 ✔ Port 3000 → killed (node, PID 12345)
@@ -27,16 +27,16 @@ portkill <port> [port2] [port3] ...
 ✖ Port 5432 → permission denied (try with sudo)
 ```
 
-## Çıkış kodları
+## Exit codes
 
-| Kod | Anlam |
+| Code | Meaning |
 | --- | --- |
-| `0` | Tüm portlar işlendi (başarılı akış) |
-| `1` | Genel hata (geçersiz argüman, beklenmeyen hata) |
-| `2` | İstenen portlarda hiçbir süreç bulunamadı |
-| `3` | İzin hatası (ör. başkasının süreci, düşük port) |
+| `0` | All ports handled successfully |
+| `1` | General error (invalid args, unexpected failure) |
+| `2` | No process found on any requested port |
+| `3` | Permission denied (e.g. another user’s process, privileged port) |
 
-## Örnekler
+## Examples
 
 ```bash
 portkill 3000

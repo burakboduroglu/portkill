@@ -1,33 +1,33 @@
 ---
-description: Portkill PRD uyumu, CLI sözleşmesi ve yeni Cursor kuralları (.mdc) üretirken izlenecek ilkeler
+description: Portkill PRD alignment, CLI contract, and principles for adding new Cursor rules (.mdc)
 alwaysApply: true
 ---
 
-# portkill — üretim ve kural ilkeleri
+# portkill — engineering and rule guidelines
 
-## Kaynak
+## Source of truth
 
-- Ürün davranışı ve mimari için [PRD.md](PRD.md) tek doğruluk kaynağıdır; çelişki varsa önce PRD güncellenir, sonra kod.
+- Product behavior and architecture: [PRD.md](PRD.md). If code and PRD disagree, update the PRD first, then the code.
 
-## Teknoloji ve yapı
+## Stack and layout
 
 - **Stack:** TypeScript, Node.js ≥ 18, `commander`, `tsup`, `vitest`, ESLint + Prettier.
-- **Dizinler:** `src/index.ts` (CLI girişi), `src/commands/kill.ts`, `src/core/finder.ts`, `src/core/killer.ts`, `src/utils/output.ts`, `src/utils/platform.ts`. Opsiyonel GUI: PRD §5.5 / `src/gui/`.
-- **Platform:** macOS ve Linux; Windows yok. Port→PID soyutlaması `platform.ts` içinde; macOS `lsof`, Linux `fuser` veya `/proc/net/tcp`.
+- **Paths:** `src/index.ts` (CLI entry), `src/commands/kill.ts`, `src/core/finder.ts`, `src/core/killer.ts`, `src/utils/output.ts`, `src/utils/platform.ts`. Optional GUI: PRD §5.5 / `src/gui/`.
+- **Platforms:** macOS and Linux only; no Windows. Port→PID logic lives in `platform.ts`; macOS uses `lsof`, Linux `fuser` or `/proc/net/tcp`.
 
-## CLI sözleşmesi (PRD §5)
+## CLI contract (PRD §5)
 
-- **Çıktı satırları:** başarı `✔ Port <p> → killed (name, PID …)`; boş port `ℹ Port <p> → no process found`; izin `✖ Port <p> → permission denied (try with sudo)`.
-- **Exit kodları:** `0` tamamlandı; `1` genel hata; `2` hiçbir portta process yok; `3` permission denied.
-- **Flag’ler:** `--force` / `-f`, `--dry-run` / `-n`, `--signal` / `-s` (varsayılan SIGTERM), `--verbose` / `-v`, `--version`, `--help` / `-h`.
+- **Lines:** success `✔ Port <p> → killed (name, PID …)`; empty `ℹ Port <p> → no process found`; permission `✖ Port <p> → permission denied (try with sudo)`.
+- **Exit codes:** `0` done; `1` general error; `2` no process on any port; `3` permission denied.
+- **Flags:** `--force` / `-f`, `--dry-run` / `-n`, `--signal` / `-s` (default SIGTERM), `--verbose` / `-v`, `--version`, `--help` / `-h`.
 
-## Kod stili
+## Code style
 
-- `core/` yan etkisiz ve test edilebilir tut; shell/`child_process` sınırlarını net ayır.
-- Gereksiz refactor, alakasız dosya ve PRD’de olmayan özellik ekleme.
+- Keep `core/` testable and isolate shell/`child_process` at clear boundaries.
+- No drive-by refactors, unrelated files, or features not in the PRD.
 
-## Yeni `.cursor/rules/*.mdc` eklerken
+## Adding new `.cursor/rules/*.mdc` files
 
-- YAML frontmatter: `description` zorunlu; dosya türüne göre `globs` **veya** `alwaysApply: true`.
-- Tek konu, kısa (tercihen ~50 satır civarı); somut örnek ver.
-- Bu dosyayı kopyalayıp genişletmek yerine konuya özel isim kullan (örn. `portkill-tests.mdc`).
+- YAML frontmatter: required `description`; either `globs` **or** `alwaysApply: true`.
+- One topic per file, keep it short (~50 lines when possible); include concrete examples.
+- Prefer a specific name (e.g. `portkill-tests.mdc`) instead of copying this file wholesale.

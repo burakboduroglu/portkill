@@ -1,111 +1,111 @@
 # DATA_DICTIONARY — portkill
 
-Bu dosya uygulama genelinde kullanılan kavramları, alanları ve (planlı) API yüklerini tek yerde tanımlar. PRD: [PRD.md](./PRD.md).
+This document defines concepts, fields, and (planned) API payloads used across the app. PRD: [PRD.md](./PRD.md).
 
 ---
 
-## 1. CLI girdileri
+## 1. CLI inputs
 
-| Alan | Tip | Doğrulama | Açıklama |
+| Field | Type | Validation | Description |
 | --- | --- | --- | --- |
-| `ports` | `number[]` | Her eleman 1–65535 arası tam sayı | Pozisyonel argümanlar; en az bir port gerekir (yardım/version hariç). |
+| `ports` | `number[]` | Each value integer 1–65535 | Positional arguments; at least one port required (except `--help` / `--version`). |
 | `force` | `boolean` | — | `--force` / `-f`. |
 | `dryRun` | `boolean` | — | `--dry-run` / `-n`. |
-| `signal` | `string` | Node/OS tarafından tanınan sinyal adı veya numarası | `--signal` / `-s`; varsayılan `SIGTERM`. |
+| `signal` | `string` | Signal name or number accepted by Node/OS | `--signal` / `-s`; default `SIGTERM`. |
 | `verbose` | `boolean` | — | `--verbose` / `-v`. |
 
 ---
 
 ## 2. Platform
 
-| Alan | Tip | Değerler | Açıklama |
+| Field | Type | Values | Description |
 | --- | --- | --- | --- |
-| `platformId` | `string` | `darwin`, `linux` | `process.platform`; diğer değerler desteklenmez (açık hata). |
+| `platformId` | `string` | `darwin`, `linux` | From `process.platform`; other values unsupported (clear error). |
 
 ---
 
-## 3. Süreç / port tespiti (iç model)
+## 3. Process / port discovery (internal model)
 
-| Alan | Tip | Açıklama |
+| Field | Type | Description |
 | --- | --- | --- |
-| `port` | `number` | Hedef TCP portu. |
-| `pid` | `number` | Süreç kimliği; aynı portta birden fazla dinleyici olabilir (liste). |
-| `commandName` | `string \| null` | Varsa kısa komut adı (örn. `node`); `lsof`/`ps` çıktısından türetilir. |
+| `port` | `number` | Target TCP port. |
+| `pid` | `number` | Process ID; multiple listeners on one port possible (list). |
+| `commandName` | `string \| null` | Short command name if known (e.g. `node`), derived from `lsof`/`ps`. |
 
-**Not:** Birden fazla PID aynı portta dönerse, PRD çıktısı veya implementasyon tek satırda birleştirebilir veya satır başına bir süreç yazabilir; tercih kodda sabitlenmeli ve testle korunmalıdır.
+**Note:** If multiple PIDs share a port, the PRD line format may collapse to one line or one line per process; pick one behavior in code and cover with tests.
 
 ---
 
-## 4. Port işlem sonucu (`PortOutcome`)
+## 4. Per-port outcome (`PortOutcome`)
 
-Tek bir port için makine tarafında kullanılacak sonuç ayrımı (önerilen isimlendirme):
+Suggested machine-facing discriminant for one port:
 
-| `kind` | Anlam | CLI çıktısı (PRD §5.2) | Exit katkısı |
+| `kind` | Meaning | CLI line (PRD §5.2) | Exit contribution |
 | --- | --- | --- | --- |
-| `killed` | Sonlandırma denemesi başarılı | `✔ Port … → killed (name, PID …)` | Başarı |
-| `dryRunWouldKill` | Dry-run; süreç vardı | Aynı bilgi + öldürülmedi (metin implementasyonda netleşir) | Başarı |
-| `notFound` | Dinleyen süreç yok | `ℹ Port … → no process found` | Toplu `2` için sayım |
-| `permissionDenied` | `kill` / EPERM vb. | `✖ Port … → permission denied (try with sudo)` | `3` |
-| `error` | Beklenmeyen hata | Uygun hata mesajı | `1` |
+| `killed` | Kill succeeded | `✔ Port … → killed (name, PID …)` | Success |
+| `dryRunWouldKill` | Dry-run; process existed | Same info, no signal sent (wording in implementation) | Success |
+| `notFound` | No listener | `ℹ Port … → no process found` | Count toward `2` |
+| `permissionDenied` | `kill` / EPERM, etc. | `✖ Port … → permission denied (try with sudo)` | `3` |
+| `error` | Unexpected failure | Appropriate error line | `1` |
 
-İlişkili alanlar (opsiyonel): `pids`, `commandName`, `message` (verbose veya hata detayı).
+Optional extra fields: `pids`, `commandName`, `message` (verbose or error detail).
 
 ---
 
-## 5. Çıkış kodu (`ExitCode`)
+## 5. Exit code (`ExitCode`)
 
-| Sabit | Değer | Koşul (PRD §5.4) |
+| Constant | Value | Condition (PRD §5.4) |
 | --- | --- | --- |
-| `SUCCESS` | `0` | İş akışı tamamlandı; tüm portlar “işlendi” (not_found dahil PRD tanımına göre). |
-| `GENERAL_ERROR` | `1` | Geçersiz argüman, iç hata, bilinmeyen hata. |
-| `NO_PROCESS_FOUND` | `2` | Hiçbir portta süreç bulunamadı (PRD: tüm portlar boş). |
-| `PERMISSION_DENIED` | `3` | En az bir portta izin hatası. |
+| `SUCCESS` | `0` | Run finished; all ports handled per PRD. |
+| `GENERAL_ERROR` | `1` | Invalid args, internal error, unknown failure. |
+| `NO_PROCESS_FOUND` | `2` | No process on any requested port (all empty). |
+| `PERMISSION_DENIED` | `3` | At least one permission error. |
 
-**Toplama kuralı (öneri):** Öncelik `3` > `1` > `2` > `0`; birden fazla portta farklı sonuçlar varsa en kötü kod kazanır (PRD netleştirilene kadar uygulama README’sinde sabitlenmeli).
+**Aggregation (recommended):** Priority `3` > `1` > `2` > `0`; when ports differ, the worst code wins (document the rule in README until PRD spells it out).
 
 ---
 
-## 6. Dış komut arayüzleri (referans)
+## 6. External command interfaces (reference)
 
-| Platform | Komut | Beklenen kullanım |
+| Platform | Command | Expected use |
 | --- | --- | --- |
-| macOS | `lsof -ti tcp:<port>` | PID listesi (stdout, satır satır). |
-| Linux | `fuser -n tcp <port> 2>/dev/null` veya eşdeğeri | PID listesi; dağıtıma göre parse. |
+| macOS | `lsof -ti tcp:<port>` | PID list on stdout, one per line. |
+| Linux | `fuser -n tcp <port> 2>/dev/null` or equivalent | PID list; parse per distro. |
 
-Bu komutların ham stdout/stderr alanları kalıcı veri modeli değildir; yalnızca `finder` içinde ayrıştırılır.
+Raw stdout/stderr from these commands are not part of the persistent model; only `finder` parses them.
 
 ---
 
-## 7. HTTP API (planlı — GUI, PRD §5.5)
+## 7. HTTP API (planned — GUI, PRD §5.5)
 
-Aşağıdaki şemalar v0.4 öncesi **tasarım**dır; uygulama ile birlikte sürümlenmelidir.
+Schemas below are **design** until v0.4; version with the implementation.
 
-### 7.1 `POST /resolve` isteği
+### 7.1 `POST /resolve` request
 
-| Alan | Tip | Zorunlu | Açıklama |
+| Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `ports` | `number[]` | evet | Hedef portlar. |
-| `dryRun` | `boolean` | hayır | Varsayılan `false`. |
-| `force` | `boolean` | hayır | GUI’de onay yoksa anlamlı; varsayılan `false`. |
-| `signal` | `string` | hayır | Varsayılan `SIGTERM`. |
+| `ports` | `number[]` | yes | Target ports. |
+| `dryRun` | `boolean` | no | Default `false`. |
+| `force` | `boolean` | no | Meaningful when UI has no prompt; default `false`. |
+| `signal` | `string` | no | Default `SIGTERM`. |
 
-### 7.2 `POST /resolve` yanıtı
+### 7.2 `POST /resolve` response
 
-| Alan | Tip | Açıklama |
+| Field | Type | Description |
 | --- | --- | --- |
-| `results` | `PortOutcome[]` | Her port için §4 ile uyumlu nesne (serialize edilmiş). |
-| `exitCode` | `number` | CLI ile aynı toplama kuralı (isteğe bağlı; UI sadece `results` ile de çizebilir). |
+| `results` | `PortOutcome[]` | One object per port, aligned with §4 (serialized). |
+| `exitCode` | `number` | Same aggregation as CLI (optional; UI can derive from `results`). |
 
-**Güvenlik:** Sunucu yalnızca `127.0.0.1` üzerinde dinlemeli; kimlik doğrulama PRD kapsamı dışında tutulabilir (yerel tek kullanıcı varsayımı).
+**Security:** Server should listen on `127.0.0.1` only; auth out of scope (local single-user assumption).
 
 ---
 
-## 8. Sürümleme
+## 8. Versioning
 
-| Alan | Konum | Açıklama |
+| Field | Location | Description |
 | --- | --- | --- |
-| `version` | `package.json` | `--version` çıktısı; npm/Homebrew ile hizalı. |
+| `version` | `package.json` | `--version` output; aligned with npm/Homebrew. |
 
 ---
 
-*Son güncelleme: PRD 0.1.0 (2026-03-22) ile uyumlu.*
+*Last aligned with PRD 0.1.0 (2026-03-22).*

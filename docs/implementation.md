@@ -1,12 +1,12 @@
-# portkill — Uygulama rehberi
+# portkill — Implementation guide
 
-Bu belge [PRD.md](../PRD.md) ile hizalı hedef mimariyi ve uygulama sırasını açıklar. Kaynak kod henüz yoksa bile modül sınırları ve veri akışı buradan takip edilir.
+Describes the **target** architecture and implementation order aligned with [PRD.md](../PRD.md). Use this for module boundaries and data flow even before all code exists.
 
-## Amaç
+## Goal
 
-Verilen TCP port(lar)ında dinleyen süreçleri bulup sonlandırmak; çıktı ve çıkış kodları PRD §5 ile birebir uyumlu olmalıdır.
+Find processes listening on the given TCP port(s) and terminate them; stdout and exit codes must match PRD §5.
 
-## Katmanlar
+## Layers
 
 ```mermaid
 flowchart LR
@@ -25,46 +25,46 @@ flowchart LR
   KILL --> PLAT
 ```
 
-| Modül | Sorumluluk |
+| Module | Responsibility |
 | --- | --- |
-| `index.ts` | `commander` kurulumu, global flag’ler, `process.exit` ile PRD exit kodları. |
-| `commands/kill.ts` | Port listesini doğrula; `--dry-run` / onay / `--force` akışını yönet; her port için `finder` + `killer` çağır; toplu exit kodu hesapla. |
-| `core/finder.ts` | Port başına dinleyen süreç(ler): PID, mümkünse komut adı. Shell çıktısını ayrıştırma burada veya `platform` yardımıyla. |
-| `core/killer.ts` | PID’ye sinyal gönderme (`kill` / `process.kill`); EPERM vs diğer hataları ayırt et. |
-| `utils/platform.ts` | `process.platform`; macOS için `lsof`, Linux için `fuser` veya `/proc/net/tcp` stratejisi; komut satırlarını üretme. |
-| `utils/output.ts` | PRD §5.2 tek satırlık mesajlar; `--verbose` ek detay; isteğe bağlı renk (PRD v0.2 chalk). |
+| `index.ts` | `commander` setup, global flags, `process.exitCode` / PRD exit codes. |
+| `commands/kill.ts` | Validate ports; `--dry-run` / confirm / `--force`; call `finder` + `killer` per port; aggregate exit code. |
+| `core/finder.ts` | Listeners per port: PID(s), command name when available; parse shell output here or via `platform`. |
+| `core/killer.ts` | Send signal (`process.kill`); distinguish EPERM vs other errors. |
+| `utils/platform.ts` | `process.platform`; macOS `lsof`, Linux `fuser` or `/proc/net/tcp`; build command lines. |
+| `utils/output.ts` | PRD §5.2 one-line messages; `--verbose` extras; optional color (PRD v0.2 chalk). |
 
-## Veri akışı (özet)
+## Data flow (summary)
 
-1. CLI, pozisyonel port argümanlarını sayıya çevirir (geçersiz → genel hata, exit `1`).
-2. Her port için `finder` çağrılır: süreç yoksa sonuç **not_found**; varsa PID listesi + isim.
-3. `--dry-run`: öldürme yapılmaz; kullanıcıya ne yapılacağı gösterilir (PRD çıktı biçimi).
-4. Aksi halde `--force` yoksa etkileşimli onay (stdin TTY kontrolü); sonra `killer` SIGTERM (veya `--signal`).
-5. Tüm portlar işlendikten sonra: en az bir **permission denied** → exit `3`; hiçbirinde süreç yok ve bu tek başarısızlık senaryosuysa PRD’ye göre exit `2`; tam başarı → `0`.
+1. CLI parses positional ports (invalid → exit `1`).
+2. Per port, `finder`: none → **not_found**; else PID list + name.
+3. `--dry-run`: no signals; show what would happen (PRD-style lines).
+4. Otherwise, if not `--force`, interactive confirm (stdin TTY check); then `killer` with SIGTERM (or `--signal`).
+5. After all ports: any **permission denied** → exit `3`; all ports empty → exit `2`; success → `0`.
 
-Ayrıntılı alanlar ve sonuç türleri için [DATA_DICTIONARY.md](../DATA_DICTIONARY.md).
+See [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) for fields and outcome kinds.
 
-## Platform uygulaması
+## Platform implementation
 
-| OS | Tespit | Not |
+| OS | Detection | Notes |
 | --- | --- | --- |
-| `darwin` | `lsof -ti tcp:<port>` (+ gerekirse `-sTCP:LISTEN`) | Çıktı: satır başına PID. |
-| `linux` | Öncelik `fuser -n tcp <port>` veya `/proc/net/tcp` ile inode→PID | `fuser` dağıtımda yoksa yedek yol. |
+| `darwin` | `lsof` with TCP + LISTEN | One PID per line in machine-friendly mode or parse table. |
+| `linux` | Prefer `lsof`; else `fuser` or `/proc/net/tcp` inode → PID | Fallback when `fuser` or `lsof` missing. |
 
-Windows kapsam dışı; `platform.ts` açıkça desteklenmeyen platformda anlamlı hata verir.
+Windows is out of scope; `platform.ts` should error clearly on unsupported `process.platform`.
 
-## Test stratejisi
+## Testing
 
-- `finder` / `killer`: `child_process.exec` veya küçük bir “runner” arayüzü mock’lanarak birim test (Vitest).
-- Entegrasyon: mümkünse geçici dinleyici (ör. `node -e` ile `http.createServer`) açıp gerçek portta dry-run ve kill senaryosu — CI’de flaky olabilir; isteğe bağlı script.
+- `finder` / `killer`: unit tests with mocked `child_process` or a small runner interface (Vitest).
+- Optional integration: temporary listener (`node -e` + `http.createServer`) for real-port dry-run/kill — can be flaky in CI; keep optional.
 
 ## GUI (v0.4+)
 
-- `src/gui/server.ts`: yalnızca `127.0.0.1`, statik bundle + JSON endpoint.
-- İş mantığı **paylaşılmaz** kopyalanmaz; `core/*` import edilir. İstek/yanıt şeması [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) §HTTP API.
+- `src/gui/server.ts`: bind `127.0.0.1` only; static bundle + JSON endpoint.
+- Do **not** duplicate business logic; import `core/*`. Request/response shapes: [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) §HTTP API.
 
-## İlgili belgeler
+## Related docs
 
-- [PRD.md](../PRD.md) — ürün ve CLI sözleşmesi
-- [cli-reference.md](./cli-reference.md) — komut satırı özeti
-- [.cursor/rules/workflow.mdc](../.cursor/rules/workflow.mdc) — geliştirme sırası
+- [PRD.md](../PRD.md) — product and CLI contract
+- [cli-reference.md](./cli-reference.md) — CLI cheat sheet
+- [.cursor/rules/workflow.mdc](../.cursor/rules/workflow.mdc) — implementation order

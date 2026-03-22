@@ -1,151 +1,151 @@
-# portkill — Ürün gereksinim belgesi (PRD)
+# portkill — Product Requirements Document (PRD)
 
-**Versiyon:** 0.1.0  
-**Durum:** Draft  
-**Tarih:** 2026-03-22
+**Version:** 0.1.0  
+**Status:** Draft  
+**Date:** 2026-03-22
 
 ---
 
-## 1. Özet
+## 1. Summary
 
-`portkill`, belirtilen port(lar)ı dinleyen process'leri tek komutla sonlandıran bir CLI aracıdır; isteğe bağlı olarak çok hafif bir tarayıcı arayüzü de sunulabilir. "Port already in use" hatasıyla karşılaşan her developer'ın hayatını kolaylaştırmak için tasarlanmıştır. TypeScript ile yazılır, Node.js üzerinde çalışır ve Homebrew üzerinden dağıtılır.
+`portkill` is a CLI tool that terminates processes listening on given port(s) in a single command; an optional lightweight browser UI may be added later. It is aimed at developers who hit “port already in use” errors. It is written in TypeScript, runs on Node.js, and is distributed via Homebrew.
 
 ---
 
 ## 2. Problem
 
-Lokal geliştirme ortamında çalışan her developer şu senaryoyla karşılaşır:
+Every developer working locally eventually sees:
 
 ```
 Error: listen EADDRINUSE: address already in use :::3000
 ```
 
-Mevcut çözümler aşağıdaki nedenlerle yetersizdir:
+Existing approaches fall short because:
 
-- `lsof -ti:3000 | xargs kill -9` — Ezberlemesi zor, yazması yavaş
-- `fuser -k 3000/tcp` — macOS'ta varsayılan olarak gelmiyor
-- Activity Monitor / Task Manager — Çok fazla adım, terminal flow'unu kiriyor
-- Manuel PID bulma — `lsof`, `ps`, `kill` üçlüsü gereksiz yük
-
----
-
-## 3. Hedef Kullanıcı
-
-- Lokal geliştirme yapan her seviyeden yazılım geliştirici
-- macOS ve Linux kullananlar (birincil hedef: macOS + Homebrew kullanıcıları)
-- Terminal-first workflow tercih edenler
+- `lsof -ti:3000 | xargs kill -9` — hard to remember, slow to type
+- `fuser -k 3000/tcp` — not available by default on macOS
+- Activity Monitor / Task Manager — too many steps, breaks terminal flow
+- Manual PID lookup — unnecessary friction across `lsof`, `ps`, and `kill`
 
 ---
 
-## 4. Hedefler
+## 3. Target users
 
-| #   | Hedef                                                                 |
-| --- | --------------------------------------------------------------------- |
-| 1   | Bir portu tek komutla sonlandırmak: `portkill 3000`                   |
-| 2   | Birden fazla portu aynı anda sonlandırmak: `portkill 3000 8080 5432`  |
-| 3   | Kullanıcıya hangi process'in öldürüldüğünü bildirmek                 |
-| 4   | Homebrew üzerinden `brew install` ile kurulabilir olmak             |
-| 5   | macOS ve Linux'ta sorunsuz çalışmak                                   |
-
-### Hedef Dışında Kalanlar (v0.1.0)
-
-- Windows desteği
-- GUI arayüzü (basit web GUI ayrı sürümde; bkz. §5.5)
-- Port izleme / monitoring
-- Process whitelist/blacklist
-- Config dosyası
+- Developers at any level doing local development
+- macOS and Linux users (primary: macOS + Homebrew)
+- People who prefer a terminal-first workflow
 
 ---
 
-## 5. Özellikler
+## 4. Goals
 
-### 5.1 Temel Kullanım
+| # | Goal |
+| --- | --- |
+| 1 | Kill a single port in one command: `portkill 3000` |
+| 2 | Kill multiple ports at once: `portkill 3000 8080 5432` |
+| 3 | Tell the user which process was killed |
+| 4 | Installable via Homebrew (`brew install`) |
+| 5 | Work reliably on macOS and Linux |
+
+### Out of scope (v0.1.0)
+
+- Windows support
+- GUI (simple web UI is a later release; see §5.5)
+- Port monitoring / long-running watch
+- Process whitelist / blacklist
+- Config files
+
+---
+
+## 5. Features
+
+### 5.1 Basic usage
 
 ```bash
 portkill <port> [port2] [port3] ...
 ```
 
-**Örnekler:**
+**Examples:**
 
 ```bash
-portkill 3000              # Tek port
-portkill 3000 8080         # Birden fazla port
-portkill 3000 --force      # Onay sormadan öldür
-portkill 3000 --dry-run    # Neyin öldürüleceğini göster, öldürme
+portkill 3000              # single port
+portkill 3000 8080         # multiple ports
+portkill 3000 --force      # kill without confirmation
+portkill 3000 --dry-run    # show what would be killed; do not kill
 ```
 
-### 5.2 Çıktı Formatı
+### 5.2 Output format
 
-Başarılı durumda:
+On success:
 
 ```
 ✔ Port 3000 → killed (node, PID 12345)
 ```
 
-Process bulunamadığında:
+When no process is listening:
 
 ```
 ℹ Port 8080 → no process found
 ```
 
-Hata durumunda:
+On error:
 
 ```
 ✖ Port 5432 → permission denied (try with sudo)
 ```
 
-### 5.3 Flag'ler
+### 5.3 Flags
 
-| Flag               | Kısaltma | Açıklama                               |
-| ------------------ | -------- | -------------------------------------- |
-| `--force`          | `-f`     | Onay sormadan öldür                    |
-| `--dry-run`        | `-n`     | Sadece process bilgisini göster, öldürme |
-| `--signal <SIG>`   | `-s`     | Kullanılacak sinyal (varsayılan: SIGTERM) |
-| `--verbose`        | `-v`     | Detaylı çıktı                          |
-| `--version`        |          | Versiyon bilgisi                       |
-| `--help`           | `-h`     | Yardım mesajı                          |
+| Flag | Short | Description |
+| --- | --- | --- |
+| `--force` | `-f` | Do not prompt for confirmation |
+| `--dry-run` | `-n` | Show process info only; do not kill |
+| `--signal <SIG>` | `-s` | Signal to send (default: SIGTERM) |
+| `--verbose` | `-v` | Verbose output |
+| `--version` | | Print version |
+| `--help` | `-h` | Help |
 
-### 5.4 Exit Kodları
+### 5.4 Exit codes
 
-| Kod | Anlam                         |
-| --- | ----------------------------- |
-| `0` | Başarılı (tüm portlar işlendi) |
-| `1` | Genel hata                    |
-| `2` | Hiçbir port bulunamadı        |
-| `3` | İzin hatası (permission denied) |
+| Code | Meaning |
+| --- | --- |
+| `0` | Success (all ports handled) |
+| `1` | General error |
+| `2` | No process found on any requested port |
+| `3` | Permission denied |
 
-### 5.5 Basit GUI — tasarım ve TypeScript yaklaşımı
+### 5.5 Simple GUI — design and TypeScript approach
 
-Amaç: CLI ile aynı `finder` / `killer` mantığını kullanan, kurulumu ağır olmayan (Electron/Tauri yok) minimal bir arayüz. **v0.1.0 MVP dışında**; CLI stabil olduktan sonra eklenebilir.
+**Goal:** A minimal UI that reuses the same `finder` / `killer` logic as the CLI, without heavy runtimes (no Electron/Tauri). **Not part of v0.1.0 MVP**; add after the CLI is stable.
 
-**Giriş noktası önerisi:** `portkill --gui` veya alt komut `portkill gui` — yerel HTTP sunucusu (`127.0.0.1` üzerinde rastgele veya sabit port) başlar, sistem tarayıcısı açılır; sadece localhost’a bağlanır (CSRF / ağ maruziyeti riski düşük).
+**Suggested entry:** `portkill --gui` or subcommand `portkill gui` — starts a local HTTP server on `127.0.0.1` (fixed or ephemeral port), opens the system browser; bind to localhost only (lower CSRF / network exposure risk).
 
-**Teknoloji (basit tutmak için):**
+**Technology (keep it light):**
 
-| Katman        | Seçim | Gerekçe |
-| ------------- | ----- | ------- |
-| Ön yüz        | TypeScript + HTML/CSS (Vite ile derleme veya tek sayfa + modül) | Hafif, ekstra UI framework zorunlu değil |
-| API           | Aynı Node sürecinde ince HTTP handler (`node:http`) veya minimal router | `core/` modülleri doğrudan import |
-| Paylaşılan kod | `src/core/*` + isteğe bağlı ince `src/api/` katmanı | Tek doğruluk kaynağı |
+| Layer | Choice | Rationale |
+| --- | --- | --- |
+| Frontend | TypeScript + HTML/CSS (Vite bundle or single page + modules) | Lightweight; no UI framework required |
+| API | Thin `node:http` handler or minimal router in the same Node process | Import `core/` directly |
+| Shared code | `src/core/*` plus optional thin `src/api/` | Single source of truth |
 
-**Ekran düzeni (wireframe):**
+**Screen layout (wireframe):**
 
 ```
 ┌─────────────────────────────────────────────┐
-│  portkill                          [kapat]  │
+│  portkill                          [close]  │
 ├─────────────────────────────────────────────┤
-│  Port(lar)  [ 3000, 8080        ]           │
-│  ☐ Force (onay sorma)   ☐ Dry-run           │
-│  [ Listele ]  [ Sonlandır ]                  │
+│  Port(s)   [ 3000, 8080        ]            │
+│  ☐ Force (no prompt)   ☐ Dry-run            │
+│  [ List ]  [ Kill ]                         │
 ├─────────────────────────────────────────────┤
-│  Sonuçlar                                   │
-│  • 3000 → node (PID 12345)   [öldür]       │
+│  Results                                    │
+│  • 3000 → node (PID 12345)   [kill]         │
 │  • 8080 → no process found                  │
-│  ✖ 5432 → permission denied (sudo önerisi)   │
+│  ✖ 5432 → permission denied (try sudo)      │
 └─────────────────────────────────────────────┘
 ```
 
-**Kullanıcı akışı:**
+**User flow:**
 
 ```mermaid
 sequenceDiagram
@@ -154,93 +154,93 @@ sequenceDiagram
   participant LocalAPI as LocalServer_TS
   participant Core as finder_killer
 
-  User->>LocalAPI: CLI portkill --gui sunucuyu başlatır
-  LocalAPI->>Browser: Tarayıcı http://127.0.0.1 açılır
+  User->>LocalAPI: CLI starts server (portkill --gui)
+  LocalAPI->>Browser: Open http://127.0.0.1
   Browser->>LocalAPI: GET /
   LocalAPI->>Browser: SPA
   User->>LocalAPI: POST /resolve (ports, dryRun)
   LocalAPI->>Core: findPids / kill
-  Core->>LocalAPI: sonuçlar
+  Core->>LocalAPI: results
   LocalAPI->>Browser: JSON
 ```
 
-**Çıktı:** CLI ile aynı anlamlı mesajlar (başarı / bulunamadı / izin hatası); renk ve ikonlar opsiyonel (ileride chalk benzeri stil sadece terminalde kalır, web tarafında CSS).
+**Output:** Same semantics as the CLI (success / not found / permission); colors and icons optional (terminal styling e.g. chalk stays CLI-only; web uses CSS).
 
 ---
 
-## 6. Teknik Mimari
+## 6. Technical architecture
 
-### 6.1 Teknoloji Stack
+### 6.1 Technology stack
 
-| Katman        | Seçim              | Gerekçe                          |
-| ------------- | ------------------ | -------------------------------- |
-| Dil           | TypeScript         | Tip güvenliği, modern JS ekosistemi |
-| Runtime       | Node.js ≥ 18       | LTS, Homebrew ile kolay dağıtım  |
-| CLI Framework | `commander`        | Olgun, sade API                  |
-| Build         | `tsup`             | Zero-config TypeScript bundler   |
-| Test          | `vitest`           | Hızlı, modern, TS-native         |
-| Linter        | `eslint` + `prettier` | Kod standardı                 |
-| GUI (opsiyonel) | TypeScript + Vite (veya sade bundle) + `node:http` | Hafif yerel arayüz, §5.5 |
+| Layer | Choice | Rationale |
+| --- | --- | --- |
+| Language | TypeScript | Type safety, modern ecosystem |
+| Runtime | Node.js ≥ 18 | LTS, straightforward Homebrew packaging |
+| CLI | `commander` | Mature, small API |
+| Build | `tsup` | Zero-config TypeScript bundler |
+| Tests | `vitest` | Fast, TS-native |
+| Lint | `eslint` + `prettier` | Consistency |
+| GUI (optional) | TypeScript + Vite (or plain bundle) + `node:http` | Lightweight local UI, §5.5 |
 
-### 6.2 Proje Yapısı
+### 6.2 Project layout
 
 ```
 portkill/
 ├── src/
-│   ├── index.ts          # CLI giriş noktası
+│   ├── index.ts          # CLI entry
 │   ├── commands/
-│   │   └── kill.ts       # Ana kill komutu
+│   │   └── kill.ts       # Main kill command
 │   ├── core/
-│   │   ├── finder.ts     # Port → PID bulma mantığı
-│   │   └── killer.ts     # Process sonlandırma mantığı
-│   ├── gui/              # (opsiyonel, §5.5) yerel web arayüzü
-│   │   ├── server.ts     # 127.0.0.1 HTTP + statik dosya
-│   │   ├── app.ts        # Ön yüz mantığı (TS)
-│   │   └── index.html    # Kabuk sayfa
+│   │   ├── finder.ts     # Port → PID discovery
+│   │   └── killer.ts     # Process termination
+│   ├── gui/              # (optional, §5.5) local web UI
+│   │   ├── server.ts     # 127.0.0.1 HTTP + static files
+│   │   ├── app.ts        # Frontend logic (TS)
+│   │   └── index.html    # Shell page
 │   └── utils/
-│       ├── output.ts     # Renkli terminal çıktısı
-│       └── platform.ts   # macOS / Linux platform tespiti
+│       ├── output.ts     # Terminal formatting
+│       └── platform.ts   # macOS / Linux detection
 ├── tests/
 │   ├── finder.test.ts
 │   └── killer.test.ts
-├── dist/                 # Build çıktısı (gitignore)
-├── gui-dist/             # (opsiyonel) Vite çıktısı — .gitignore
+├── dist/                 # build output (gitignored)
+├── gui-dist/             # (optional) Vite output — gitignored
 ├── package.json
 ├── tsconfig.json
 ├── tsup.config.ts
-├── vite.config.ts        # (opsiyonel) GUI bundle
+├── vite.config.ts        # (optional) GUI bundle
 └── README.md
 ```
 
-### 6.3 Platform Stratejisi
+### 6.3 Platform strategy
 
-Port → PID eşleştirmesi platforma göre farklı komutlarla yapılır:
+Port → PID mapping uses OS-specific commands:
 
-| Platform | Komut                    |
-| -------- | ------------------------ |
-| macOS    | `lsof -ti tcp:<port>`    |
-| Linux    | `fuser <port>/tcp` veya `/proc/net/tcp` |
+| Platform | Command |
+| --- | --- |
+| macOS | `lsof -ti tcp:<port>` |
+| Linux | `fuser <port>/tcp` or `/proc/net/tcp` |
 
-Tespit `process.platform` ile yapılır, abstraction `platform.ts`'de tutulur.
+Detection uses `process.platform`; abstraction lives in `platform.ts`.
 
 ---
 
-## 7. Homebrew Dağıtım Planı
+## 7. Homebrew distribution plan
 
-### 7.1 Adımlar
+### 7.1 Steps
 
-1. `npm publish` ile npm'e yayınla
-2. GitHub'da versioned release çıkar (tarball)
-3. `homebrew-portkill` tap reposu aç
-4. Formula dosyası yaz (`portkill.rb`)
-5. `brew tap <kullanıcı>/portkill && brew install portkill` ile test et
+1. Publish to npm (`npm publish`)
+2. Create a versioned GitHub release (tarball)
+3. Open a `homebrew-portkill` tap repository
+4. Add a formula (`portkill.rb`)
+5. Test with `brew tap <user>/portkill && brew install portkill`
 
-### 7.2 Örnek Formula
+### 7.2 Example formula
 
 ```ruby
 class Portkill < Formula
   desc "Kill processes running on specified ports"
-  homepage "https://github.com/<kullanici>/portkill"
+  homepage "https://github.com/<user>/portkill"
   url "https://registry.npmjs.org/portkill/-/portkill-0.1.0.tgz"
   sha256 "<sha256>"
   license "MIT"
@@ -260,56 +260,56 @@ end
 
 ---
 
-## 8. Geliştirme Yol Haritası
+## 8. Roadmap
 
 ### v0.1.0 — MVP
 
-- [ ] Tek port öldürme
-- [ ] Çoklu port desteği
-- [ ] macOS desteği
+- [ ] Single-port kill
+- [ ] Multi-port support
+- [ ] macOS support
 - [ ] `--dry-run` flag
 - [ ] `--force` flag
-- [ ] Homebrew tap yayını
+- [ ] Homebrew tap published
 
 ### v0.2.0
 
-- [ ] Linux desteği
+- [ ] Linux support
 - [ ] `--signal` flag
-- [ ] Renkli ve formatlanmış çıktı (chalk)
-- [ ] Unit testler (%80+ coverage)
+- [ ] Colored, formatted output (chalk)
+- [ ] Unit tests (≥ 80% coverage)
 
 ### v0.3.0
 
-- [ ] Port range desteği: `portkill 3000-3005`
-- [ ] Tüm portları listele: `portkill --list`
-- [ ] npm global install desteği (`npm i -g portkill`)
+- [ ] Port ranges: `portkill 3000-3005`
+- [ ] List listeners: `portkill --list`
+- [ ] Polished `npm i -g portkill` story
 
-### v0.4.0 — Basit GUI
+### v0.4.0 — Simple GUI
 
-- [ ] `portkill --gui` / `portkill gui`: localhost sunucusu + tarayıcı
-- [ ] TypeScript ön yüz; API’de `core/` yeniden kullanımı
-- [ ] Listele, dry-run, force ile sonlandırma (§5.5 wireframe ile uyumlu)
-
----
-
-## 9. Başarı Kriterleri
-
-| Metrik                         | Hedef              |
-| ------------------------------ | ------------------ |
-| İlk kurulum → ilk kullanım süresi | < 2 dakika     |
-| Komut çalışma süresi           | < 500ms            |
-| macOS + Linux uyumluluğu       | %100               |
-| Test coverage                  | ≥ %80              |
-| Homebrew tap kurulumu          | Sorunsuz çalışıyor |
+- [ ] `portkill --gui` / `portkill gui`: localhost server + browser
+- [ ] TypeScript frontend; API reuses `core/`
+- [ ] List, dry-run, force kill aligned with §5.5 wireframe
 
 ---
 
-## 10. Riskler
+## 9. Success criteria
 
-| Risk                                           | Olasılık | Çözüm                          |
-| ---------------------------------------------- | -------- | ------------------------------ |
-| `lsof` / `fuser` çıktısı platforma göre değişir | Orta     | Platform abstraction katmanı   |
-| Root gerektiren portlar (< 1024)               | Yüksek   | Açık hata mesajı + sudo önerisi |
-| Node.js versiyon uyumsuzluğu                  | Düşük    | `engines` field ile `>=18` zorunlu kıl |
-| npm namespace çakışması                        | Düşük    | Önceden `npm info portkill` ile kontrol et |
-| Yerel GUI sunucusu yanlışlıkla ağa açılırsa   | Düşük    | Yalnızca `127.0.0.1` dinle; güvenlik notu README’de |
+| Metric | Target |
+| --- | --- |
+| First install → first successful use | < 2 minutes |
+| Command runtime | < 500ms |
+| macOS + Linux compatibility | 100% |
+| Test coverage | ≥ 80% |
+| Homebrew tap install | Works without friction |
+
+---
+
+## 10. Risks
+
+| Risk | Likelihood | Mitigation |
+| --- | --- | --- |
+| `lsof` / `fuser` output differs by OS | Medium | Platform abstraction layer |
+| Privileged ports (< 1024) need root | High | Clear error + suggest `sudo` |
+| Node version mismatch | Low | Enforce `>=18` in `engines` |
+| npm package name collision | Low | Check `npm info portkill` early |
+| Local GUI server bound to non-loopback | Low | Listen on `127.0.0.1` only; document in README |

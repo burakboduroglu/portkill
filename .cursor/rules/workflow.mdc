@@ -1,40 +1,40 @@
 ---
-description: portkill için özellik geliştirme, doğrulama ve sürüm adımları (agent + geliştirici workflow)
+description: Feature development, validation, and release steps for portkill (agent + human workflow)
 alwaysApply: true
 ---
 
-# portkill — geliştirme workflow
+# portkill — development workflow
 
-Stil, CLI sözleşmesi ve PRD uyumu için [generate-rules.mdc](.cursor/rules/generate-rules.mdc) ile birlikte kullan.
+Use together with [generate-rules.mdc](.cursor/rules/generate-rules.mdc) for style, CLI contract, and PRD alignment.
 
-## 1. Özellik / düzeltme öncesi
+## 1. Before a feature or fix
 
-- [PRD.md](PRD.md) içinde kapsam var mı kontrol et; yoksa veya belirsizse önce PRD’yi güncelle, sonra koda geç.
-- Çıkış kodları, çıktı metinleri ve flag davranışı PRD §5 ile aynı kalmalı.
+- Confirm scope in [PRD.md](PRD.md); if missing or unclear, update the PRD, then implement.
+- Exit codes, stdout lines, and flag behavior must stay consistent with PRD §5.
 
-## 2. Uygulama sırası (önerilen)
+## 2. Suggested implementation order
 
-1. **`src/utils/platform.ts`** — `darwin` / `linux` ayrımı ve port→PID için kullanılacak komut yolu.
-2. **`src/core/finder.ts`** — Port başına PID(ler) ve mümkünse process adı; hata mesajları test edilebilir tiplerle.
-3. **`src/core/killer.ts`** — Sinyal gönderme; izin hatalarını ayırt et (exit `3`).
-4. **`src/utils/output.ts`** — PRD’deki tek satırlık formatlar.
-5. **`src/commands/kill.ts` + `src/index.ts`** — `commander` ile argümanlar ve exit kodu toplama.
-6. **Testler** — `tests/finder.test.ts`, `tests/killer.test.ts`; mock ile shell çıktıları.
+1. **`src/utils/platform.ts`** — `darwin` / `linux` and commands used for port→PID.
+2. **`src/core/finder.ts`** — PID(s) per port and optional process name; typed, testable errors.
+3. **`src/core/killer.ts`** — Send signal; map permission errors to exit `3`.
+4. **`src/utils/output.ts`** — PRD one-line formats.
+5. **`src/commands/kill.ts` + `src/index.ts`** — `commander` args and aggregated exit code.
+6. **Tests** — `tests/finder.test.ts`, `tests/killer.test.ts`; mock shell output.
 
-GUI (PRD §5.5) yalnızca CLI ve `core/` oturduktan sonra; aynı `finder`/`killer` API’sini çağır.
+GUI (PRD §5.5) only after CLI and `core/` are stable; call the same `finder`/`killer` APIs.
 
-## 3. Doğrulama (proje ayağa kalkınca)
+## 3. Validation (once the project builds)
 
-- `pnpm` / `npm`: lint + format (Prettier/ESLint), `vitest`, `tsup` build.
-- Elle: bir dinleyen portta `portkill <port> --dry-run`, sonra `--force` veya onaylı akış; boş portta exit `2` senaryosu.
+- `npm` / `pnpm`: lint, Prettier, `vitest`, `tsup` build.
+- Manual: `portkill <port> --dry-run` on a listening port, then `--force` or interactive confirm; empty ports for exit `2`.
 
-## 4. Sürüm / dağıtım (PRD §7)
+## 4. Release / distribution (PRD §7)
 
-- Sürümü `package.json` ile hizala; gerekirse changelog veya release notu.
-- npm yayını ve Homebrew formula SHA güncellemesi PRD adımlarına göre.
+- Align version with `package.json`; add changelog or release notes if needed.
+- npm publish and Homebrew formula SHA updates follow PRD steps.
 
-## 5. Agent için kısa kontrol listesi
+## 5. Short agent checklist
 
-- PRD ile çelişen davranış bırakma.
-- Windows’a özel kod ekleme (kapsam dışı).
-- `core/` içinde gereksiz CLI/stdout karıştırma; çıktı `output` katmanında.
+- Do not ship behavior that contradicts the PRD.
+- Do not add Windows-specific code (out of scope).
+- Do not mix CLI/stdout into `core/`; formatting belongs in `output`.
