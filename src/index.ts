@@ -96,10 +96,10 @@ async function main(): Promise<void> {
           }
           throw e;
         }
-        const { url, server } = await startGuiServer({ platform });
+        const { url, servers } = await startGuiServer({ platform });
         process.stdout.write(`portkill GUI: ${url}\n`);
         process.stdout.write("Press Ctrl+C to stop.\n");
-        attachGuiShutdown(server);
+        attachGuiShutdown(...servers);
         return;
       }
 

@@ -16,7 +16,21 @@ import { openBrowser } from "./open-browser.js";
 const HOST = "127.0.0.1";
 const MAX_BODY = 64 * 1024;
 
-function json(res: ServerResponse, status: number, body: unknown): void {
+/** Lets the UI work if the tab is opened via `localhost` while the API is called cross-origin, and satisfies JSON POST preflight. */
+function applyApiCors(req: IncomingMessage, res: ServerResponse): void {
+  const origin = req.headers.origin;
+  if (origin) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+  } else {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+  }
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+}
+
+function json(res: ServerResponse, req: IncomingMessage, status: number, body: unknown): void {
+  applyApiCors(req, res);
   const payload = JSON.stringify(body);
   res.writeHead(status, {
     "Content-Type": "application/json; charset=utf-8",
@@ -50,16 +64,22 @@ export interface StartGuiServerOptions {
   openBrowser?: boolean;
 }
 
-export function startGuiServer(opts: StartGuiServerOptions): Promise<{ url: string; server: Server }> {
-  const server = createServer(async (req, res) => {
+export function startGuiServer(opts: StartGuiServerOptions): Promise<{ url: string; servers: Server[] }> {
+  const requestHandler = async (req: IncomingMessage, res: ServerResponse): Promise<void> => {
     try {
       const url = new URL(req.url ?? "/", `http://${HOST}`);
+
+      if (req.method === "OPTIONS" && url.pathname.startsWith("/api/")) {
+        applyApiCors(req, res);
+        res.writeHead(204).end();
+        return;
+      }
 
       if (req.method === "GET" && url.pathname === "/") {
         const html = getIndexHtml();
         res.writeHead(200, {
           "Content-Type": "text/html; charset=utf-8",
-          "Content-Length": Buffer.byteLength(html),
+          "Content-Length": Buffer.byteLength(html, "utf8"),
         });
         res.end(html);
         return;
@@ -68,10 +88,10 @@ export function startGuiServer(opts: StartGuiServerOptions): Promise<{ url: stri
       if (req.method === "GET" && url.pathname === "/api/listeners") {
         const result = await listAllTcpListeners(opts.platform);
         if (!result.ok) {
-          json(res, 200, { ok: false, message: result.message });
+          json(res, req, 200, { ok: false, message: result.message });
           return;
         }
-        json(res, 200, { ok: true, rows: result.rows });
+        json(res, req, 200, { ok: true, rows: result.rows });
         return;
       }
 
@@ -80,17 +100,17 @@ export function startGuiServer(opts: StartGuiServerOptions): Promise<{ url: stri
         try {
           body = await readJsonBody(req);
         } catch {
-          json(res, 400, { ok: false, message: "invalid JSON body" });
+          json(res, req, 400, { ok: false, message: "invalid JSON body" });
           return;
         }
         if (!body || typeof body !== "object") {
-          json(res, 400, { ok: false, message: "expected JSON object" });
+          json(res, req, 400, { ok: false, message: "expected JSON object" });
           return;
         }
         const b = body as Record<string, unknown>;
         const tokens = b.tokens;
         if (!Array.isArray(tokens) || !tokens.every((t) => typeof t === "string")) {
-          json(res, 400, { ok: false, message: "tokens must be an array of strings" });
+          json(res, req, 400, { ok: false, message: "tokens must be an array of strings" });
           return;
         }
         let ports: number[];
@@ -98,11 +118,11 @@ export function startGuiServer(opts: StartGuiServerOptions): Promise<{ url: stri
           ports = parsePortArguments(tokens);
         } catch (e) {
           const msg = e instanceof Error ? e.message : String(e);
-          json(res, 400, { ok: false, message: msg });
+          json(res, req, 400, { ok: false, message: msg });
           return;
         }
         if (ports.length === 0) {
-          json(res, 400, { ok: false, message: "no valid ports after parsing" });
+          json(res, req, 400, { ok: false, message: "no valid ports after parsing" });
           return;
         }
         const dryRun = Boolean(b.dryRun);
@@ -116,7 +136,7 @@ export function startGuiServer(opts: StartGuiServerOptions): Promise<{ url: stri
           signal,
           platform: opts.platform,
         });
-        json(res, 200, {
+        json(res, req, 200, {
           ok: true,
           exitCode,
           outcomes,
@@ -127,29 +147,51 @@ export function startGuiServer(opts: StartGuiServerOptions): Promise<{ url: stri
       res.writeHead(404).end("not found");
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      json(res, 500, { ok: false, message: msg });
+      json(res, req, 500, { ok: false, message: msg });
     }
-  });
+  };
+
+  const server4 = createServer(requestHandler);
 
   return new Promise((resolve, reject) => {
-    server.once("error", reject);
-    server.listen(opts.port ?? 0, HOST, () => {
-      server.off("error", reject);
-      const addr = server.address();
+    server4.once("error", reject);
+    server4.listen(opts.port ?? 0, HOST, () => {
+      server4.off("error", reject);
+      const addr = server4.address();
       const port =
         addr && typeof addr === "object" && "port" in addr ? (addr as { port: number }).port : 0;
       const baseUrl = `http://${HOST}:${port}`;
-      if (opts.openBrowser !== false) {
-        openBrowser(baseUrl);
-      }
-      resolve({ url: baseUrl, server });
+
+      const v6 = createServer(requestHandler);
+      let settled = false;
+      const finish = (servers: Server[]) => {
+        if (settled) return;
+        settled = true;
+        if (opts.openBrowser !== false) {
+          openBrowser(baseUrl);
+        }
+        resolve({ url: baseUrl, servers });
+      };
+
+      v6.once("error", () => finish([server4]));
+      v6.listen(port, "::1", () => finish([server4, v6]));
     });
   });
 }
 
-export function attachGuiShutdown(server: Server): void {
+export function attachGuiShutdown(...servers: Server[]): void {
   const shutdown = () => {
-    server.close(() => process.exit(0));
+    const list = servers.filter(Boolean);
+    if (list.length === 0) {
+      process.exit(0);
+      return;
+    }
+    let pending = list.length;
+    for (const s of list) {
+      s.close(() => {
+        if (--pending <= 0) process.exit(0);
+      });
+    }
   };
   process.on("SIGINT", shutdown);
   process.on("SIGTERM", shutdown);

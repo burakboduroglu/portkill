@@ -6,18 +6,18 @@ import { startGuiServer } from "../src/gui/server.js";
 
 describe("GUI server", () => {
   it("serves index HTML on GET /", async () => {
-    const { url, server } = await startGuiServer({ platform: "darwin", port: 0, openBrowser: false });
+    const { url, servers } = await startGuiServer({ platform: "darwin", port: 0, openBrowser: false });
     try {
       const html = await fetchText(`${url}/`);
       expect(html).toContain("portkill");
       expect(html).toContain("/api/listeners");
     } finally {
-      await closeServer(server);
+      await closeAllServers(servers);
     }
   });
 
   it("returns 400 for empty resolve tokens", async () => {
-    const { url, server } = await startGuiServer({ platform: "darwin", port: 0, openBrowser: false });
+    const { url, servers } = await startGuiServer({ platform: "darwin", port: 0, openBrowser: false });
     try {
       const res = await fetch(`${url}/api/resolve`, {
         method: "POST",
@@ -26,7 +26,7 @@ describe("GUI server", () => {
       });
       expect(res.status).toBe(400);
     } finally {
-      await closeServer(server);
+      await closeAllServers(servers);
     }
   });
 });
@@ -47,4 +47,10 @@ function closeServer(server: http.Server): Promise<void> {
   return new Promise((resolve, reject) => {
     server.close((err) => (err ? reject(err) : resolve()));
   });
+}
+
+async function closeAllServers(servers: http.Server[]): Promise<void> {
+  for (const s of servers) {
+    await closeServer(s);
+  }
 }
