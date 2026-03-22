@@ -1,6 +1,6 @@
 # Contributing to portkill
 
-Thanks for helping improve **portkill** — a small CLI (+ optional `--gui`) for freeing TCP ports on macOS and Linux.
+Thanks for helping improve **portkill** — a CLI plus a **local `--gui` web UI** (loopback) for freeing TCP ports on macOS and Linux.
 
 Please read the **[Code of Conduct](CODE_OF_CONDUCT.md)** before participating.
 

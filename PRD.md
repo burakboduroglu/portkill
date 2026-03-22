@@ -46,7 +46,7 @@ Existing approaches fall short because:
 | 3 | Tell the user which process was killed |
 | 4 | Installable via npm (`npm i -g @burakboduroglu/portkill`) |
 | 5 | Work reliably on macOS and Linux |
-| 6 | Optional local web UI (`--gui`) with the same kill/list semantics as the CLI |
+| 6 | Local web UI (`--gui`) with the same kill/list semantics as the CLI |
 
 ### Out of scope (not planned)
 

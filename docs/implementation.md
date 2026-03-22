@@ -33,7 +33,7 @@ flowchart LR
 | `core/finder.ts` | Listeners per port: PID(s), command name when available; parse shell output here or via `platform`. |
 | `core/killer.ts` | Send signal (`process.kill`); distinguish EPERM vs other errors. |
 | `utils/platform.ts` | `process.platform`; macOS `lsof`, Linux `fuser` or `/proc/net/tcp`; build command lines. |
-| `utils/output.ts` | PRD §5.2 one-line messages; `--verbose` extras; optional color (PRD v0.2 chalk). |
+| `utils/output.ts` | PRD §5.2 one-line messages; `--verbose` extras; chalk when stderr is a TTY (`NO_COLOR` respected). |
 
 ## Data flow (summary)
 
