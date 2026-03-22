@@ -118,6 +118,8 @@ Full reference: [CLI reference](https://github.com/burakboduroglu/portkill/blob/
 | [Data dictionary](https://github.com/burakboduroglu/portkill/blob/main/DATA_DICTIONARY.md) | Types, GUI API shapes |
 | [Security notes](https://github.com/burakboduroglu/portkill/blob/main/docs/security-notes.md) | GUI scope, `npm audit`, reporting |
 | [Release](https://github.com/burakboduroglu/portkill/blob/main/docs/RELEASE.md) | `npm publish` (2FA), tags, GitHub Release |
+| [Contributing](https://github.com/burakboduroglu/portkill/blob/main/CONTRIBUTING.md) | Fork, branch, tests, PR expectations |
+| [Code of Conduct](https://github.com/burakboduroglu/portkill/blob/main/CODE_OF_CONDUCT.md) | Community standards (Contributor Covenant 2.0) |
 
 ---
 
