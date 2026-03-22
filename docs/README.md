@@ -9,9 +9,15 @@
 
 ## GUI demo — `portkill --gui`
 
-**[Watch on YouTube](https://www.youtube.com/watch?v=_-Z6zwiEHmg)**
+GitHub does not render YouTube `<iframe>` in Markdown; click the image to open the video.
 
-[![portkill --gui introduction (video)](https://img.youtube.com/vi/_-Z6zwiEHmg/hqdefault.jpg)](https://www.youtube.com/watch?v=_-Z6zwiEHmg)
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=_-Z6zwiEHmg" title="portkill --gui — YouTube">
+    <img src="https://img.youtube.com/vi/_-Z6zwiEHmg/hqdefault.jpg" alt="portkill --gui — click for YouTube" width="560">
+  </a>
+</p>
+
+**[YouTube](https://www.youtube.com/watch?v=_-Z6zwiEHmg)**
 
 ## Top-level sources
 
