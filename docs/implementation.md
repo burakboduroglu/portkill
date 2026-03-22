@@ -63,6 +63,10 @@ Windows is out of scope; `platform.ts` should error clearly on unsupported `proc
 - `src/gui/server.ts`: bind `127.0.0.1` only; static bundle + JSON endpoint.
 - Do **not** duplicate business logic; import `core/*`. Request/response shapes: [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) §HTTP API.
 
+## Distribution (v0.3+)
+
+Publishing to **npm** (`npm publish`) and **Homebrew** (`brew install` via a tap) is planned together for v0.3.0. See [PRD.md](../PRD.md) §7 for ordered steps (npm first, then formula tarball/SHA).
+
 ## Related docs
 
 - [PRD.md](../PRD.md) — product and CLI contract

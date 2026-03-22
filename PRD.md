@@ -225,17 +225,36 @@ Detection uses `process.platform`; abstraction lives in `platform.ts`.
 
 ---
 
-## 7. Homebrew distribution plan
+## 7. Distribution plan (npm + Homebrew)
 
-### 7.1 Steps
+End-user installs are **out of scope for v0.1–v0.2**; both channels are targeted in **v0.3.0** (see §8). Order of operations: publish to **npm first** (Homebrew formula often consumes the npm tarball).
 
-1. Publish to npm (`npm publish`)
-2. Create a versioned GitHub release (tarball)
-3. Open a `homebrew-portkill` tap repository
-4. Add a formula (`portkill.rb`)
-5. Test with `brew tap <user>/portkill && brew install portkill`
+### 7.1 npm — `npm publish` and global install
 
-### 7.2 Example formula
+| Step | Action |
+| --- | --- |
+| 1 | Confirm package name (`npm info portkill` / scoped name if needed). |
+| 2 | Ensure `package.json` has correct `version`, `bin.portkill` → built `dist/index.js`, `files` (or `.npmignore`) so `dist/` ships. |
+| 3 | `npm run build` and `npm test` (and `npm run test:coverage`) before release. |
+| 4 | `npm login`; `npm publish` (or `npm publish --access public` for scoped packages). |
+| 5 | Verify: `npm i -g portkill` then `portkill --version`; optional `npx portkill --help`. |
+| 6 | Tag release in Git (`vX.Y.Z`) aligned with `package.json` version. |
+
+**v0.3 deliverable:** documented install path (`README` + registry page) and a repeatable release checklist.
+
+### 7.2 Homebrew — tap and `brew install`
+
+| Step | Action |
+| --- | --- |
+| 1 | (After npm) Note tarball URL and SHA256 from registry or release artifact. |
+| 2 | Create a versioned GitHub release if you mirror artifacts there. |
+| 3 | Open a `homebrew-portkill` (or user) tap repository. |
+| 4 | Add formula `portkill.rb` (see §7.3). |
+| 5 | Test: `brew tap <user>/portkill && brew install portkill` and `portkill --version`. |
+
+**v0.3 deliverable:** tap URL in README; formula maintained alongside npm versions.
+
+### 7.3 Example Homebrew formula
 
 ```ruby
 class Portkill < Formula
@@ -269,7 +288,7 @@ end
 - [x] macOS support
 - [x] `--dry-run` flag
 - [x] `--force` flag
-- [ ] Homebrew tap published
+- [ ] Distribution (npm + Homebrew): deferred to **v0.3.0** (§7)
 
 ### v0.2.0
 
@@ -282,7 +301,8 @@ end
 
 - [ ] Port ranges: `portkill 3000-3005`
 - [x] List listeners: `portkill --list`
-- [ ] Polished `npm i -g portkill` story
+- [ ] **npm:** `npm publish` to the public registry; documented install via `npm i -g portkill` and/or `npx portkill` (see §7.1)
+- [ ] **Homebrew:** tap + formula; `brew install portkill` (see §7.2)
 
 ### v0.4.0 — Simple GUI
 
@@ -300,7 +320,8 @@ end
 | Command runtime | < 500ms |
 | macOS + Linux compatibility | 100% |
 | Test coverage | ≥ 80% |
-| Homebrew tap install | Works without friction |
+| npm global / `npx` install | Documented; package published to registry |
+| Homebrew tap install | Works without friction (v0.3) |
 
 ---
 
