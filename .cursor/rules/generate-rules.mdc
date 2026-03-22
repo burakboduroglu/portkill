@@ -1,0 +1,33 @@
+---
+description: Portkill PRD uyumu, CLI sözleşmesi ve yeni Cursor kuralları (.mdc) üretirken izlenecek ilkeler
+alwaysApply: true
+---
+
+# portkill — üretim ve kural ilkeleri
+
+## Kaynak
+
+- Ürün davranışı ve mimari için [PRD.md](PRD.md) tek doğruluk kaynağıdır; çelişki varsa önce PRD güncellenir, sonra kod.
+
+## Teknoloji ve yapı
+
+- **Stack:** TypeScript, Node.js ≥ 18, `commander`, `tsup`, `vitest`, ESLint + Prettier.
+- **Dizinler:** `src/index.ts` (CLI girişi), `src/commands/kill.ts`, `src/core/finder.ts`, `src/core/killer.ts`, `src/utils/output.ts`, `src/utils/platform.ts`. Opsiyonel GUI: PRD §5.5 / `src/gui/`.
+- **Platform:** macOS ve Linux; Windows yok. Port→PID soyutlaması `platform.ts` içinde; macOS `lsof`, Linux `fuser` veya `/proc/net/tcp`.
+
+## CLI sözleşmesi (PRD §5)
+
+- **Çıktı satırları:** başarı `✔ Port <p> → killed (name, PID …)`; boş port `ℹ Port <p> → no process found`; izin `✖ Port <p> → permission denied (try with sudo)`.
+- **Exit kodları:** `0` tamamlandı; `1` genel hata; `2` hiçbir portta process yok; `3` permission denied.
+- **Flag’ler:** `--force` / `-f`, `--dry-run` / `-n`, `--signal` / `-s` (varsayılan SIGTERM), `--verbose` / `-v`, `--version`, `--help` / `-h`.
+
+## Kod stili
+
+- `core/` yan etkisiz ve test edilebilir tut; shell/`child_process` sınırlarını net ayır.
+- Gereksiz refactor, alakasız dosya ve PRD’de olmayan özellik ekleme.
+
+## Yeni `.cursor/rules/*.mdc` eklerken
+
+- YAML frontmatter: `description` zorunlu; dosya türüne göre `globs` **veya** `alwaysApply: true`.
+- Tek konu, kısa (tercihen ~50 satır civarı); somut örnek ver.
+- Bu dosyayı kopyalayıp genişletmek yerine konuya özel isim kullan (örn. `portkill-tests.mdc`).

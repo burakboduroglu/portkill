@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+gui-dist/
+*.tsbuildinfo
+
+# Test / coverage
+coverage/
+
+# Environment
+.env
+.env.*
+
+# Logs and OS
+*.log
+.DS_Store
+
+# IDE (optional local overrides)
+.idea/
