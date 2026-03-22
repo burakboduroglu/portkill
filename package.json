@@ -7,9 +7,18 @@
     "portkill": "./dist/index.js"
   },
   "files": [
-    "dist",
-    "README.md"
+    "dist/index.js",
+    "README.md",
+    "LICENSE"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/burakboduroglu/portkill.git"
+  },
+  "bugs": {
+    "url": "https://github.com/burakboduroglu/portkill/issues"
+  },
+  "homepage": "https://github.com/burakboduroglu/portkill#readme",
   "engines": {
     "node": ">=18"
   },

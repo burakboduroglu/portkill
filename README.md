@@ -22,7 +22,16 @@ Run without global install:
 npx portkill --list
 ```
 
-See [PRD.md](./PRD.md) §7 for release steps (`npm publish`, Homebrew tap).
+### From Homebrew (personal tap)
+
+Requires a published npm package. See **[docs/homebrew.md](./docs/homebrew.md)** for creating a tap, copying `packaging/homebrew/portkill.rb`, and updating `sha256` after each release.
+
+```bash
+brew tap YOUR_GITHUB_USER/portkill https://github.com/YOUR_GITHUB_USER/homebrew-portkill
+brew install portkill
+```
+
+Release checklist: [PRD.md](./PRD.md) §7 · Security: [docs/security-notes.md](./docs/security-notes.md).
 
 ### From source
 
@@ -55,7 +64,7 @@ npm run build
 node dist/index.js --gui
 ```
 
-Opens a page on **127.0.0.1** (ephemeral port printed in the terminal). Use **Ctrl+C** to stop. The browser may open automatically (macOS `open`, Linux `xdg-open`).
+Opens a page on **loopback** (127.0.0.1 and ::1 when available; ephemeral port printed in the terminal). Use **Ctrl+C** to stop. The browser may open automatically (macOS `open`, Linux `xdg-open`).
 
 Port arguments can be single numbers or **inclusive ranges** (`start-end`, max 4096 ports per range). Duplicates are removed while keeping order.
 
@@ -65,7 +74,9 @@ Port arguments can be single numbers or **inclusive ranges** (`start-end`, max 4
 | --- | --- |
 | [docs/implementation.md](./docs/implementation.md) | Architecture, modules, data flow |
 | [docs/cli-reference.md](./docs/cli-reference.md) | Flags, exit codes, examples |
-| [DATA_DICTIONARY.md](./DATA_DICTIONARY.md) | Fields, outcomes, planned HTTP API |
+| [DATA_DICTIONARY.md](./DATA_DICTIONARY.md) | Fields, outcomes, HTTP API (GUI) |
+| [docs/homebrew.md](./docs/homebrew.md) | Brew tap, formula updates |
+| [docs/security-notes.md](./docs/security-notes.md) | Audit, GUI exposure, reporting |
 
 Colors use [chalk](https://github.com/chalk/chalk); set `NO_COLOR=1` to disable (see [NO_COLOR](https://no-color.org/)).
 

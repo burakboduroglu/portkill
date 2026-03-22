@@ -303,7 +303,7 @@ end
 - [x] Port ranges: `portkill 3000-3005` (inclusive; max 4096 ports per range token)
 - [x] List listeners: `portkill --list`
 - [x] **npm:** Package layout for registry (`files`, `prepublishOnly`); install docs for `npm i -g` / `npx` (see §7.1; run `npm publish` when ready)
-- [ ] **Homebrew:** tap + formula; `brew install portkill` (see §7.2)
+- [x] **Homebrew:** formula in repo (`packaging/homebrew/portkill.rb`); maintainer creates a tap and updates `sha256` per release (see `docs/homebrew.md`, §7.2)
 
 ### v0.4.0 — Simple GUI
 
@@ -334,4 +334,4 @@ end
 | Privileged ports (< 1024) need root | High | Clear error + suggest `sudo` |
 | Node version mismatch | Low | Enforce `>=18` in `engines` |
 | npm package name collision | Low | Check `npm info portkill` early |
-| Local GUI server bound to non-loopback | Low | Listen on `127.0.0.1` only; document in README |
+| Local GUI server bound to non-loopback | Low | Listen on loopback (`127.0.0.1` + `::1`); document in README |
