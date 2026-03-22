@@ -27,13 +27,58 @@ portkill --version
 
 ## 4. Registry tarball checksum (Homebrew)
 
-After publish, confirm the SHA-256 matches `packaging/homebrew/portkill.rb`:
+Run **after** `npm publish` so the registry tarball exists.
+
+### 4.1 Compute SHA-256 from npm (source of truth)
+
+**macOS:**
 
 ```bash
-curl -sL "https://registry.npmjs.org/portkill/-/portkill-$(npm view portkill version).tgz" | shasum -a 256
+VERSION=$(npm view portkill version)
+curl -sL "https://registry.npmjs.org/portkill/-/portkill-${VERSION}.tgz" | shasum -a 256
 ```
 
-If it differs from the repo formula, update `sha256` in `packaging/homebrew/portkill.rb` and in the **tap** repo `Formula/portkill.rb`, then commit.
+**Linux** (no `shasum`):
+
+```bash
+VERSION=$(npm view portkill version)
+curl -sL "https://registry.npmjs.org/portkill/-/portkill-${VERSION}.tgz" | sha256sum
+```
+
+Tek satır çıktı: `abcdef...` (bazen dosya adı da yazılır; **ilk alan** SHA-256’dır).
+
+### 4.2 Repodaki formülle karşılaştır
+
+Ana repo kökünden:
+
+```bash
+grep -E '^\s*sha256 ' packaging/homebrew/portkill.rb
+```
+
+Üstteki `curl` çıktısındaki hash ile **aynı** olmalı.
+
+### 4.3 Farklıysa güncelle
+
+1. **`packaging/homebrew/portkill.rb`** içinde `sha256 "..."` satırını registry çıktısıyla değiştir.
+2. **Tap** klonu: [homebrew-portkill](https://github.com/burakboduroglu/homebrew-portkill) → `Formula/portkill.rb` içinde aynı `sha256` (ve gerekiyorsa `url` içindeki sürüm numarası).
+3. İki repoda commit + push:
+
+   ```bash
+   # portkill ana repo
+   git add packaging/homebrew/portkill.rb && git commit -m "chore(homebrew): sync sha256 for v${VERSION}" && git push
+
+   # tap (örnek yol)
+   cd ../homebrew-portkill
+   git add Formula/portkill.rb && git commit -m "chore: sync portkill sha256 for v${VERSION}" && git push
+   ```
+
+### 4.4 `brew install` doğrulama
+
+```bash
+brew update
+brew reinstall portkill   # veya ilk kurulum: brew install portkill
+portkill --version
+```
 
 ## 5. Git tag & GitHub Release
 
