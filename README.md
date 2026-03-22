@@ -1,94 +1,128 @@
-# portkill
+# **`.portkill`**
 
-CLI to kill processes listening on given **TCP** ports. See [PRD.md](./PRD.md) for the full product spec.
+**Free stuck TCP ports in one command** — without memorizing `lsof`, `fuser`, and `kill` pipelines.
 
-## Requirements
+[![npm](https://img.shields.io/npm/v/portkill?style=flat-square&logo=npm&label=npm)](https://www.npmjs.com/package/portkill)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](https://github.com/burakboduroglu/portkill/blob/main/LICENSE)
+[![Node.js](https://img.shields.io/badge/node.js-%3E%3D18-417E38?style=flat-square&logo=node.js&logoColor=white)](https://github.com/burakboduroglu/portkill/blob/main/package.json)
 
-- Node.js **≥ 18**
-- macOS or Linux (`lsof`; on Linux, `fuser` as fallback if `lsof` is missing)
+> The name reads like **`.portkill`** — a small, local dev utility (think `.env`-style prefix). The CLI binary is still `portkill`.
+
+When Node or another stack prints `EADDRINUSE`, **`.portkill`** shows who owns the port, lets you **preview** (`--dry-run`), then stops only what you intend — or opens a **calm local web UI** on loopback.
+
+---
+
+## Why **`.portkill`**
+
+| Instead of… | You get… |
+| --- | --- |
+| Copy-pasting `lsof` / `xargs` / `kill -9` | One tool, clear output, safe defaults |
+| Guessing PIDs | Process name + PID per port |
+| Accidentally nuking the wrong thing | `--dry-run` first; `--gui` with browser confirm |
+| Another Electron app | Node only; `--gui` is a tiny HTTP server on **127.0.0.1** / **::1** |
+
+---
 
 ## Install
-
-### From npm (after publish)
 
 ```bash
 npm i -g portkill
 portkill --version
 ```
 
-Run without global install:
+No global install:
 
 ```bash
 npx portkill --list
 ```
 
-### From Homebrew (personal tap)
+**Homebrew (your own tap)** — after `npm publish`, see [docs/homebrew.md](https://github.com/burakboduroglu/portkill/blob/main/docs/homebrew.md).
 
-Requires a published npm package. See **[docs/homebrew.md](./docs/homebrew.md)** for creating a tap, copying `packaging/homebrew/portkill.rb`, and updating `sha256` after each release.
+**From source**
 
 ```bash
-brew tap YOUR_GITHUB_USER/portkill https://github.com/YOUR_GITHUB_USER/homebrew-portkill
-brew install portkill
+git clone https://github.com/burakboduroglu/portkill.git && cd portkill
+npm install && npm run build
+npm link   # optional: puts `portkill` on PATH
 ```
 
-Release checklist: [PRD.md](./PRD.md) §7 · Security: [docs/security-notes.md](./docs/security-notes.md).
+---
 
-### From source
-
-```bash
-npm install
-npm run build
-node dist/index.js --help
-```
+## Quick start
 
 ```bash
-npm link
-portkill --version
-```
-
-## Usage
-
-```bash
-portkill <port> [port2] ...
-portkill 3000-3005
-portkill 3000 8080 9000-9002 --dry-run
+# What is listening everywhere?
 portkill --list
+
+# See what would happen (no signals sent)
+portkill 3000 8080 --dry-run
+
+# Stop listeners on those ports (prompts unless --force)
+portkill 3000 8080
+
+# Range (inclusive, max 4096 ports per range token)
+portkill 9000-9002
+
+# Optional local UI — same logic as the CLI
 portkill --gui
-portkill 3000 --force
 ```
 
-### Web UI (`--gui`)
+Press **Ctrl+C** to stop the GUI server. The printed URL is loopback-only.
+
+---
+
+## CLI flags (short)
+
+| Flag | Meaning |
+| --- | --- |
+| `-n`, `--dry-run` | Show targets only; do not send signals |
+| `-f`, `--force` | Skip the terminal confirmation |
+| `-s`, `--signal` | Signal to send (default `SIGTERM`) |
+| `-l`, `--list` | List all TCP listeners |
+| `--gui` | Open the local web UI |
+| `-v`, `--verbose` | More detail on stderr |
+
+Full reference: [CLI reference](https://github.com/burakboduroglu/portkill/blob/main/docs/cli-reference.md) · Exit codes and outcomes: same doc.
+
+---
+
+## Requirements
+
+- **Node.js ≥ 18**
+- **macOS** or **Linux** — uses `lsof` (Linux may use `fuser` as fallback where applicable)
+
+---
+
+## Docs & product spec
+
+| Doc | What it is |
+| --- | --- |
+| [PRD](https://github.com/burakboduroglu/portkill/blob/main/PRD.md) | Product requirements, roadmap |
+| [Implementation](https://github.com/burakboduroglu/portkill/blob/main/docs/implementation.md) | Architecture & data flow |
+| [Data dictionary](https://github.com/burakboduroglu/portkill/blob/main/DATA_DICTIONARY.md) | Types, GUI API shapes |
+| [Security notes](https://github.com/burakboduroglu/portkill/blob/main/docs/security-notes.md) | GUI scope, `npm audit`, reporting |
+
+---
+
+## Development
 
 ```bash
 npm run build
-node dist/index.js --gui
+npm test
+npm run test:coverage
+npm run lint
 ```
 
-Opens a page on **loopback** (127.0.0.1 and ::1 when available; ephemeral port printed in the terminal). Use **Ctrl+C** to stop. The browser may open automatically (macOS `open`, Linux `xdg-open`).
+Terminal colors use [chalk](https://github.com/chalk/chalk); set `NO_COLOR=1` to disable ([no-color.org](https://no-color.org/)).
 
-Port arguments can be single numbers or **inclusive ranges** (`start-end`, max 4096 ports per range). Duplicates are removed while keeping order.
+---
 
-## Docs
+## npm vs GitHub README
 
-| Document | Description |
-| --- | --- |
-| [docs/implementation.md](./docs/implementation.md) | Architecture, modules, data flow |
-| [docs/cli-reference.md](./docs/cli-reference.md) | Flags, exit codes, examples |
-| [DATA_DICTIONARY.md](./DATA_DICTIONARY.md) | Fields, outcomes, HTTP API (GUI) |
-| [docs/homebrew.md](./docs/homebrew.md) | Brew tap, formula updates |
-| [docs/security-notes.md](./docs/security-notes.md) | Audit, GUI exposure, reporting |
+**The same `README.md` is what npm shows** on [npmjs.com/package/portkill](https://www.npmjs.com/package/portkill) — it is listed in `package.json` `"files"`. Links to deep docs use **GitHub URLs** so they still work from the npm page (the `docs/` folder is not inside the published tarball).
 
-Colors use [chalk](https://github.com/chalk/chalk); set `NO_COLOR=1` to disable (see [NO_COLOR](https://no-color.org/)).
-
-## Scripts
-
-| Script | Description |
-| --- | --- |
-| `npm run build` | Bundle CLI with `tsup` |
-| `npm test` | `vitest run` |
-| `npm run test:coverage` | Vitest + v8 coverage (see `vitest.config.ts`; excludes `src/index.ts`, `src/types.ts`, `src/gui/**`) |
-| `npm run lint` | ESLint |
+---
 
 ## License
 
-MIT
+MIT — see [LICENSE](https://github.com/burakboduroglu/portkill/blob/main/LICENSE).
