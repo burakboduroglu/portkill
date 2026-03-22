@@ -1,6 +1,6 @@
 # DATA_DICTIONARY — portkill
 
-This document defines concepts, fields, and (planned) API payloads used across the app. PRD: [PRD.md](./PRD.md).
+This document defines concepts, fields, and HTTP API payloads for the **`--gui`** server, plus CLI-related types. PRD: [PRD.md](./PRD.md).
 
 ---
 

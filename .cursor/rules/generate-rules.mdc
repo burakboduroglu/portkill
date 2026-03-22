@@ -12,14 +12,14 @@ alwaysApply: true
 ## Stack and layout
 
 - **Stack:** TypeScript, Node.js ≥ 18, `commander`, `tsup`, `vitest`, ESLint + Prettier.
-- **Paths:** `src/index.ts` (CLI entry), `src/commands/kill.ts`, `src/core/finder.ts`, `src/core/killer.ts`, `src/utils/output.ts`, `src/utils/platform.ts`. Optional GUI: PRD §5.5 / `src/gui/`.
+- **Paths:** `src/index.ts` (CLI entry), `src/commands/kill.ts`, `src/core/finder.ts`, `src/core/killer.ts`, `src/utils/output.ts`, `src/utils/platform.ts`. GUI (shipped): PRD §5.5 / `src/gui/`.
 - **Platforms:** macOS and Linux only; no Windows. Port→PID logic lives in `platform.ts`; macOS uses `lsof`, Linux `fuser` or `/proc/net/tcp`.
 
 ## CLI contract (PRD §5)
 
 - **Lines:** success `✔ Port <p> → killed (name, PID …)`; empty `ℹ Port <p> → no process found`; permission `✖ Port <p> → permission denied (try with sudo)`.
 - **Exit codes:** `0` done; `1` general error; `2` no process on any port; `3` permission denied.
-- **Flags:** `--force` / `-f`, `--dry-run` / `-n`, `--signal` / `-s` (default SIGTERM), `--verbose` / `-v`, `--version`, `--help` / `-h`.
+- **Flags:** `--force` / `-f`, `--dry-run` / `-n`, `--signal` / `-s` (default SIGTERM), `--list` / `-l`, `--gui`, `--verbose` / `-v`, `--version`, `--help` / `-h`.
 
 ## Code style
 

@@ -205,7 +205,16 @@ portkill/
 │       └── platform.ts   # macOS / Linux detection
 ├── tests/
 │   ├── finder.test.ts
-│   └── killer.test.ts
+│   ├── killer.test.ts
+│   ├── kill-command.test.ts
+│   ├── list-command.test.ts
+│   ├── lister.test.ts
+│   ├── lister-all.test.ts
+│   ├── parse-ports.test.ts
+│   ├── platform.test.ts
+│   ├── output.test.ts
+│   ├── exit-code.test.ts
+│   └── gui-server.test.ts
 ├── dist/                 # build output (gitignored)
 ├── package.json
 ├── tsconfig.json
