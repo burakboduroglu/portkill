@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { Command } from "commander";
 
 import { runKill } from "./commands/kill.js";
+import { runList } from "./commands/list.js";
 import { getSupportedPlatform, UnsupportedPlatformError } from "./utils/platform.js";
 
 function readPackageVersion(): string {
@@ -43,8 +44,39 @@ async function main(): Promise<void> {
     .option("-n, --dry-run", "show targets only; do not send signals", false)
     .option("-s, --signal <name>", "signal to send (default: SIGTERM)", "SIGTERM")
     .option("-v, --verbose", "verbose stderr logs", false)
+    .option("-l, --list", "list all TCP listening ports and processes", false)
     .configureHelp({ helpWidth: 88 })
     .action(async (portsArg: string[], options) => {
+      const list = options.list as boolean;
+      if (list && portsArg.length > 0) {
+        process.stderr.write("error: do not pass ports together with --list\n");
+        process.exitCode = 1;
+        return;
+      }
+
+      if (list) {
+        let platform;
+        try {
+          platform = getSupportedPlatform();
+        } catch (e) {
+          if (e instanceof UnsupportedPlatformError) {
+            process.stderr.write(`${e.message}\n`);
+            process.exitCode = 1;
+            return;
+          }
+          throw e;
+        }
+        const { exitCode, lines } = await runList({
+          platform,
+          verbose: options.verbose as boolean,
+        });
+        for (const line of lines) {
+          process.stdout.write(`${line}\n`);
+        }
+        process.exitCode = exitCode;
+        return;
+      }
+
       if (portsArg.length === 0) {
         program.help({ error: true });
         return;

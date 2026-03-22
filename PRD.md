@@ -273,15 +273,15 @@ end
 
 ### v0.2.0
 
-- [ ] Linux support
-- [ ] `--signal` flag
-- [ ] Colored, formatted output (chalk)
-- [ ] Unit tests (≥ 80% coverage)
+- [x] Linux support
+- [x] `--signal` flag
+- [x] Colored, formatted output (chalk)
+- [x] Unit tests (≥ 80% coverage on `src/` except CLI entry)
 
 ### v0.3.0
 
 - [ ] Port ranges: `portkill 3000-3005`
-- [ ] List listeners: `portkill --list`
+- [x] List listeners: `portkill --list`
 - [ ] Polished `npm i -g portkill` story
 
 ### v0.4.0 — Simple GUI

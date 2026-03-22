@@ -2,6 +2,8 @@
 
 Same as [PRD.md](../PRD.md) §5; duplicated here for quick lookup.
 
+Stdout lines are colorized with **chalk** when supported. Set `NO_COLOR=1` to disable.
+
 ## Usage
 
 ```bash
@@ -16,6 +18,7 @@ portkill <port> [port2] [port3] ...
 | `--dry-run` | `-n` | Show targets only; do not send signals |
 | `--signal <SIG>` | `-s` | Signal (default: SIGTERM) |
 | `--verbose` | `-v` | Verbose stderr logs |
+| `--list` | `-l` | List all TCP listeners (uses `lsof`; do not pass ports) |
 | `--version` | `-V`, `--version` | Print version |
 | `--help` | `-h` | Help |
 
@@ -43,4 +46,5 @@ portkill 3000
 portkill 3000 8080
 portkill 3000 --force
 portkill 3000 --dry-run
+portkill --list
 ```
