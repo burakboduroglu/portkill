@@ -54,8 +54,6 @@ npm link   # optional: puts `portkill` on PATH
 
 Introduction to **`portkill --gui`** (local web UI on loopback — list listeners, dry-run, kill with browser confirm).
 
-GitHub and npm **do not allow `<iframe>` embeds** in README files (sanitized for security), so there is no true inline player here — **click the preview** to watch on YouTube.
-
 <p align="center">
   <a href="https://www.youtube.com/watch?v=_-Z6zwiEHmg" title="portkill --gui — watch on YouTube">
     <img src="https://img.youtube.com/vi/_-Z6zwiEHmg/hqdefault.jpg" alt="portkill --gui GUI demo — click to watch on YouTube" width="640">

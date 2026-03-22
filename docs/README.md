@@ -9,8 +9,6 @@
 
 ## GUI demo — `portkill --gui`
 
-GitHub does not render YouTube `<iframe>` in Markdown; click the image to open the video.
-
 <p align="center">
   <a href="https://www.youtube.com/watch?v=_-Z6zwiEHmg" title="portkill --gui — YouTube">
     <img src="https://img.youtube.com/vi/_-Z6zwiEHmg/hqdefault.jpg" alt="portkill --gui — click for YouTube" width="560">
