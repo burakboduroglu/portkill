@@ -264,11 +264,11 @@ end
 
 ### v0.1.0 — MVP
 
-- [ ] Single-port kill
-- [ ] Multi-port support
-- [ ] macOS support
-- [ ] `--dry-run` flag
-- [ ] `--force` flag
+- [x] Single-port kill
+- [x] Multi-port support
+- [x] macOS support
+- [x] `--dry-run` flag
+- [x] `--force` flag
 - [ ] Homebrew tap published
 
 ### v0.2.0

@@ -1,0 +1,98 @@
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import process from "node:process";
+import { fileURLToPath } from "node:url";
+
+import { Command } from "commander";
+
+import { runKill } from "./commands/kill.js";
+import { getSupportedPlatform, UnsupportedPlatformError } from "./utils/platform.js";
+
+function readPackageVersion(): string {
+  try {
+    const here = dirname(fileURLToPath(import.meta.url));
+    const pkgPath = join(here, "..", "package.json");
+    const raw = readFileSync(pkgPath, "utf8");
+    const pkg = JSON.parse(raw) as { version?: string };
+    return pkg.version ?? "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+}
+
+function parsePorts(raw: string[]): number[] {
+  const ports: number[] = [];
+  for (const token of raw) {
+    const n = Number.parseInt(token, 10);
+    if (!Number.isFinite(n) || n < 1 || n > 65535) {
+      throw new Error(`invalid port: ${token}`);
+    }
+    ports.push(n);
+  }
+  return ports;
+}
+
+async function main(): Promise<void> {
+  const program = new Command();
+
+  program
+    .name("portkill")
+    .description("Kill processes listening on given TCP ports")
+    .argument("[ports...]", "one or more TCP ports (1–65535)")
+    .option("-f, --force", "do not prompt for confirmation", false)
+    .option("-n, --dry-run", "show targets only; do not send signals", false)
+    .option("-s, --signal <name>", "signal to send (default: SIGTERM)", "SIGTERM")
+    .option("-v, --verbose", "verbose stderr logs", false)
+    .configureHelp({ helpWidth: 88 })
+    .action(async (portsArg: string[], options) => {
+      if (portsArg.length === 0) {
+        program.help({ error: true });
+        return;
+      }
+
+      let ports: number[];
+      try {
+        ports = parsePorts(portsArg);
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        process.stderr.write(`${msg}\n`);
+        process.exitCode = 1;
+        return;
+      }
+
+      let platform;
+      try {
+        platform = getSupportedPlatform();
+      } catch (e) {
+        if (e instanceof UnsupportedPlatformError) {
+          process.stderr.write(`${e.message}\n`);
+          process.exitCode = 1;
+          return;
+        }
+        throw e;
+      }
+
+      const { exitCode, lines } = await runKill({
+        ports,
+        dryRun: options.dryRun as boolean,
+        force: options.force as boolean,
+        verbose: options.verbose as boolean,
+        signal: options.signal as string,
+        platform,
+      });
+
+      for (const line of lines) {
+        process.stdout.write(`${line}\n`);
+      }
+      process.exitCode = exitCode;
+    });
+
+  program.version(readPackageVersion(), "-V, --version", "output version number");
+
+  await program.parseAsync(process.argv);
+}
+
+main().catch((err) => {
+  process.stderr.write(err instanceof Error ? `${err.message}\n` : `${String(err)}\n`);
+  process.exitCode = 1;
+});
