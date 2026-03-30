@@ -32,7 +32,7 @@ This document defines concepts, fields, and HTTP API payloads for the **`--gui`*
 | `pid` | `number` | Process ID; multiple listeners on one port possible (list). |
 | `commandName` | `string \| null` | Short command name if known (e.g. `node`), derived from `lsof`/`ps`. |
 
-**Note:** If multiple PIDs share a port, the PRD line format may collapse to one line or one line per process; pick one behavior in code and cover with tests.
+**Note:** If several processes listen on the same port, `findListeners` returns all of them. The CLI kills each PID; the **stdout success/dry-run line** shows the **first** listener’s `pid` / `commandName` (confirmation prompt lists all, with `+N more` when needed). See `src/types.ts` (`PortOutcome`) and `src/commands/kill.ts`.
 
 ---
 
@@ -48,7 +48,7 @@ Suggested machine-facing discriminant for one port:
 | `permissionDenied` | `kill` / EPERM, etc. | `✖ Port … → permission denied (try with sudo)` | `3` |
 | `error` | Unexpected failure | Appropriate error line | `1` |
 
-Optional extra fields: `pids`, `commandName`, `message` (verbose or error detail).
+Concrete fields match **`src/types.ts`**: e.g. `killed` / `dryRunWouldKill` carry `pid` and `commandName`; `error` carries `message`. There is no `pids[]` on `PortOutcome` — multiple listeners are handled in the kill command loop, but the reported line uses the first process for display.
 
 ---
 
@@ -61,18 +61,20 @@ Optional extra fields: `pids`, `commandName`, `message` (verbose or error detail
 | `NO_PROCESS_FOUND` | `2` | No process on any requested port (all empty). |
 | `PERMISSION_DENIED` | `3` | At least one permission error. |
 
-**Aggregation (recommended):** Priority `3` > `1` > `2` > `0`; when ports differ, the worst code wins (document the rule in README until PRD spells it out).
+**Aggregation:** Same as `aggregateExitCode` in `src/utils/exit-code.ts`: permission (`3`) > any `error` outcome (`1`) > all ports `notFound` (`2`) > else success (`0`).
 
 ---
 
 ## 6. External command interfaces (reference)
 
-| Platform | Command | Expected use |
-| --- | --- | --- |
-| macOS | `lsof -ti tcp:<port>` | PID list on stdout, one per line. |
-| Linux | `fuser -n tcp <port> 2>/dev/null` or equivalent | PID list; parse per distro. |
+Aligned with **`src/core/finder.ts`** (not an exhaustive shell guide):
 
-Raw stdout/stderr from these commands are not part of the persistent model; only `finder` parses them.
+| Step | Command | Expected use |
+| --- | --- | --- |
+| Primary (all platforms) | `lsof -nP -iTCP:<port> -sTCP:LISTEN` | Parse listen table → `ListenerProcess[]` (command name + PID). |
+| Linux fallback if `lsof` fails | `fuser -n tcp <port>` | Combine stdout/stderr → PID list (`commandName` unknown). |
+
+Raw stdout/stderr are not part of the persistent model; only `finder` / `lister` parse them.
 
 ---
 
@@ -116,4 +118,4 @@ Served only when **`portkill --gui`** is running. Server binds **loopback** (`12
 
 ---
 
-*Aligned with current PRD / `package.json` (2026-03-22).*
+*Aligned with current PRD and `package.json` version; cross-check `src/types.ts` and `src/gui/server.ts` when changing APIs.*

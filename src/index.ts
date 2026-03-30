@@ -1,7 +1,4 @@
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
 import process from "node:process";
-import { fileURLToPath } from "node:url";
 
 import { Command } from "commander";
 
@@ -10,18 +7,7 @@ import { runList } from "./commands/list.js";
 import { attachGuiShutdown, startGuiServer } from "./gui/server.js";
 import { parsePortArguments } from "./utils/parse-ports.js";
 import { getSupportedPlatform, UnsupportedPlatformError } from "./utils/platform.js";
-
-function readPackageVersion(): string {
-  try {
-    const here = dirname(fileURLToPath(import.meta.url));
-    const pkgPath = join(here, "..", "package.json");
-    const raw = readFileSync(pkgPath, "utf8");
-    const pkg = JSON.parse(raw) as { version?: string };
-    return pkg.version ?? "0.0.0";
-  } catch {
-    return "0.0.0";
-  }
-}
+import { getPackageVersion } from "./version.js";
 
 async function main(): Promise<void> {
   const program = new Command();
@@ -145,7 +131,7 @@ async function main(): Promise<void> {
       process.exitCode = exitCode;
     });
 
-  program.version(readPackageVersion(), "-V, --version", "output version number");
+  program.version(getPackageVersion(), "-V, --version", "output version number");
 
   await program.parseAsync(process.argv);
 }

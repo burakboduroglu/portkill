@@ -15,7 +15,7 @@ npm view @burakboduroglu/portkill version
 If it matches `package.json`, bump:
 
 ```bash
-npm run release:bump-patch   # e.g. 0.4.5 → 0.4.6 (typical doc/readme fixes)
+npm run release:bump-patch   # e.g. 0.4.6 → 0.4.7 (typical doc/readme fixes)
 # or
 npm run release:bump-minor   # 0.4.x → 0.5.0
 ```

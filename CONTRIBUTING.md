@@ -19,7 +19,7 @@ Please read the **[Code of Conduct](CODE_OF_CONDUCT.md)** before participating.
 
 - **Bug reports** with steps to reproduce, OS, Node version, and `portkill --version`
 - **Feature ideas** that fit the product scope in [PRD.md](PRD.md) (or propose a PRD update in the same PR)
-- **Docs** fixes (README, `docs/`, typos, clarity)
+- **Docs** fixes (README, `docs/`, [DATA_DICTIONARY.md](DATA_DICTIONARY.md) when types/APIs change, typos, clarity)
 - **Code** that keeps CLI behavior, exit codes, and tests aligned with the PRD and [docs/cli-reference.md](docs/cli-reference.md)
 
 Out of scope for this repo: Windows support and long-running port monitors (see PRD).
@@ -41,9 +41,9 @@ npm run lint
 
 Before opening a PR:
 
-- Add or update **tests** when behavior changes (`tests/`, Vitest).
+- Add or update **tests** when behavior changes (`tests/`, Vitest; patterns in [docs/testing-strategy.md](docs/testing-strategy.md)).
 - Run **`npm run format`** if you touch many files (Prettier).
-- For GUI changes, see [docs/security-notes.md](docs/security-notes.md) and [docs/implementation.md](docs/implementation.md).
+- For GUI or HTTP API changes, update [DATA_DICTIONARY.md](DATA_DICTIONARY.md) §7 and see [docs/security-notes.md](docs/security-notes.md) and [docs/implementation.md](docs/implementation.md).
 
 ---
 
@@ -89,7 +89,7 @@ Maintainers will review when they can. Please keep feedback discussions respectf
 ### Do
 
 - Keep changes **focused** on one concern per PR when possible
-- Match existing **TypeScript style** and layout in [PRD.md](PRD.md) §6.2 (`src/commands`, `src/core`, `src/utils`, `src/gui`, `src/types.ts`)
+- Match existing **TypeScript style** and layout in [PRD.md](PRD.md) §6.2 (`src/commands`, `src/core`, `src/utils`, `src/gui`, `src/types.ts`); keep [DATA_DICTIONARY.md](DATA_DICTIONARY.md) in sync when public shapes change
 - Preserve **backward compatibility** for CLI flags and exit codes unless the PRD is updated intentionally
 
 ### Don’t
