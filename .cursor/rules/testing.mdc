@@ -1,0 +1,24 @@
+---
+description: Vitest tests — mocks, coverage expectation, and layout for portkill tests/
+globs: tests/**/*.ts
+---
+
+# portkill — testing
+
+## Runner
+
+- **Vitest** (`npm test`, `npm run test:coverage`).
+
+## Principles
+
+- **Mock at the shell boundary:** pass fake `ExecFile` into `finder` / `lister` instead of relying on real `lsof`/`fuser` in unit tests.
+- **Spy on `finder`** in `kill-command.test.ts`-style tests to control `runKill` paths without a listening port.
+- **Assert exit codes** and PRD-style **line substrings** (`no process found`, `permission denied`, etc.).
+
+## Coverage
+
+- Target **≥ 80% on `src/`** where practical (see [PRD.md](../../PRD.md) §9). Gaps should be justified (e.g. pure CLI argv wiring).
+
+## Full guide
+
+- See [docs/testing-strategy.md](../../docs/testing-strategy.md) for file-to-module mapping and patterns.

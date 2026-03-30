@@ -5,6 +5,8 @@ alwaysApply: true
 
 # portkill — development workflow
 
+**Doc hub:** [AGENTS.md](../AGENTS.md) — read order, testing strategy, and links to PRD / implementation.
+
 Use together with [generate-rules.mdc](.cursor/rules/generate-rules.mdc) for style, CLI contract, and PRD alignment.
 
 ## 1. Before a feature or fix

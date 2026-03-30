@@ -1,5 +1,7 @@
 # Contributing to portkill
 
+**Agents & doc map:** see **[AGENTS.md](AGENTS.md)** first (links PRD, implementation, testing strategy, and Cursor rules).
+
 Thanks for helping improve **portkill** — a CLI plus a **local `--gui` web UI** (loopback) for freeing TCP ports on macOS and Linux.
 
 Please read the **[Code of Conduct](CODE_OF_CONDUCT.md)** before participating.

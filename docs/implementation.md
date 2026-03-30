@@ -83,9 +83,11 @@ Windows is out of scope; `platform.ts` should error clearly on unsupported `proc
 
 ## Testing
 
-- `finder` / `killer` / `lister`: unit tests with mocked `child_process` or injectable `execFile` (Vitest).
-- Commands and GUI: integration-style tests under `tests/` (see PRD §6.2 file list).
-- Optional: temporary listener (`node -e` + `http.createServer`) for real-port dry-run/kill — can be flaky in CI; keep optional.
+See **[testing-strategy.md](./testing-strategy.md)** for Vitest layout, mock patterns (`ExecFile`, `vi.mock` / spies), coverage goal, and priorities. Short summary:
+
+- Mock shell I/O at **`finder` / `lister`** boundaries; command tests mock **`finder`** for `runKill` paths.
+- **`gui-server.test.ts`** covers HTTP API behavior without a real browser.
+- Real-port integration tests are optional (flaky in CI).
 
 ## GUI
 
@@ -102,4 +104,6 @@ Publishing to **npm** only (`npm publish`) as `@burakboduroglu/portkill`. See [P
 
 - [PRD.md](../PRD.md) — product and CLI contract
 - [cli-reference.md](./cli-reference.md) — CLI cheat sheet
+- [testing-strategy.md](./testing-strategy.md) — Vitest patterns and coverage
+- [AGENTS.md](../AGENTS.md) — hub for agents and contributors
 - [.cursor/rules/workflow.mdc](../.cursor/rules/workflow.mdc) — implementation order

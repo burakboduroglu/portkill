@@ -1,7 +1,7 @@
 # portkill — Product Requirements Document (PRD)
 
 **Version:** 0.4.x (see `package.json`; ships as `@burakboduroglu/portkill` on npm)  
-**Status:** Active (current scope shipped)  
+**Status:** Stable — current product scope is shipped and maintained (agents: treat as authoritative; change via PR with PRD updates).  
 **Date:** 2026-03-22
 
 ---

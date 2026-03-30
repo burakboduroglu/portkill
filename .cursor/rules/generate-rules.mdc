@@ -7,6 +7,7 @@ alwaysApply: true
 
 ## Source of truth
 
+- **Entry hub:** [AGENTS.md](../AGENTS.md) links PRD, DATA_DICTIONARY, implementation, testing strategy, and these rules.
 - Product behavior and architecture: [PRD.md](PRD.md). If code and PRD disagree, update the PRD first, then the code.
 
 ## Stack and layout

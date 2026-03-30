@@ -76,9 +76,9 @@ Raw stdout/stderr from these commands are not part of the persistent model; only
 
 ---
 
-## 7. HTTP API (local GUI, v0.4+)
+## 7. HTTP API (local GUI, `portkill --gui`)
 
-Served only when running `portkill --gui`. Server binds **`127.0.0.1`** (random port unless fixed). No CORS needed (same origin).
+Served only when **`portkill --gui`** is running. Server binds **loopback** (`127.0.0.1` / `::1`). `/api/*` responses may include CORS headers so browser tabs using `localhost` vs `127.0.0.1` both work — the server is still not exposed off-loopback (see [security-notes.md](./docs/security-notes.md)).
 
 ### 7.1 `GET /api/listeners`
 

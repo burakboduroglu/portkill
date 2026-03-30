@@ -113,8 +113,10 @@ Full reference: [CLI reference](https://github.com/burakboduroglu/portkill/blob/
 
 | Doc | What it is |
 | --- | --- |
+| [AGENTS](https://github.com/burakboduroglu/portkill/blob/main/AGENTS.md) | **Start here** — doc map, rules, and links for contributors & AI agents |
 | [PRD](https://github.com/burakboduroglu/portkill/blob/main/PRD.md) | Product requirements & shipped scope |
 | [Implementation](https://github.com/burakboduroglu/portkill/blob/main/docs/implementation.md) | Architecture & data flow |
+| [Testing strategy](https://github.com/burakboduroglu/portkill/blob/main/docs/testing-strategy.md) | Vitest mocks, coverage, test file map |
 | [Data dictionary](https://github.com/burakboduroglu/portkill/blob/main/DATA_DICTIONARY.md) | Types, GUI API shapes |
 | [Security notes](https://github.com/burakboduroglu/portkill/blob/main/docs/security-notes.md) | GUI scope, `npm audit`, reporting |
 | [Release](https://github.com/burakboduroglu/portkill/blob/main/RELEASE.md) | `npm publish` (2FA), tags, GitHub Release |

@@ -1,0 +1,31 @@
+---
+description: TypeScript style, boundaries, and PRD-aligned output for portkill src/
+globs: src/**/*.ts
+---
+
+# portkill — coding style (src/)
+
+## Stack
+
+- **TypeScript** strictness per `tsconfig.json`; **ESM** (`import` / `.js` suffix in imports where required by build).
+- **Node.js ≥ 18** only — no `require` for app code.
+
+## Boundaries
+
+- **`core/`** — no `chalk`, no `process.stdout` formatting for user-facing lines; return data or call small helpers. Shell access via injected `execFile` in tests.
+- **`commands/`** — orchestration: call `finder` / `killer` / `lister`, use `output.ts` / `style.ts` for lines.
+- **`utils/output.ts`** — PRD §5.2 one-line formats; keep strings stable (tests assert substrings).
+
+## Naming
+
+- **Files:** `kebab-case` is not used; follow existing **`camelCase.ts`** for modules (`parse-ports.ts` uses hyphen — keep consistency within each folder).
+- **Exports:** prefer named exports matching file purpose (`runKill`, `findListeners`).
+
+## Product rules
+
+- **No Windows branches** in `platform.ts` beyond a clear unsupported error.
+- **CLI contract** (stdout lines, exit codes) must match [PRD.md](../../PRD.md) §5 — when in doubt, update PRD + tests together.
+
+## Formatting
+
+- Run **`npm run format`** (Prettier) before PR; **`npm run lint`** (ESLint) must pass.
