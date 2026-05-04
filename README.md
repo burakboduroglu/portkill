@@ -3,12 +3,13 @@
 **Free stuck TCP ports in one command** — without memorizing `lsof`, `fuser`, and `kill` pipelines.
 
 [![npm](https://img.shields.io/npm/v/%40burakboduroglu%2Fportkill?style=flat-square&logo=npm&label=npm)](https://www.npmjs.com/package/@burakboduroglu/portkill)
+[![Homebrew](https://img.shields.io/badge/homebrew-tap-fbb040?style=flat-square&logo=homebrew&logoColor=white)](https://github.com/burakboduroglu/homebrew-portkill)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](https://github.com/burakboduroglu/portkill/blob/main/LICENSE)
 [![Node.js](https://img.shields.io/badge/node.js-%3E%3D18-417E38?style=flat-square&logo=node.js&logoColor=white)](https://github.com/burakboduroglu/portkill/blob/main/package.json)
 
 > The name reads like **`.portkill`** — a small, local dev utility (think `.env`-style prefix). The CLI binary is still `portkill`.
 
-**Published on npm:** [`@burakboduroglu/portkill`](https://www.npmjs.com/package/@burakboduroglu/portkill) — install with `npm i -g @burakboduroglu/portkill` or `npx @burakboduroglu/portkill` (see [Install](#install)).
+**Published on Homebrew and npm:** install with `brew install burakboduroglu/portkill/portkill`, `npm i -g @burakboduroglu/portkill`, or `npx @burakboduroglu/portkill` (see [Install](#install)).
 
 When Node or another stack prints `EADDRINUSE`, **`.portkill`** shows who owns the port, lets you **preview** (`--dry-run`), then stops only what you intend — or use the **local web UI** (`--gui` on loopback), same logic as the CLI.
 
@@ -27,7 +28,21 @@ When Node or another stack prints `EADDRINUSE`, **`.portkill`** shows who owns t
 
 ## Install
 
-Registry page: [npmjs.com/package/@burakboduroglu/portkill](https://www.npmjs.com/package/@burakboduroglu/portkill).
+Homebrew tap: [github.com/burakboduroglu/homebrew-portkill](https://github.com/burakboduroglu/homebrew-portkill).
+
+```bash
+brew install burakboduroglu/portkill/portkill
+portkill --version
+```
+
+If you prefer tapping first:
+
+```bash
+brew tap burakboduroglu/portkill
+brew install portkill
+```
+
+npm package: [npmjs.com/package/@burakboduroglu/portkill](https://www.npmjs.com/package/@burakboduroglu/portkill).
 
 ```bash
 npm i -g @burakboduroglu/portkill
@@ -38,6 +53,13 @@ No global install:
 
 ```bash
 npx @burakboduroglu/portkill --list
+```
+
+If Homebrew reports that `/opt/homebrew/bin/portkill` already exists, remove the npm global install first:
+
+```bash
+npm uninstall -g @burakboduroglu/portkill
+brew link portkill
 ```
 
 **From Source**
