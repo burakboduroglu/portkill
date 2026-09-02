@@ -1,6 +1,7 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
+import { execErrorCode } from "../utils/exec-error.js";
 import type { SupportedPlatform } from "../utils/platform.js";
 import type { ExecFile } from "./finder.js";
 
@@ -39,7 +40,9 @@ export async function listAllTcpListeners(
 ): Promise<{ ok: true; rows: TcpListenerRow[] } | { ok: false; message: string }> {
   const execFileFn = options.execFile ?? defaultExecFile;
   try {
-    const { stdout } = await execFileFn("lsof", ["-nP", "-iTCP", "-sTCP:LISTEN"], { encoding: "utf8" });
+    const { stdout } = await execFileFn("lsof", ["-nP", "-iTCP", "-sTCP:LISTEN"], {
+      encoding: "utf8",
+    });
     const seen = new Set<string>();
     const rows: TcpListenerRow[] = [];
     for (const line of stdout.split(/\r?\n/)) {
@@ -53,7 +56,7 @@ export async function listAllTcpListeners(
     rows.sort((a, b) => a.port - b.port || a.pid - b.pid);
     return { ok: true, rows };
   } catch (err) {
-    const code = err && typeof err === "object" && "code" in err ? (err as NodeJS.ErrnoException).code : undefined;
+    const code = execErrorCode(err);
     if (code === 1) {
       return { ok: true, rows: [] };
     }

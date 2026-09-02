@@ -1,9 +1,4 @@
-import {
-  createServer,
-  type IncomingMessage,
-  type Server,
-  type ServerResponse,
-} from "node:http";
+import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http";
 import process from "node:process";
 
 import { runKill } from "../commands/kill.js";
@@ -64,7 +59,9 @@ export interface StartGuiServerOptions {
   openBrowser?: boolean;
 }
 
-export function startGuiServer(opts: StartGuiServerOptions): Promise<{ url: string; servers: Server[] }> {
+export function startGuiServer(
+  opts: StartGuiServerOptions,
+): Promise<{ url: string; servers: Server[] }> {
   const requestHandler = async (req: IncomingMessage, res: ServerResponse): Promise<void> => {
     try {
       const url = new URL(req.url ?? "/", `http://${HOST}`);

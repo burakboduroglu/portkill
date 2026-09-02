@@ -17,7 +17,7 @@ node    12345 user   21u  IPv6 0x1234567890      0t0  TCP *:3000 (LISTEN)
 
   it("returns empty when lsof exits 1 (no matches)", async () => {
     const err = new Error("lsof");
-    (err as NodeJS.ErrnoException).code = 1;
+    Object.assign(err, { code: 1 });
     const execFile: ExecFile = vi.fn(async () => {
       throw err;
     });
@@ -27,7 +27,7 @@ node    12345 user   21u  IPv6 0x1234567890      0t0  TCP *:3000 (LISTEN)
 
   it("uses fuser on linux when lsof is missing", async () => {
     const enoent = new Error("nope");
-    (enoent as NodeJS.ErrnoException).code = "ENOENT";
+    Object.assign(enoent, { code: "ENOENT" });
     const execFile: ExecFile = vi.fn(async (file) => {
       if (file === "lsof") throw enoent;
       if (file === "fuser") {

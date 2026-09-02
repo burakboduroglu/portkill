@@ -4,18 +4,18 @@ Vitest is the test runner. **Goal:** keep `core/` honest with **mocked `child_pr
 
 ## Layout
 
-| Test file | Focus |
-| --- | --- |
-| `finder.test.ts` | `findListeners`; inject `ExecFile` mock; darwin table + linux `fuser` fallback |
-| `killer.test.ts` | `killPid`, permission vs other errors |
-| `lister.test.ts` / `lister-all.test.ts` | `listAllTcpListeners`, `lsof` LISTEN parsing |
-| `parse-ports.test.ts` | Port args and inclusive ranges |
-| `exit-code.test.ts` | `aggregateExitCode` priority (3 > 1 > 2 > 0) |
-| `output.test.ts` | Line formatting |
-| `platform.test.ts` | Unsupported platform errors |
-| `kill-command.test.ts` | `runKill` with `vi.mock` / spy on `finder` |
-| `list-command.test.ts` | `runList` |
-| `gui-server.test.ts` | HTTP handlers on loopback (no real browser) |
+| Test file                               | Focus                                                                          |
+| --------------------------------------- | ------------------------------------------------------------------------------ |
+| `finder.test.ts`                        | `findListeners`; inject `ExecFile` mock; darwin table + linux `fuser` fallback |
+| `killer.test.ts`                        | `killPid`, permission vs other errors                                          |
+| `lister.test.ts` / `lister-all.test.ts` | `listAllTcpListeners`, `lsof` LISTEN parsing                                   |
+| `parse-ports.test.ts`                   | Port args and inclusive ranges                                                 |
+| `exit-code.test.ts`                     | `aggregateExitCode` priority (3 > 1 > 2 > 0)                                   |
+| `output.test.ts`                        | Line formatting                                                                |
+| `platform.test.ts`                      | Unsupported platform errors                                                    |
+| `kill-command.test.ts`                  | `runKill` with `vi.mock` / spy on `finder`                                     |
+| `list-command.test.ts`                  | `runList`                                                                      |
+| `gui-server.test.ts`                    | HTTP handlers on loopback (no real browser)                                    |
 
 ## Mock patterns
 

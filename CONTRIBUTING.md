@@ -62,11 +62,11 @@ git checkout -b fix/your-topic
 
 Use a short, imperative summary. Prefixes are welcome:
 
-- `fix:` bug fix  
-- `feat:` user-visible behavior  
-- `docs:` documentation only  
-- `chore:` tooling, deps, release prep  
-- `test:` tests only  
+- `fix:` bug fix
+- `feat:` user-visible behavior
+- `docs:` documentation only
+- `chore:` tooling, deps, release prep
+- `test:` tests only
 
 Examples: `fix: handle empty lsof line on Linux`, `docs: clarify --gui loopback`.
 

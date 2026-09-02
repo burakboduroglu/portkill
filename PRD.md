@@ -39,14 +39,14 @@ Existing approaches fall short because:
 
 ## 4. Goals
 
-| # | Goal |
-| --- | --- |
-| 1 | Kill a single port in one command: `portkill 3000` |
-| 2 | Kill multiple ports at once: `portkill 3000 8080 5432` |
-| 3 | Tell the user which process was killed |
-| 4 | Installable via npm (`npm i -g @burakboduroglu/portkill`) |
-| 5 | Work reliably on macOS and Linux |
-| 6 | Local web UI (`--gui`) with the same kill/list semantics as the CLI |
+| #   | Goal                                                                |
+| --- | ------------------------------------------------------------------- |
+| 1   | Kill a single port in one command: `portkill 3000`                  |
+| 2   | Kill multiple ports at once: `portkill 3000 8080 5432`              |
+| 3   | Tell the user which process was killed                              |
+| 4   | Installable via npm (`npm i -g @burakboduroglu/portkill`)           |
+| 5   | Work reliably on macOS and Linux                                    |
+| 6   | Local web UI (`--gui`) with the same kill/list semantics as the CLI |
 
 ### Out of scope (not planned)
 
@@ -97,25 +97,25 @@ On error:
 
 ### 5.3 Flags
 
-| Flag | Short | Description |
-| --- | --- | --- |
-| `--force` | `-f` | Do not prompt for confirmation |
-| `--dry-run` | `-n` | Show process info only; do not kill |
-| `--signal <SIG>` | `-s` | Signal to send (default: SIGTERM) |
-| `--verbose` | `-v` | Verbose output |
-| `--list` | `-l` | List all TCP listeners (no port arguments) |
-| `--gui` | | Local web UI on loopback (no port arguments or `--list`) |
-| `--version` | | Print version |
-| `--help` | `-h` | Help |
+| Flag             | Short | Description                                              |
+| ---------------- | ----- | -------------------------------------------------------- |
+| `--force`        | `-f`  | Do not prompt for confirmation                           |
+| `--dry-run`      | `-n`  | Show process info only; do not kill                      |
+| `--signal <SIG>` | `-s`  | Signal to send (default: SIGTERM)                        |
+| `--verbose`      | `-v`  | Verbose output                                           |
+| `--list`         | `-l`  | List all TCP listeners (no port arguments)               |
+| `--gui`          |       | Local web UI on loopback (no port arguments or `--list`) |
+| `--version`      |       | Print version                                            |
+| `--help`         | `-h`  | Help                                                     |
 
 ### 5.4 Exit codes
 
-| Code | Meaning |
-| --- | --- |
-| `0` | Success (all ports handled) |
-| `1` | General error |
-| `2` | No process found on any requested port |
-| `3` | Permission denied |
+| Code | Meaning                                |
+| ---- | -------------------------------------- |
+| `0`  | Success (all ports handled)            |
+| `1`  | General error                          |
+| `2`  | No process found on any requested port |
+| `3`  | Permission denied                      |
 
 ### 5.5 Simple GUI — shipped behavior
 
@@ -125,11 +125,11 @@ On error:
 
 **Technology:**
 
-| Layer | Choice | Rationale |
-| --- | --- | --- |
-| Frontend | Embedded single-page UI (`index-html.ts`) | No separate Vite bundle in the shipped build |
-| API | `node:http` in-process | JSON routes; imports shared command helpers |
-| Shared code | `runKill`, `listAllTcpListeners`, `parsePortArguments` | Same outcomes as CLI |
+| Layer       | Choice                                                 | Rationale                                    |
+| ----------- | ------------------------------------------------------ | -------------------------------------------- |
+| Frontend    | Embedded single-page UI (`index-html.ts`)              | No separate Vite bundle in the shipped build |
+| API         | `node:http` in-process                                 | JSON routes; imports shared command helpers  |
+| Shared code | `runKill`, `listAllTcpListeners`, `parsePortArguments` | Same outcomes as CLI                         |
 
 **Screen layout (wireframe):**
 
@@ -175,15 +175,15 @@ sequenceDiagram
 
 ### 6.1 Technology stack
 
-| Layer | Choice | Rationale |
-| --- | --- | --- |
-| Language | TypeScript | Type safety, modern ecosystem |
-| Runtime | Node.js ≥ 18 | LTS; install via npm |
-| CLI | `commander` | Mature, small API |
-| Build | `tsup` | Zero-config TypeScript bundler |
-| Tests | `vitest` | Fast, TS-native |
-| Lint | `eslint` + `prettier` | Consistency |
-| GUI | Embedded UI + `node:http` | Local UI, §5.5 |
+| Layer    | Choice                    | Rationale                      |
+| -------- | ------------------------- | ------------------------------ |
+| Language | TypeScript                | Type safety, modern ecosystem  |
+| Runtime  | Node.js ≥ 18              | LTS; install via npm           |
+| CLI      | `commander`               | Mature, small API              |
+| Build    | `tsup`                    | Zero-config TypeScript bundler |
+| Tests    | `vitest`                  | Fast, TS-native                |
+| Lint     | `eslint` + `prettier`     | Consistency                    |
+| GUI      | Embedded UI + `node:http` | Local UI, §5.5                 |
 
 ### 6.2 Project layout
 
@@ -235,10 +235,10 @@ portkill/
 
 Port → PID mapping uses OS-specific commands:
 
-| Platform | Command |
-| --- | --- |
-| macOS | `lsof -ti tcp:<port>` |
-| Linux | `fuser <port>/tcp` or `/proc/net/tcp` |
+| Platform | Command                               |
+| -------- | ------------------------------------- |
+| macOS    | `lsof -ti tcp:<port>`                 |
+| Linux    | `fuser <port>/tcp` or `/proc/net/tcp` |
 
 Detection uses `process.platform`; abstraction lives in `platform.ts`.
 
@@ -250,14 +250,14 @@ End-user installs ship through **npm** only, as `@burakboduroglu/portkill` (unsc
 
 ### 7.1 npm — `npm publish` and global install
 
-| Step | Action |
-| --- | --- |
-| 1 | Confirm package name (`npm view @burakboduroglu/portkill`); unscoped `portkill` is blocked on npm (similar to `port-kill`). |
-| 2 | Ensure `package.json` has correct `version`, `bin.portkill` → built `dist/index.js`, `files` (or `.npmignore`) so `dist/` ships. |
-| 3 | `npm run build` and `npm test` (and `npm run test:coverage`) before release. |
-| 4 | `npm login`; `npm publish` (`publishConfig.access: public` for this scoped package). |
-| 5 | Verify: `npm i -g @burakboduroglu/portkill` then `portkill --version`; optional `npx @burakboduroglu/portkill --help`. |
-| 6 | Tag release in Git (`vX.Y.Z`) aligned with `package.json` version. |
+| Step | Action                                                                                                                           |
+| ---- | -------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | Confirm package name (`npm view @burakboduroglu/portkill`); unscoped `portkill` is blocked on npm (similar to `port-kill`).      |
+| 2    | Ensure `package.json` has correct `version`, `bin.portkill` → built `dist/index.js`, `files` (or `.npmignore`) so `dist/` ships. |
+| 3    | `npm run build` and `npm test` (and `npm run test:coverage`) before release.                                                     |
+| 4    | `npm login`; `npm publish` (`publishConfig.access: public` for this scoped package).                                             |
+| 5    | Verify: `npm i -g @burakboduroglu/portkill` then `portkill --version`; optional `npx @burakboduroglu/portkill --help`.           |
+| 6    | Tag release in Git (`vX.Y.Z`) aligned with `package.json` version.                                                               |
 
 **Deliverable:** documented install path (`README` + registry page) and a repeatable release checklist ([`RELEASE.md`](RELEASE.md) at repo root).
 
@@ -277,22 +277,22 @@ All of the following are implemented and maintained in the current codebase:
 
 ## 9. Success criteria
 
-| Metric | Target |
-| --- | --- |
-| First install → first successful use | < 2 minutes |
-| Command runtime | < 500ms |
-| macOS + Linux compatibility | 100% |
-| Test coverage | ≥ 80% |
-| npm global / `npx` install | Documented; package published to registry |
+| Metric                               | Target                                    |
+| ------------------------------------ | ----------------------------------------- |
+| First install → first successful use | < 2 minutes                               |
+| Command runtime                      | < 500ms                                   |
+| macOS + Linux compatibility          | 100%                                      |
+| Test coverage                        | ≥ 80%                                     |
+| npm global / `npx` install           | Documented; package published to registry |
 
 ---
 
 ## 10. Risks
 
-| Risk | Likelihood | Mitigation |
-| --- | --- | --- |
-| `lsof` / `fuser` output differs by OS | Medium | Platform abstraction layer |
-| Privileged ports (< 1024) need root | High | Clear error + suggest `sudo` |
-| Node version mismatch | Low | Enforce `>=18` in `engines` |
-| npm package name collision | Done | Published as `@burakboduroglu/portkill` (unscoped blocked vs `port-kill`) |
-| Local GUI server bound to non-loopback | Low | Listen on loopback (`127.0.0.1` + `::1`); document in README |
+| Risk                                   | Likelihood | Mitigation                                                                |
+| -------------------------------------- | ---------- | ------------------------------------------------------------------------- |
+| `lsof` / `fuser` output differs by OS  | Medium     | Platform abstraction layer                                                |
+| Privileged ports (< 1024) need root    | High       | Clear error + suggest `sudo`                                              |
+| Node version mismatch                  | Low        | Enforce `>=18` in `engines`                                               |
+| npm package name collision             | Done       | Published as `@burakboduroglu/portkill` (unscoped blocked vs `port-kill`) |
+| Local GUI server bound to non-loopback | Low        | Listen on loopback (`127.0.0.1` + `::1`); document in README              |

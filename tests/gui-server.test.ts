@@ -6,7 +6,11 @@ import { startGuiServer } from "../src/gui/server.js";
 
 describe("GUI server", () => {
   it("serves index HTML on GET /", async () => {
-    const { url, servers } = await startGuiServer({ platform: "darwin", port: 0, openBrowser: false });
+    const { url, servers } = await startGuiServer({
+      platform: "darwin",
+      port: 0,
+      openBrowser: false,
+    });
     try {
       const html = await fetchText(`${url}/`);
       expect(html).toContain("portkill");
@@ -17,14 +21,19 @@ describe("GUI server", () => {
   });
 
   it("returns 400 for empty resolve tokens", async () => {
-    const { url, servers } = await startGuiServer({ platform: "darwin", port: 0, openBrowser: false });
+    const { url, servers } = await startGuiServer({
+      platform: "darwin",
+      port: 0,
+      openBrowser: false,
+    });
     try {
-      const res = await fetch(`${url}/api/resolve`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tokens: [], dryRun: true, force: true, signal: "SIGTERM" }),
+      const status = await postJsonStatus(`${url}/api/resolve`, {
+        tokens: [],
+        dryRun: true,
+        force: true,
+        signal: "SIGTERM",
       });
-      expect(res.status).toBe(400);
+      expect(status).toBe(400);
     } finally {
       await closeAllServers(servers);
     }
@@ -40,6 +49,33 @@ function fetchText(url: string): Promise<string> {
         res.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
       })
       .on("error", reject);
+  });
+}
+
+/**
+ * Node 18's global fetch does not work inside vitest's worker environment: the
+ * request hangs until the test times out, against any server. Node 18 is still
+ * a supported target, so the request goes through node:http like the GET above.
+ */
+function postJsonStatus(url: string, body: unknown): Promise<number | undefined> {
+  return new Promise((resolve, reject) => {
+    const payload = JSON.stringify(body);
+    const req = http.request(
+      url,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(payload),
+        },
+      },
+      (res) => {
+        res.resume();
+        res.on("end", () => resolve(res.statusCode));
+      },
+    );
+    req.on("error", reject);
+    req.end(payload);
   });
 }
 

@@ -1,6 +1,7 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
+import { execErrorCode } from "../utils/exec-error.js";
 import type { SupportedPlatform } from "../utils/platform.js";
 import type { ListenerProcess } from "../types.js";
 
@@ -60,7 +61,7 @@ async function findWithLsof(
     const list = parseLsofListenTable(stdout);
     return list.length === 0 ? "empty" : list;
   } catch (err) {
-    const code = err && typeof err === "object" && "code" in err ? (err as NodeJS.ErrnoException).code : undefined;
+    const code = execErrorCode(err);
     if (code === 1) {
       return "empty";
     }
@@ -71,7 +72,10 @@ async function findWithLsof(
   }
 }
 
-async function findWithFuser(port: number, execFileFn: ExecFile): Promise<ListenerProcess[] | "empty" | "error"> {
+async function findWithFuser(
+  port: number,
+  execFileFn: ExecFile,
+): Promise<ListenerProcess[] | "empty" | "error"> {
   try {
     const { stdout, stderr } = await execFileFn("fuser", ["-n", "tcp", String(port)], {
       encoding: "utf8",
@@ -81,7 +85,7 @@ async function findWithFuser(port: number, execFileFn: ExecFile): Promise<Listen
     if (pids.length === 0) return "empty";
     return pids.map((pid) => ({ pid, commandName: null }));
   } catch (err) {
-    const code = err && typeof err === "object" && "code" in err ? (err as NodeJS.ErrnoException).code : undefined;
+    const code = execErrorCode(err);
     if (code === 1) return "empty";
     if (code === "ENOENT") return "error";
     return "error";

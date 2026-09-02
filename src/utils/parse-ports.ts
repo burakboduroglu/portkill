@@ -30,7 +30,9 @@ export function expandPortToken(token: string): number[] {
     }
     const count = end - start + 1;
     if (count > MAX_PORTS_PER_RANGE) {
-      throw new Error(`port range too large: ${count} ports (max ${MAX_PORTS_PER_RANGE} per range)`);
+      throw new Error(
+        `port range too large: ${count} ports (max ${MAX_PORTS_PER_RANGE} per range)`,
+      );
     }
     const out: number[] = [];
     for (let p = start; p <= end; p++) {

@@ -1,5 +1,7 @@
 import process from "node:process";
 
+import { execErrorCode } from "../utils/exec-error.js";
+
 export type KillFn = (pid: number, signal?: NodeJS.Signals | number) => void;
 
 const defaultKill: KillFn = (pid, signal) => {
@@ -17,7 +19,7 @@ export function killPid(
     killFn(pid, signal);
     return { ok: true };
   } catch (err) {
-    const code = err && typeof err === "object" && "code" in err ? String((err as NodeJS.ErrnoException).code) : "";
+    const code = String(execErrorCode(err) ?? "");
     if (code === "EPERM") {
       return { ok: false, permissionDenied: true };
     }

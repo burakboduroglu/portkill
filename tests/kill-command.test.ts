@@ -80,7 +80,7 @@ describe("runKill", () => {
     });
     const killFn = vi.fn(() => {
       const e = new Error("nope");
-      (e as NodeJS.ErrnoException).code = "EPERM";
+      Object.assign(e, { code: "EPERM" });
       throw e;
     });
     const r = await runKill({ ...baseOpts, killFn });
