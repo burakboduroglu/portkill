@@ -28,8 +28,7 @@ Keep the change focused, and read CONTRIBUTING.md first.
 
 ## If this touches the CLI or the GUI API
 
-- [ ] `docs/cli-reference.md` matches the flags and exit codes
-- [ ] `DATA_DICTIONARY.md` §7 matches the request and response shapes
+- [ ] `docs/cli-reference.md` matches the flags, exit codes and GUI API shapes
 - [ ] I ran the built CLI by hand: `bun run build && node dist/index.js --list`
 
 ## Notes for the reviewer

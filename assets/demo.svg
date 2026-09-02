@@ -1,0 +1,40 @@
+<!--
+  README terminal figure. The lines are what the CLI prints; see
+  src/utils/output.ts for the formats and src/utils/style.ts for the colours.
+  Regenerate the PNG with:
+    rsvg-convert -w 900 -h 520 assets/demo.svg -o assets/demo.png
+-->
+<svg width="900" height="520" viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#04070D" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <rect width="900" height="520" fill="#0C1424"/>
+
+  <g filter="url(#sh)">
+    <rect x="40" y="34" width="820" height="452" rx="16" fill="#0A0F1A" stroke="#243147" stroke-width="1"/>
+  </g>
+  <rect x="40" y="34" width="820" height="44" rx="16" fill="#151E2F"/>
+  <rect x="40" y="62" width="820" height="16" fill="#151E2F"/>
+  <circle cx="66" cy="56" r="6" fill="#FF5F57"/>
+  <circle cx="88" cy="56" r="6" fill="#FEBC2E"/>
+  <circle cx="110" cy="56" r="6" fill="#28C840"/>
+  <text x="450" y="62" text-anchor="middle" font-family="SF Mono, Menlo, Consolas, monospace"
+        font-size="16" fill="#6C819E">portkill</text>
+
+  <g font-family="SF Mono, Menlo, Consolas, monospace" font-size="18" xml:space="preserve">
+    <text x="68" y="128"><tspan fill="#2DD4BF">$</tspan><tspan fill="#E6EDF7"> portkill --list</tspan></text>
+    <text x="68" y="168" fill="#E6EDF7">• Port <tspan fill="#E5C07B" font-weight="700">3000</tspan> → node (PID 12345)</text>
+    <text x="68" y="198" fill="#E6EDF7">• Port <tspan fill="#E5C07B" font-weight="700">8080</tspan> → vite (PID 67890)</text>
+    <text x="68" y="228" fill="#E6EDF7">• Port <tspan fill="#E5C07B" font-weight="700">5432</tspan> → postgres (PID 41277)</text>
+
+    <text x="68" y="290"><tspan fill="#2DD4BF">$</tspan><tspan fill="#E6EDF7"> portkill 3000 5432 --dry-run</tspan></text>
+    <text x="68" y="330" fill="#22D3EE">ℹ Port 3000 → node (PID 12345) — dry-run (no signal sent)</text>
+    <text x="68" y="360" fill="#22D3EE">ℹ Port 5432 → postgres (PID 41277) — dry-run (no signal sent)</text>
+
+    <text x="68" y="420"><tspan fill="#2DD4BF">$</tspan><tspan fill="#E6EDF7"> portkill 3000 --force</tspan></text>
+    <text x="68" y="458" fill="#4ADE80">✔ Port 3000 → killed (node, PID 12345)</text>
+  </g>
+</svg>

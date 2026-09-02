@@ -21,7 +21,7 @@ async function main(): Promise<void> {
     )
     .option("-f, --force", "do not prompt for confirmation", false)
     .option("-n, --dry-run", "show targets only; do not send signals", false)
-    .option("-s, --signal <name>", "signal to send (default: SIGTERM)", "SIGTERM")
+    .option("-s, --signal <name>", "signal to send", "SIGTERM")
     .option("-v, --verbose", "verbose stderr logs", false)
     .option("-l, --list", "list all TCP listening ports and processes", false)
     .option("--gui", "open local web UI (127.0.0.1 only)", false)

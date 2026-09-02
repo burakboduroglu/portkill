@@ -21,6 +21,8 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   the cast was wrong; one `execErrorCode` helper now returns the honest union.
 - The GUI server test no longer hangs on Node 18. It called the server through
   global `fetch`, which does not work inside a vitest worker on that version.
+- `--help` printed the default signal twice: the option description carried
+  `(default: SIGTERM)` while commander appended its own.
 
 ### Added
 
@@ -28,13 +30,38 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   test suite across Node 18, 20 and 22 on both Linux and macOS. The built CLI
   is asked for its version there, so a bump that lands only in `package.json`
   cannot ship a binary reporting the previous release.
-- Homebrew install instructions in the README, an AGENTS documentation hub and
-  a testing strategy document.
+- Homebrew install instructions in the README.
+- A release workflow: pushing a version tag publishes to npm with provenance
+  and creates the GitHub release from this changelog.
+- `SECURITY.md`, issue forms and a pull request template. The security notes
+  previously pointed people at the public issue tracker for vulnerabilities.
+- A social preview card and a rewritten README, both showing the output the CLI
+  actually prints.
+- The coverage thresholds in `vitest.config.ts` now run in CI, where nothing
+  had been enforcing them.
 
 ### Changed
 
 - Prettier applied across the tree, with `format:check` wired into CI so the
   formatter stays authoritative.
+- The toolchain moved to bun. `package-lock.json` is gone, `bun.lock` is the
+  tracked lockfile, and the development commands in every document match what
+  CI runs. Publishing stays with npm.
+- Dependency updates closing 30 of the 32 advisories `bun audit` reported, all
+  of them in development dependencies. What remains is one low advisory for an
+  esbuild development server that this project never starts, on a platform it
+  does not support.
+
+### Removed
+
+- The Cursor rules, the PRD, the data dictionary, the AGENTS hub and the
+  implementation, testing-strategy and security-notes documents. Seven
+  documents described a CLI with seven flags, cross-referencing each other more
+  than the code, and drifted from it — the implementation guide still described
+  `/proc/net/tcp` parsing that does not exist. What was load-bearing moved
+  where it is checked: the GUI API contract into the CLI reference, the audit
+  and body-cap notes into the security policy, and the module boundaries and
+  mock patterns into the README and the contributing guide.
 
 ## [0.4.5] - 2026-03-22
 

@@ -7,9 +7,7 @@ body:
     attributes:
       value: |
         portkill is deliberately small: find what holds a TCP port, show it,
-        stop it. Proposals that keep it that way are the easiest to accept —
-        see [PRD.md](https://github.com/burakboduroglu/portkill/blob/main/PRD.md)
-        for the shipped scope.
+        stop it. Proposals that keep it that way are the easiest to accept.
 
         Windows support and long-running port monitors are out of scope.
 

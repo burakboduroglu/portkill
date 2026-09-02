@@ -36,6 +36,10 @@ Worth knowing before you report, and before you install:
   release tarball, pinned by checksum.
 - The published tarball ships `dist/index.js`, the README and the license — no
   source maps and no `package.json` scripts.
+- Request bodies to the GUI API are capped at 64 KiB.
+- Dependencies are audited with `bun audit`. The runtime dependencies are
+  `chalk` and `commander`; everything else is development-only and never
+  reaches the tarball.
 
 ## Reporting a vulnerability
 

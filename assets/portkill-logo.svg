@@ -1,0 +1,15 @@
+<!--
+  portkill mark: a shell prompt in a rounded tile. Matches the tile on
+  assets/social-preview.svg.
+-->
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mark" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4ADE80"/><stop offset="1" stop-color="#12A594"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="139" fill="url(#mark)"/>
+  <path d="M160 181 L266 256 L160 331" fill="none" stroke="#07231C" stroke-width="48"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="299" y="298" width="128" height="43" rx="21" fill="#07231C"/>
+</svg>

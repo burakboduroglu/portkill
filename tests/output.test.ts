@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { formatOutcomeLine } from "../src/utils/output.js";
 
 describe("formatOutcomeLine", () => {
-  it("formats PRD examples", () => {
+  it("formats one line per outcome kind", () => {
     expect(formatOutcomeLine({ kind: "killed", port: 3000, pid: 12345, commandName: "node" })).toBe(
       "✔ Port 3000 → killed (node, PID 12345)",
     );
