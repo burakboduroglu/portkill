@@ -1,6 +1,6 @@
 # Testing strategy (portkill)
 
-Vitest is the test runner. **Goal:** keep `core/` honest with **mocked `child_process`**, and commands covered with **spies/mocks** on `finder` / `killer` where appropriate. PRD success criteria target **≥ 80% coverage on `src/`** excluding the thin CLI glue if measured that way — run `npm run test:coverage` locally.
+Vitest is the test runner. **Goal:** keep `core/` honest with **mocked `child_process`**, and commands covered with **spies/mocks** on `finder` / `killer` where appropriate. PRD success criteria target **≥ 80% coverage on `src/`** excluding the thin CLI glue if measured that way — run `bun run test:coverage` locally.
 
 ## Layout
 

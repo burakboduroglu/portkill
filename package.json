@@ -36,9 +36,9 @@
     "typecheck": "tsc --noEmit",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
-    "release:bump-patch": "npm version patch --no-git-tag-version",
-    "release:bump-minor": "npm version minor --no-git-tag-version",
-    "prepublishOnly": "node scripts/assert-version-not-published.mjs && npm run build && npm test"
+    "release:bump-patch": "bun pm version patch --no-git-tag-version",
+    "release:bump-minor": "bun pm version minor --no-git-tag-version",
+    "prepublishOnly": "node scripts/assert-version-not-published.mjs && bun run build && bun run test"
   },
   "keywords": [
     "cli",
