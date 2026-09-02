@@ -3,6 +3,7 @@
 **Free stuck TCP ports in one command** — without memorizing `lsof`, `fuser`, and `kill` pipelines.
 
 [![npm](https://img.shields.io/npm/v/%40burakboduroglu%2Fportkill?style=flat-square&logo=npm&label=npm)](https://www.npmjs.com/package/@burakboduroglu/portkill)
+[![CI](https://github.com/burakboduroglu/portkill/actions/workflows/ci.yml/badge.svg)](https://github.com/burakboduroglu/portkill/actions/workflows/ci.yml)
 [![Homebrew](https://img.shields.io/badge/homebrew-tap-fbb040?style=flat-square&logo=homebrew&logoColor=white)](https://github.com/burakboduroglu/homebrew-portkill)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](https://github.com/burakboduroglu/portkill/blob/main/LICENSE)
 [![Node.js](https://img.shields.io/badge/node.js-%3E%3D18-417E38?style=flat-square&logo=node.js&logoColor=white)](https://github.com/burakboduroglu/portkill/blob/main/package.json)

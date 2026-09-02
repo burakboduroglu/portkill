@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Lint, types and formatting
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun run lint
+
+      - run: bun run typecheck
+
+      - run: bun run format:check
+
+  test:
+    name: Test on Node ${{ matrix.node }} (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # package.json claims Node >= 18, and the tool only supports macOS and
+        # Linux, so the matrix is exactly the range that claim covers.
+        os: [ubuntu-latest, macos-latest]
+        node: [18, 20, 22]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      # Installing with bun but running the suite on this matrix entry's node:
+      # the package ships to npm users, so the runtime under test is Node.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - run: bun install --frozen-lockfile
+
+      - run: node --version
+
+      - run: bun run test
+
+      - run: bun run build
+
+      # `--version` reads a value tsup bakes into the bundle, so a bump that
+      # only lands in package.json would ship a CLI reporting the old version.
+      - name: Check the built CLI reports the package version
+        run: |
+          expected=$(node -p "require('./package.json').version")
+          actual=$(node dist/index.js --version)
+          echo "package.json=$expected cli=$actual"
+          test "$expected" = "$actual"
+
+      - name: Check the CLI starts
+        run: node dist/index.js --help

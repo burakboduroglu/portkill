@@ -33,6 +33,8 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "format:check": "prettier --check .",
     "format": "prettier --write .",
     "release:bump-patch": "npm version patch --no-git-tag-version",
     "release:bump-minor": "npm version minor --no-git-tag-version",
