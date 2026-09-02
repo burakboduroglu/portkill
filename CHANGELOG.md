@@ -92,13 +92,20 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   on the registry, so a forgotten bump fails locally instead of at npm.
 - A YouTube walkthrough of `portkill --gui` in the README.
 
+## [0.4.2] - 2026-03-22
+
 ### Changed
 
-- Distribution documented as npm-only for this release; the Homebrew tap
-  returned in 0.4.6.
+- Distribution documented as npm-only: the Homebrew tap and every `brew`
+  reference came out of the install instructions. The tap returned in 0.4.6.
 
-Versions 0.4.1 and 0.4.2 were npm-only publishes with no GitHub release, both
-folded into this entry.
+## [0.4.1] - 2026-03-22
+
+### Changed
+
+- Published under the scoped name `@burakboduroglu/portkill`. npm blocks the
+  unscoped `portkill` as too similar to an existing `port-kill`. The CLI binary
+  is still `portkill`.
 
 ## [0.4.0] - 2026-03-22
 
@@ -136,7 +143,9 @@ folded into this entry.
 [0.4.6]: https://github.com/burakboduroglu/portkill/compare/v0.4.5...v0.4.6
 [0.4.5]: https://github.com/burakboduroglu/portkill/compare/v0.4.4...v0.4.5
 [0.4.4]: https://github.com/burakboduroglu/portkill/compare/v0.4.3...v0.4.4
-[0.4.3]: https://github.com/burakboduroglu/portkill/compare/v0.4.0...v0.4.3
+[0.4.3]: https://github.com/burakboduroglu/portkill/compare/v0.4.2...v0.4.3
+[0.4.2]: https://github.com/burakboduroglu/portkill/compare/v0.4.1...v0.4.2
+[0.4.1]: https://github.com/burakboduroglu/portkill/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/burakboduroglu/portkill/releases/tag/v0.4.0
 [0.3.0]: https://github.com/burakboduroglu/portkill/compare/e0ec647...2e87b1e
 [0.2.0]: https://github.com/burakboduroglu/portkill/compare/6148021...e0ec647
