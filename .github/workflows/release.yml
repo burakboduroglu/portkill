@@ -73,8 +73,8 @@ jobs:
           echo "package.json=$expected cli=$actual"
           test "$expected" = "$actual"
 
-      # The Homebrew formula installs this exact tarball, so it is packed once
-      # and the same file is both published and attached to the release.
+      # The Homebrew formula downloads this tarball from the release, so it is
+      # packed here and attached below.
       - name: Pack the tarball
         id: pack
         run: |
@@ -87,10 +87,13 @@ jobs:
             echo "sha256=$(shasum -a 256 "portkill-${version}.tgz" | cut -d' ' -f1)"
           } >> "$GITHUB_OUTPUT"
 
+      # Published from the package directory rather than from the packed
+      # tarball: that is the path npm documents for provenance, and it runs
+      # prepublishOnly, whose guard refuses a version already on the registry.
       - name: Publish to npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish "${{ steps.pack.outputs.tarball }}" --provenance --access public
+        run: npm publish --provenance --access public
 
       - name: Publish the GitHub release
         env:
