@@ -17,12 +17,12 @@ When Node or another stack prints `EADDRINUSE`, **`.portkill`** shows who owns t
 
 ## Why **`.portkill`**
 
-| Instead of… | You get… |
-| --- | --- |
-| Copy-pasting `lsof` / `xargs` / `kill -9` | One tool, clear output, safe defaults |
-| Guessing PIDs | Process name + PID per port |
-| Accidentally nuking the wrong thing | `--dry-run` first; `--gui` with browser confirm |
-| Another Electron app | Node only; `--gui` is a tiny HTTP server on **127.0.0.1** / **::1** |
+| Instead of…                               | You get…                                                            |
+| ----------------------------------------- | ------------------------------------------------------------------- |
+| Copy-pasting `lsof` / `xargs` / `kill -9` | One tool, clear output, safe defaults                               |
+| Guessing PIDs                             | Process name + PID per port                                         |
+| Accidentally nuking the wrong thing       | `--dry-run` first; `--gui` with browser confirm                     |
+| Another Electron app                      | Node only; `--gui` is a tiny HTTP server on **127.0.0.1** / **::1** |
 
 ---
 
@@ -111,14 +111,14 @@ Press **Ctrl+C** to stop the GUI server. The printed URL is loopback-only. **Vid
 
 ## CLI Flags (Short)
 
-| Flag | Meaning |
-| --- | --- |
+| Flag              | Meaning                                |
+| ----------------- | -------------------------------------- |
 | `-n`, `--dry-run` | Show targets only; do not send signals |
-| `-f`, `--force` | Skip the terminal confirmation |
-| `-s`, `--signal` | Signal to send (default `SIGTERM`) |
-| `-l`, `--list` | List all TCP listeners |
-| `--gui` | Open the local web UI |
-| `-v`, `--verbose` | More detail on stderr |
+| `-f`, `--force`   | Skip the terminal confirmation         |
+| `-s`, `--signal`  | Signal to send (default `SIGTERM`)     |
+| `-l`, `--list`    | List all TCP listeners                 |
+| `--gui`           | Open the local web UI                  |
+| `-v`, `--verbose` | More detail on stderr                  |
 
 Full reference: [CLI reference](https://github.com/burakboduroglu/portkill/blob/main/docs/cli-reference.md) · Exit codes and outcomes: same doc.
 
@@ -133,17 +133,17 @@ Full reference: [CLI reference](https://github.com/burakboduroglu/portkill/blob/
 
 ## Docs & Product Spec
 
-| Doc | What it is |
-| --- | --- |
-| [AGENTS](https://github.com/burakboduroglu/portkill/blob/main/AGENTS.md) | **Start here** — doc map, rules, and links for contributors & AI agents |
-| [PRD](https://github.com/burakboduroglu/portkill/blob/main/PRD.md) | Product requirements & shipped scope |
-| [Implementation](https://github.com/burakboduroglu/portkill/blob/main/docs/implementation.md) | Architecture & data flow |
-| [Testing strategy](https://github.com/burakboduroglu/portkill/blob/main/docs/testing-strategy.md) | Vitest mocks, coverage, test file map |
-| [Data dictionary](https://github.com/burakboduroglu/portkill/blob/main/DATA_DICTIONARY.md) | Types, GUI API shapes |
-| [Security notes](https://github.com/burakboduroglu/portkill/blob/main/docs/security-notes.md) | GUI scope, `npm audit`, reporting |
-| [Release](https://github.com/burakboduroglu/portkill/blob/main/RELEASE.md) | `npm publish` (2FA), tags, GitHub Release |
-| [Contributing](https://github.com/burakboduroglu/portkill/blob/main/CONTRIBUTING.md) | Fork, branch, tests, PR expectations |
-| [Code of Conduct](https://github.com/burakboduroglu/portkill/blob/main/CODE_OF_CONDUCT.md) | Community standards (Contributor Covenant 2.0) |
+| Doc                                                                                               | What it is                                                              |
+| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| [AGENTS](https://github.com/burakboduroglu/portkill/blob/main/AGENTS.md)                          | **Start here** — doc map, rules, and links for contributors & AI agents |
+| [PRD](https://github.com/burakboduroglu/portkill/blob/main/PRD.md)                                | Product requirements & shipped scope                                    |
+| [Implementation](https://github.com/burakboduroglu/portkill/blob/main/docs/implementation.md)     | Architecture & data flow                                                |
+| [Testing strategy](https://github.com/burakboduroglu/portkill/blob/main/docs/testing-strategy.md) | Vitest mocks, coverage, test file map                                   |
+| [Data dictionary](https://github.com/burakboduroglu/portkill/blob/main/DATA_DICTIONARY.md)        | Types, GUI API shapes                                                   |
+| [Security notes](https://github.com/burakboduroglu/portkill/blob/main/docs/security-notes.md)     | GUI scope, `npm audit`, reporting                                       |
+| [Release](https://github.com/burakboduroglu/portkill/blob/main/RELEASE.md)                        | `npm publish` (2FA), tags, GitHub Release                               |
+| [Contributing](https://github.com/burakboduroglu/portkill/blob/main/CONTRIBUTING.md)              | Fork, branch, tests, PR expectations                                    |
+| [Code of Conduct](https://github.com/burakboduroglu/portkill/blob/main/CODE_OF_CONDUCT.md)        | Community standards (Contributor Covenant 2.0)                          |
 
 ---
 

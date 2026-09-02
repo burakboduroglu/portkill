@@ -14,16 +14,16 @@ Each argument is either a single TCP port (`3000`) or an **inclusive range** (`3
 
 ## Options
 
-| Long | Short | Description |
-| --- | --- | --- |
-| `--force` | `-f` | Kill without confirmation |
-| `--dry-run` | `-n` | Show targets only; do not send signals |
-| `--signal <SIG>` | `-s` | Signal (default: SIGTERM) |
-| `--verbose` | `-v` | Verbose stderr logs |
-| `--list` | `-l` | List all TCP listeners (uses `lsof`; do not pass ports) |
-| `--gui` | — | Open local web UI on `127.0.0.1` (do not pass ports or `--list`) |
-| `--version` | `-V`, `--version` | Print version |
-| `--help` | `-h` | Help |
+| Long             | Short             | Description                                                      |
+| ---------------- | ----------------- | ---------------------------------------------------------------- |
+| `--force`        | `-f`              | Kill without confirmation                                        |
+| `--dry-run`      | `-n`              | Show targets only; do not send signals                           |
+| `--signal <SIG>` | `-s`              | Signal (default: SIGTERM)                                        |
+| `--verbose`      | `-v`              | Verbose stderr logs                                              |
+| `--list`         | `-l`              | List all TCP listeners (uses `lsof`; do not pass ports)          |
+| `--gui`          | —                 | Open local web UI on `127.0.0.1` (do not pass ports or `--list`) |
+| `--version`      | `-V`, `--version` | Print version                                                    |
+| `--help`         | `-h`              | Help                                                             |
 
 ## Sample output
 
@@ -35,12 +35,12 @@ Each argument is either a single TCP port (`3000`) or an **inclusive range** (`3
 
 ## Exit codes
 
-| Code | Meaning |
-| --- | --- |
-| `0` | All ports handled successfully |
-| `1` | General error (invalid args, unexpected failure) |
-| `2` | No process found on any requested port |
-| `3` | Permission denied (e.g. another user’s process, privileged port) |
+| Code | Meaning                                                          |
+| ---- | ---------------------------------------------------------------- |
+| `0`  | All ports handled successfully                                   |
+| `1`  | General error (invalid args, unexpected failure)                 |
+| `2`  | No process found on any requested port                           |
+| `3`  | Permission denied (e.g. another user’s process, privileged port) |
 
 ## Examples
 

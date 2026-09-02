@@ -9,7 +9,9 @@ export interface ListCommandOptions {
   verbose: boolean;
 }
 
-export async function runList(opts: ListCommandOptions): Promise<{ exitCode: number; lines: string[] }> {
+export async function runList(
+  opts: ListCommandOptions,
+): Promise<{ exitCode: number; lines: string[] }> {
   if (opts.verbose) {
     process.stderr.write("[verbose] running lsof -nP -iTCP -sTCP:LISTEN\n");
   }

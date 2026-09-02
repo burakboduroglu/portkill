@@ -72,7 +72,10 @@ async function findWithLsof(
   }
 }
 
-async function findWithFuser(port: number, execFileFn: ExecFile): Promise<ListenerProcess[] | "empty" | "error"> {
+async function findWithFuser(
+  port: number,
+  execFileFn: ExecFile,
+): Promise<ListenerProcess[] | "empty" | "error"> {
   try {
     const { stdout, stderr } = await execFileFn("fuser", ["-n", "tcp", String(port)], {
       encoding: "utf8",

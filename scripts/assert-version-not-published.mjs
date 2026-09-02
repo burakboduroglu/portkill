@@ -24,8 +24,6 @@ try {
 }
 
 if (remote === local) {
-  console.error(
-    `Version ${local} is already on npm. Bump first: npm run release:bump-patch`,
-  );
+  console.error(`Version ${local} is already on npm. Bump first: npm run release:bump-patch`);
   process.exit(1);
 }

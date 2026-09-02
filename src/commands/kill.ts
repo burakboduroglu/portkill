@@ -69,7 +69,9 @@ export async function runKill(
     phases.push({ kind: "pendingKill", port, processes: found.processes });
   }
 
-  const pending = phases.filter((p): p is Extract<Phase, { kind: "pendingKill" }> => p.kind === "pendingKill");
+  const pending = phases.filter(
+    (p): p is Extract<Phase, { kind: "pendingKill" }> => p.kind === "pendingKill",
+  );
 
   const describe = (port: number, processes: ListenerProcess[]) => {
     const first = processes[0];
@@ -81,7 +83,9 @@ export async function runKill(
 
   if (!opts.dryRun && pending.length > 0 && !opts.force) {
     if (!process.stdin.isTTY) {
-      process.stderr.write("Not a TTY: use --force to kill without confirmation, or use --dry-run.\n");
+      process.stderr.write(
+        "Not a TTY: use --force to kill without confirmation, or use --dry-run.\n",
+      );
       return { exitCode: 1, lines: [], outcomes: [] };
     }
     const lines = pending.map((p) => describe(p.port, p.processes));

@@ -10,13 +10,13 @@ This file is the **single entry point** for humans and AI coding agents working 
 
 ## Source of truth (read order for new work)
 
-| Order | Document | Purpose |
-| --- | --- | --- |
-| 1 | [PRD.md](PRD.md) | Product goals, CLI contract (§5), exit codes, out-of-scope, shipped capabilities |
-| 2 | [DATA_DICTIONARY.md](DATA_DICTIONARY.md) | Types, `PortOutcome`, GUI HTTP API shapes |
-| 3 | [docs/cli-reference.md](docs/cli-reference.md) | Flags and exit codes (quick reference) |
-| 4 | [docs/implementation.md](docs/implementation.md) | Module map, mermaid diagram, data flow |
-| 5 | [docs/testing-strategy.md](docs/testing-strategy.md) | Vitest layout, mocks, coverage expectation |
+| Order | Document                                             | Purpose                                                                          |
+| ----- | ---------------------------------------------------- | -------------------------------------------------------------------------------- |
+| 1     | [PRD.md](PRD.md)                                     | Product goals, CLI contract (§5), exit codes, out-of-scope, shipped capabilities |
+| 2     | [DATA_DICTIONARY.md](DATA_DICTIONARY.md)             | Types, `PortOutcome`, GUI HTTP API shapes                                        |
+| 3     | [docs/cli-reference.md](docs/cli-reference.md)       | Flags and exit codes (quick reference)                                           |
+| 4     | [docs/implementation.md](docs/implementation.md)     | Module map, mermaid diagram, data flow                                           |
+| 5     | [docs/testing-strategy.md](docs/testing-strategy.md) | Vitest layout, mocks, coverage expectation                                       |
 
 **Security / release:** [docs/security-notes.md](docs/security-notes.md) · [RELEASE.md](RELEASE.md)
 
@@ -48,4 +48,4 @@ npm install && npm run build && npm test && npm run lint
 
 ---
 
-*Last updated to align with repo layout and `package.json`.*
+_Last updated to align with repo layout and `package.json`._

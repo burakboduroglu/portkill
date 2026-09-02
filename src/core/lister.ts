@@ -40,7 +40,9 @@ export async function listAllTcpListeners(
 ): Promise<{ ok: true; rows: TcpListenerRow[] } | { ok: false; message: string }> {
   const execFileFn = options.execFile ?? defaultExecFile;
   try {
-    const { stdout } = await execFileFn("lsof", ["-nP", "-iTCP", "-sTCP:LISTEN"], { encoding: "utf8" });
+    const { stdout } = await execFileFn("lsof", ["-nP", "-iTCP", "-sTCP:LISTEN"], {
+      encoding: "utf8",
+    });
     const seen = new Set<string>();
     const rows: TcpListenerRow[] = [];
     for (const line of stdout.split(/\r?\n/)) {

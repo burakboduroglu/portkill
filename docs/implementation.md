@@ -41,20 +41,20 @@ flowchart TB
   GUI --> PARSE
 ```
 
-| Module | Responsibility |
-| --- | --- |
-| `index.ts` | `commander` setup, global flags, routes `--list` / `--gui` vs default kill action, `process.exitCode`. |
-| `types.ts` | `PortOutcome`, `ListenerProcess` — shared between kill flow and tests. |
-| `utils/parse-ports.ts` | Expand positional args: single ports and inclusive ranges (`3000-3005`); used by CLI and GUI. |
-| `commands/kill.ts` | Per-port `finder` + optional `killer`; `--dry-run` / confirm / `--force`; `aggregateExitCode` from outcomes. |
-| `commands/list.ts` | `--list`: `listAllTcpListeners`, styled table lines via `style`. |
-| `core/finder.ts` | Listeners for one port: PID(s), command name; shell output parsing. |
-| `core/killer.ts` | Send signal (`process.kill`); distinguish EPERM vs other errors. |
-| `core/lister.ts` | All TCP LISTEN rows (`lsof`); parse lines for `--list` and GUI. |
-| `utils/platform.ts` | `process.platform`; macOS `lsof`, Linux `fuser` or `/proc/net/tcp`; command builders. |
-| `utils/output.ts` | PRD §5.2 one-line messages for kill outcomes; `formatOutcomeLine`. |
-| `utils/exit-code.ts` | `aggregateExitCode` from `PortOutcome[]` (permission > error > all-not-found > success). |
-| `utils/style.ts` | Chalk wrappers for list rows and errors (`NO_COLOR` / TTY via chalk). |
+| Module                 | Responsibility                                                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `index.ts`             | `commander` setup, global flags, routes `--list` / `--gui` vs default kill action, `process.exitCode`.       |
+| `types.ts`             | `PortOutcome`, `ListenerProcess` — shared between kill flow and tests.                                       |
+| `utils/parse-ports.ts` | Expand positional args: single ports and inclusive ranges (`3000-3005`); used by CLI and GUI.                |
+| `commands/kill.ts`     | Per-port `finder` + optional `killer`; `--dry-run` / confirm / `--force`; `aggregateExitCode` from outcomes. |
+| `commands/list.ts`     | `--list`: `listAllTcpListeners`, styled table lines via `style`.                                             |
+| `core/finder.ts`       | Listeners for one port: PID(s), command name; shell output parsing.                                          |
+| `core/killer.ts`       | Send signal (`process.kill`); distinguish EPERM vs other errors.                                             |
+| `core/lister.ts`       | All TCP LISTEN rows (`lsof`); parse lines for `--list` and GUI.                                              |
+| `utils/platform.ts`    | `process.platform`; macOS `lsof`, Linux `fuser` or `/proc/net/tcp`; command builders.                        |
+| `utils/output.ts`      | PRD §5.2 one-line messages for kill outcomes; `formatOutcomeLine`.                                           |
+| `utils/exit-code.ts`   | `aggregateExitCode` from `PortOutcome[]` (permission > error > all-not-found > success).                     |
+| `utils/style.ts`       | Chalk wrappers for list rows and errors (`NO_COLOR` / TTY via chalk).                                        |
 
 ## Data flow (summary)
 
@@ -74,10 +74,10 @@ See [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) for fields and outcome kinds.
 
 ## Platform implementation
 
-| OS | Detection | Notes |
-| --- | --- | --- |
-| `darwin` | `lsof` with TCP + LISTEN | One PID per line in machine-friendly mode or parse table. |
-| `linux` | Prefer `lsof`; else `fuser` or `/proc/net/tcp` inode → PID | Fallback when `fuser` or `lsof` missing. |
+| OS       | Detection                                                  | Notes                                                     |
+| -------- | ---------------------------------------------------------- | --------------------------------------------------------- |
+| `darwin` | `lsof` with TCP + LISTEN                                   | One PID per line in machine-friendly mode or parse table. |
+| `linux`  | Prefer `lsof`; else `fuser` or `/proc/net/tcp` inode → PID | Fallback when `fuser` or `lsof` missing.                  |
 
 Windows is out of scope; `platform.ts` should error clearly on unsupported `process.platform`.
 

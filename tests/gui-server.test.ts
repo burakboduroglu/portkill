@@ -6,7 +6,11 @@ import { startGuiServer } from "../src/gui/server.js";
 
 describe("GUI server", () => {
   it("serves index HTML on GET /", async () => {
-    const { url, servers } = await startGuiServer({ platform: "darwin", port: 0, openBrowser: false });
+    const { url, servers } = await startGuiServer({
+      platform: "darwin",
+      port: 0,
+      openBrowser: false,
+    });
     try {
       const html = await fetchText(`${url}/`);
       expect(html).toContain("portkill");
@@ -17,7 +21,11 @@ describe("GUI server", () => {
   });
 
   it("returns 400 for empty resolve tokens", async () => {
-    const { url, servers } = await startGuiServer({ platform: "darwin", port: 0, openBrowser: false });
+    const { url, servers } = await startGuiServer({
+      platform: "darwin",
+      port: 0,
+      openBrowser: false,
+    });
     try {
       const res = await fetch(`${url}/api/resolve`, {
         method: "POST",
