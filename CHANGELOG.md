@@ -30,8 +30,7 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   test suite across Node 18, 20 and 22 on both Linux and macOS. The built CLI
   is asked for its version there, so a bump that lands only in `package.json`
   cannot ship a binary reporting the previous release.
-- Homebrew install instructions in the README, an AGENTS documentation hub and
-  a testing strategy document.
+- Homebrew install instructions in the README.
 - A release workflow: pushing a version tag publishes to npm with provenance
   and creates the GitHub release from this changelog.
 - `SECURITY.md`, issue forms and a pull request template. The security notes
@@ -52,6 +51,17 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   of them in development dependencies. What remains is one low advisory for an
   esbuild development server that this project never starts, on a platform it
   does not support.
+
+### Removed
+
+- The Cursor rules, the PRD, the data dictionary, the AGENTS hub and the
+  implementation, testing-strategy and security-notes documents. Seven
+  documents described a CLI with seven flags, cross-referencing each other more
+  than the code, and drifted from it — the implementation guide still described
+  `/proc/net/tcp` parsing that does not exist. What was load-bearing moved
+  where it is checked: the GUI API contract into the CLI reference, the audit
+  and body-cap notes into the security policy, and the module boundaries and
+  mock patterns into the README and the contributing guide.
 
 ## [0.4.5] - 2026-03-22
 

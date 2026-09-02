@@ -1,7 +1,5 @@
 # CLI reference
 
-Same as [PRD.md](../PRD.md) §5; duplicated here for quick lookup.
-
 Stdout lines are colorized with **chalk** when supported. Set `NO_COLOR=1` to disable.
 
 ## Usage
@@ -53,3 +51,36 @@ portkill 3000 --dry-run
 portkill --list
 portkill --gui
 ```
+
+## Local GUI HTTP API
+
+Served only while `portkill --gui` is running, on loopback (`127.0.0.1`, and
+`::1` when available). `/api/*` carries permissive CORS so a tab on `localhost`
+and one on `127.0.0.1` both work; that does not expose the server off loopback.
+There is no authentication — see [SECURITY.md](../SECURITY.md). Request bodies
+are capped at 64 KiB.
+
+### `GET /api/listeners`
+
+| Response                               | Description                                                  |
+| -------------------------------------- | ------------------------------------------------------------ |
+| `{ ok: true, rows: TcpListenerRow[] }` | `port`, `pid`, `commandName` — the same rows `--list` prints |
+| `{ ok: false, message: string }`       | For example, `lsof` is missing                               |
+
+### `POST /api/resolve`
+
+| Field    | Type       | Required | Description                                                            |
+| -------- | ---------- | -------- | ---------------------------------------------------------------------- |
+| `tokens` | `string[]` | yes      | Port arguments as strings (`"3000"`, `"3000-3005"`)                    |
+| `dryRun` | `boolean`  | no       | Default `false`                                                        |
+| `force`  | `boolean`  | no       | Must be `true` to actually signal; there is no TTY, so the UI confirms |
+| `signal` | `string`   | no       | Default `SIGTERM`                                                      |
+
+| Response field | Type            | Description                     |
+| -------------- | --------------- | ------------------------------- |
+| `ok`           | `boolean`       | `true` on the success path      |
+| `exitCode`     | `number`        | The same aggregation as the CLI |
+| `outcomes`     | `PortOutcome[]` | One entry per port              |
+
+`PortOutcome` is defined in `src/types.ts`; the kinds are `notFound`, `killed`,
+`dryRunWouldKill`, `permissionDenied` and `error`.

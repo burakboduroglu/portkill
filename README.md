@@ -187,20 +187,14 @@ src/
 
 ## Docs
 
-| Doc                                                                                               | What it is                                                   |
-| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| [AGENTS](https://github.com/burakboduroglu/portkill/blob/main/AGENTS.md)                          | **Start here** — doc map for contributors and AI agents      |
-| [Changelog](https://github.com/burakboduroglu/portkill/blob/main/CHANGELOG.md)                    | What changed in each release                                 |
-| [PRD](https://github.com/burakboduroglu/portkill/blob/main/PRD.md)                                | Product requirements and shipped scope                       |
-| [Implementation](https://github.com/burakboduroglu/portkill/blob/main/docs/implementation.md)     | Architecture and data flow                                   |
-| [CLI reference](https://github.com/burakboduroglu/portkill/blob/main/docs/cli-reference.md)       | Every flag, exit code and outcome                            |
-| [Testing strategy](https://github.com/burakboduroglu/portkill/blob/main/docs/testing-strategy.md) | Vitest mocks, coverage, test file map                        |
-| [Data dictionary](https://github.com/burakboduroglu/portkill/blob/main/DATA_DICTIONARY.md)        | Types and GUI API shapes                                     |
-| [Security policy](https://github.com/burakboduroglu/portkill/blob/main/SECURITY.md)               | What portkill touches, and private vulnerability reporting   |
-| [Security notes](https://github.com/burakboduroglu/portkill/blob/main/docs/security-notes.md)     | GUI scope, dependency audit, published package contents      |
-| [Release](https://github.com/burakboduroglu/portkill/blob/main/RELEASE.md)                        | Cutting a release: version, changelog, tag, Homebrew formula |
-| [Contributing](https://github.com/burakboduroglu/portkill/blob/main/CONTRIBUTING.md)              | Fork, branch, tests, PR expectations                         |
-| [Code of Conduct](https://github.com/burakboduroglu/portkill/blob/main/CODE_OF_CONDUCT.md)        | Community standards (Contributor Covenant 2.0)               |
+| Doc                                                                                         | What it is                                                   |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| [CLI reference](https://github.com/burakboduroglu/portkill/blob/main/docs/cli-reference.md) | Every flag, exit code, outcome, and the local GUI HTTP API   |
+| [Changelog](https://github.com/burakboduroglu/portkill/blob/main/CHANGELOG.md)              | What changed in each release                                 |
+| [Security policy](https://github.com/burakboduroglu/portkill/blob/main/SECURITY.md)         | What portkill touches, and private vulnerability reporting   |
+| [Release](https://github.com/burakboduroglu/portkill/blob/main/RELEASE.md)                  | Cutting a release: version, changelog, tag, Homebrew formula |
+| [Contributing](https://github.com/burakboduroglu/portkill/blob/main/CONTRIBUTING.md)        | Fork, branch, tests, PR expectations                         |
+| [Code of Conduct](https://github.com/burakboduroglu/portkill/blob/main/CODE_OF_CONDUCT.md)  | Community standards (Contributor Covenant 2.0)               |
 
 ## Development
 
@@ -214,7 +208,11 @@ bun run typecheck
 bun run format
 ```
 
-CI runs the checks on every push and the suite across Node 18, 20 and 22 on both Linux and macOS. Terminal colour comes from [chalk](https://github.com/chalk/chalk); set `NO_COLOR=1` to turn it off ([no-color.org](https://no-color.org/)).
+`core/` takes an injected `execFile` or `kill`, so the tests drive discovery and
+signalling without a real process on a real port; the command tests mock
+`finder` in turn. CI runs the checks on every push and the suite across Node 18,
+20 and 22 on both Linux and macOS, and the coverage thresholds in
+`vitest.config.ts` are enforced there. Terminal colour comes from [chalk](https://github.com/chalk/chalk); set `NO_COLOR=1` to turn it off ([no-color.org](https://no-color.org/)).
 
 ## Contributing
 
