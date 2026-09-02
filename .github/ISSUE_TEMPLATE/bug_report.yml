@@ -1,0 +1,96 @@
+name: Bug report
+description: portkill is broken or behaves unexpectedly
+title: "fix: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please do **not** use this form for security
+        issues — see [SECURITY.md](https://github.com/burakboduroglu/portkill/blob/main/SECURITY.md).
+
+        If Homebrew says `/opt/homebrew/bin/portkill` already exists, that is an
+        older npm global install, not a bug. The
+        [README](https://github.com/burakboduroglu/portkill#install) has the two
+        commands that clear it.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the problem, and what you expected instead.
+      placeholder: portkill 3000 reports "no listener" while the server is still up…
+    validations:
+      required: true
+
+  - type: textarea
+    id: command
+    attributes:
+      label: The command you ran, and its output
+      description: |
+        Add `--verbose` if you can — it puts the detail on stderr. Redact
+        anything you would rather not publish; process names can be revealing.
+      render: shell
+      placeholder: |
+        $ portkill 3000 --dry-run --verbose
+        …
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: portkill version
+      description: Output of `portkill --version`.
+      placeholder: 0.4.6
+    validations:
+      required: true
+
+  - type: input
+    id: node
+    attributes:
+      label: Node version
+      description: Output of `node --version`.
+      placeholder: v20.11.0
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: macOS 26.6 on Apple silicon, or Ubuntu 24.04
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install-method
+    attributes:
+      label: How did you install it?
+      options:
+        - Homebrew tap
+        - npm global install
+        - npx, no install
+        - Built from source
+    validations:
+      required: true
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where does it happen?
+      options:
+        - CLI
+        - Local web UI (--gui)
+        - Both
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: |
+        For a discovery problem, the output of `lsof -nP -iTCP:<port> -sTCP:LISTEN`
+        (or `fuser -n tcp <port>` on Linux) tells us whether portkill or the
+        system tool is the one that disagrees with you.

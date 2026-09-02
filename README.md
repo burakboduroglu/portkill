@@ -141,7 +141,8 @@ Full reference: [CLI reference](https://github.com/burakboduroglu/portkill/blob/
 | [Implementation](https://github.com/burakboduroglu/portkill/blob/main/docs/implementation.md)     | Architecture & data flow                                                |
 | [Testing strategy](https://github.com/burakboduroglu/portkill/blob/main/docs/testing-strategy.md) | Vitest mocks, coverage, test file map                                   |
 | [Data dictionary](https://github.com/burakboduroglu/portkill/blob/main/DATA_DICTIONARY.md)        | Types, GUI API shapes                                                   |
-| [Security notes](https://github.com/burakboduroglu/portkill/blob/main/docs/security-notes.md)     | GUI scope, `npm audit`, reporting                                       |
+| [Security policy](https://github.com/burakboduroglu/portkill/blob/main/SECURITY.md)               | What portkill touches, and how to report a vulnerability privately      |
+| [Security notes](https://github.com/burakboduroglu/portkill/blob/main/docs/security-notes.md)     | GUI scope, dependency audit, published package contents                 |
 | [Changelog](https://github.com/burakboduroglu/portkill/blob/main/CHANGELOG.md)                    | What changed in each release                                            |
 | [Release](https://github.com/burakboduroglu/portkill/blob/main/RELEASE.md)                        | Cutting a release: version, changelog, tag, Homebrew formula            |
 | [Contributing](https://github.com/burakboduroglu/portkill/blob/main/CONTRIBUTING.md)              | Fork, branch, tests, PR expectations                                    |

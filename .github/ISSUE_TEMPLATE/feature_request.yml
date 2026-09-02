@@ -1,0 +1,45 @@
+name: Feature request
+description: Suggest something portkill should do
+title: "feat: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        portkill is deliberately small: find what holds a TCP port, show it,
+        stop it. Proposals that keep it that way are the easiest to accept —
+        see [PRD.md](https://github.com/burakboduroglu/portkill/blob/main/PRD.md)
+        for the shipped scope.
+
+        Windows support and long-running port monitors are out of scope.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the situation you hit, not the solution you have in mind.
+      placeholder: My dev server leaves a listener behind and I only notice on the next EADDRINUSE…
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like it to do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+      description: Including doing nothing, or an existing flag that nearly works.
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: This works on both macOS and Linux
+        - label: This does not require running as root
+        - label: This does not turn portkill into a background process

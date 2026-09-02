@@ -24,4 +24,4 @@ Do not commit `.env` files (see `.gitignore`). The project does not require API 
 
 ## Reporting
 
-Open a [GitHub issue](https://github.com/burakboduroglu/portkill/issues) for suspected vulnerabilities; update the URL if the repo moves.
+Do **not** open a public issue for a suspected vulnerability. [SECURITY.md](../SECURITY.md) is the policy: report privately through a [security advisory](https://github.com/burakboduroglu/portkill/security/advisories/new), or by email.
