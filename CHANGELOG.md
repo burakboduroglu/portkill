@@ -21,6 +21,8 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   the cast was wrong; one `execErrorCode` helper now returns the honest union.
 - The GUI server test no longer hangs on Node 18. It called the server through
   global `fetch`, which does not work inside a vitest worker on that version.
+- `--help` printed the default signal twice: the option description carried
+  `(default: SIGTERM)` while commander appended its own.
 
 ### Added
 
@@ -30,11 +32,26 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   cannot ship a binary reporting the previous release.
 - Homebrew install instructions in the README, an AGENTS documentation hub and
   a testing strategy document.
+- A release workflow: pushing a version tag publishes to npm with provenance
+  and creates the GitHub release from this changelog.
+- `SECURITY.md`, issue forms and a pull request template. The security notes
+  previously pointed people at the public issue tracker for vulnerabilities.
+- A social preview card and a rewritten README, both showing the output the CLI
+  actually prints.
+- The coverage thresholds in `vitest.config.ts` now run in CI, where nothing
+  had been enforcing them.
 
 ### Changed
 
 - Prettier applied across the tree, with `format:check` wired into CI so the
   formatter stays authoritative.
+- The toolchain moved to bun. `package-lock.json` is gone, `bun.lock` is the
+  tracked lockfile, and the development commands in every document match what
+  CI runs. Publishing stays with npm.
+- Dependency updates closing 30 of the 32 advisories `bun audit` reported, all
+  of them in development dependencies. What remains is one low advisory for an
+  esbuild development server that this project never starts, on a platform it
+  does not support.
 
 ## [0.4.5] - 2026-03-22
 
