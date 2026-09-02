@@ -32,6 +32,10 @@ jobs:
 
       - run: bun run format:check
 
+      # vitest.config.ts carries coverage thresholds that nothing enforced, so
+      # they could drift below the line without anyone finding out.
+      - run: bun run test:coverage
+
   test:
     name: Test on Node ${{ matrix.node }} (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
