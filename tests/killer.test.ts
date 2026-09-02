@@ -12,7 +12,7 @@ describe("killPid", () => {
   it("maps EPERM to permission denied", () => {
     const killFn = vi.fn(() => {
       const err = new Error("eprm");
-      (err as NodeJS.ErrnoException).code = "EPERM";
+      Object.assign(err, { code: "EPERM" });
       throw err;
     });
     expect(killPid(1, "SIGTERM", killFn)).toEqual({ ok: false, permissionDenied: true });
@@ -21,7 +21,7 @@ describe("killPid", () => {
   it("treats ESRCH as ok", () => {
     const killFn = vi.fn(() => {
       const err = new Error("esrch");
-      (err as NodeJS.ErrnoException).code = "ESRCH";
+      Object.assign(err, { code: "ESRCH" });
       throw err;
     });
     expect(killPid(1, "SIGTERM", killFn)).toEqual({ ok: true });

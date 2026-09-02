@@ -23,7 +23,7 @@ nginx    50 root    6u  IPv4 0x3      0t0  TCP *:80 (LISTEN)
 
   it("returns empty on lsof exit 1", async () => {
     const err = new Error("none");
-    (err as NodeJS.ErrnoException).code = 1;
+    Object.assign(err, { code: 1 });
     const execFile = vi.fn(async () => {
       throw err;
     }) as unknown as ExecFile;
@@ -33,7 +33,7 @@ nginx    50 root    6u  IPv4 0x3      0t0  TCP *:80 (LISTEN)
 
   it("returns error when lsof is missing", async () => {
     const err = new Error("nope");
-    (err as NodeJS.ErrnoException).code = "ENOENT";
+    Object.assign(err, { code: "ENOENT" });
     const execFile = vi.fn(async () => {
       throw err;
     }) as unknown as ExecFile;
