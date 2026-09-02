@@ -14,7 +14,7 @@ const { name, version: local } = pkg;
 
 let remote;
 try {
-  remote = execSync(`npm view ${name} version`, {
+  remote = execSync(`bun info ${name} version`, {
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"],
   }).trim();
@@ -24,6 +24,6 @@ try {
 }
 
 if (remote === local) {
-  console.error(`Version ${local} is already on npm. Bump first: npm run release:bump-patch`);
+  console.error(`Version ${local} is already on npm. Bump first: bun run release:bump-patch`);
   process.exit(1);
 }

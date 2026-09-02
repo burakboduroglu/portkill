@@ -1,6 +1,9 @@
 # Dependencies
 node_modules/
 
+# bun.lock is the tracked lockfile; npm's would drift beside it
+package-lock.json
+
 # Build
 dist/
 gui-dist/

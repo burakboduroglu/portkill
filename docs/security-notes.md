@@ -5,7 +5,7 @@
 Run periodically:
 
 ```bash
-npm audit
+bun audit
 ```
 
 ## Published package contents

@@ -43,7 +43,7 @@ This file is the **single entry point** for humans and AI coding agents working 
 ## Quick commands
 
 ```bash
-npm install && npm run build && npm test && npm run lint
+bun install && bun run build && bun run test && bun run lint
 ```
 
 ---

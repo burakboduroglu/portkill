@@ -46,7 +46,7 @@ portkill --version
 ## 4. Verify
 
 ```bash
-npm view @burakboduroglu/portkill version
+bun info @burakboduroglu/portkill version
 npx @burakboduroglu/portkill@latest --version
 ```
 

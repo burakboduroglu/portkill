@@ -67,8 +67,8 @@ brew link portkill
 
 ```bash
 git clone https://github.com/burakboduroglu/portkill.git && cd portkill
-npm install && npm run build
-npm link   # optional: puts `portkill` on PATH
+bun install && bun run build
+bun link   # optional: puts `portkill` on PATH
 ```
 
 ---
@@ -153,10 +153,10 @@ Full reference: [CLI reference](https://github.com/burakboduroglu/portkill/blob/
 ## Development
 
 ```bash
-npm run build
-npm test
-npm run test:coverage
-npm run lint
+bun run build
+bun run test
+bun run test:coverage
+bun run lint
 ```
 
 Terminal colors use [chalk](https://github.com/chalk/chalk); set `NO_COLOR=1` to disable ([no-color.org](https://no-color.org/)).

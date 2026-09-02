@@ -252,9 +252,9 @@ End-user installs ship through **npm** only, as `@burakboduroglu/portkill` (unsc
 
 | Step | Action                                                                                                                           |
 | ---- | -------------------------------------------------------------------------------------------------------------------------------- |
-| 1    | Confirm package name (`npm view @burakboduroglu/portkill`); unscoped `portkill` is blocked on npm (similar to `port-kill`).      |
+| 1    | Confirm package name (`bun info @burakboduroglu/portkill`); unscoped `portkill` is blocked on npm (similar to `port-kill`).      |
 | 2    | Ensure `package.json` has correct `version`, `bin.portkill` → built `dist/index.js`, `files` (or `.npmignore`) so `dist/` ships. |
-| 3    | `npm run build` and `npm test` (and `npm run test:coverage`) before release.                                                     |
+| 3    | `bun run build` and `bun run test` (and `bun run test:coverage`) before release.                                                 |
 | 4    | `npm login`; `npm publish` (`publishConfig.access: public` for this scoped package).                                             |
 | 5    | Verify: `npm i -g @burakboduroglu/portkill` then `portkill --version`; optional `npx @burakboduroglu/portkill --help`.           |
 | 6    | Tag release in Git (`vX.Y.Z`) aligned with `package.json` version.                                                               |

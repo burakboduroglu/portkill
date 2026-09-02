@@ -33,16 +33,16 @@ Out of scope for this repo: Windows support and long-running port monitors (see 
 ```bash
 git clone https://github.com/burakboduroglu/portkill.git
 cd portkill
-npm install
-npm run build
-npm test
-npm run lint
+bun install
+bun run build
+bun run test
+bun run lint
 ```
 
 Before opening a PR:
 
 - Add or update **tests** when behavior changes (`tests/`, Vitest; patterns in [docs/testing-strategy.md](docs/testing-strategy.md)).
-- Run **`npm run format`** if you touch many files (Prettier).
+- Run **`bun run format`** if you touch many files (Prettier).
 - For GUI or HTTP API changes, update [DATA_DICTIONARY.md](DATA_DICTIONARY.md) §7 and see [docs/security-notes.md](docs/security-notes.md) and [docs/implementation.md](docs/implementation.md).
 
 ---
