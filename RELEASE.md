@@ -47,7 +47,7 @@ portkill --version
 
 ```bash
 bun info @burakboduroglu/portkill version
-npx @burakboduroglu/portkill@latest --version
+bunx @burakboduroglu/portkill@latest --version
 ```
 
 ## Publishing by hand
@@ -56,6 +56,7 @@ Only needed when the workflow itself is broken. `prepublishOnly` re-checks the v
 
 ```bash
 bun run lint && bun run typecheck && bun run test && bun run build
+# publish stays on the npm CLI: `bun publish` has no --provenance
 npm login
 npm publish
 gh release create vX.Y.Z --notes-file <(node scripts/changelog-section.mjs vX.Y.Z)

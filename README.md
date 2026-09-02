@@ -6,7 +6,7 @@
 
 **Free stuck TCP ports in one command — no `lsof` pipelines, no guessing PIDs.**
 
-[**Install with Homebrew or npm →**](#install)
+[**Install with Homebrew or bun →**](#install)
 
 [![CI](https://img.shields.io/github/actions/workflow/status/burakboduroglu/portkill/ci.yml?branch=main&label=ci&style=flat-square)](https://github.com/burakboduroglu/portkill/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/%40burakboduroglu%2Fportkill?style=flat-square&logo=npm&label=npm)](https://www.npmjs.com/package/@burakboduroglu/portkill)
@@ -25,7 +25,7 @@
 
 ---
 
-Your dev server crashes, the port stays taken, and the next `npm run dev` greets you with `EADDRINUSE`. The fix is a pipeline you look up every time — `lsof -i :3000`, read the PID out of the table, `kill -9`, hope it was the right one.
+Your dev server crashes, the port stays taken, and the next `bun run dev` greets you with `EADDRINUSE`. The fix is a pipeline you look up every time — `lsof -i :3000`, read the PID out of the table, `kill -9`, hope it was the right one.
 
 `.portkill` is that pipeline as one command. It shows what owns the port, lets you preview before anything is signalled, and stops only what you meant to stop. Same logic from the terminal or from a local web UI.
 
@@ -65,22 +65,22 @@ brew install burakboduroglu/portkill/portkill
 portkill --version
 ```
 
-**npm** — [@burakboduroglu/portkill](https://www.npmjs.com/package/@burakboduroglu/portkill)
+**bun** — [@burakboduroglu/portkill](https://www.npmjs.com/package/@burakboduroglu/portkill) on the npm registry
 
 ```bash
-npm i -g @burakboduroglu/portkill
+bun add -g @burakboduroglu/portkill
 ```
 
 **No install at all**
 
 ```bash
-npx @burakboduroglu/portkill --list
+bunx @burakboduroglu/portkill --list
 ```
 
-If Homebrew reports that `/opt/homebrew/bin/portkill` already exists, an older npm global install is in the way:
+If Homebrew reports that `/opt/homebrew/bin/portkill` already exists, an older global install is in the way. Remove it with the package manager that installed it:
 
 ```bash
-npm uninstall -g @burakboduroglu/portkill
+bun remove -g @burakboduroglu/portkill   # or: npm uninstall -g @burakboduroglu/portkill
 brew link portkill
 ```
 
