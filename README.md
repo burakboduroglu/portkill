@@ -142,7 +142,8 @@ Full reference: [CLI reference](https://github.com/burakboduroglu/portkill/blob/
 | [Testing strategy](https://github.com/burakboduroglu/portkill/blob/main/docs/testing-strategy.md) | Vitest mocks, coverage, test file map                                   |
 | [Data dictionary](https://github.com/burakboduroglu/portkill/blob/main/DATA_DICTIONARY.md)        | Types, GUI API shapes                                                   |
 | [Security notes](https://github.com/burakboduroglu/portkill/blob/main/docs/security-notes.md)     | GUI scope, `npm audit`, reporting                                       |
-| [Release](https://github.com/burakboduroglu/portkill/blob/main/RELEASE.md)                        | `npm publish` (2FA), tags, GitHub Release                               |
+| [Changelog](https://github.com/burakboduroglu/portkill/blob/main/CHANGELOG.md)                    | What changed in each release                                            |
+| [Release](https://github.com/burakboduroglu/portkill/blob/main/RELEASE.md)                        | Cutting a release: version, changelog, tag, Homebrew formula            |
 | [Contributing](https://github.com/burakboduroglu/portkill/blob/main/CONTRIBUTING.md)              | Fork, branch, tests, PR expectations                                    |
 | [Code of Conduct](https://github.com/burakboduroglu/portkill/blob/main/CODE_OF_CONDUCT.md)        | Community standards (Contributor Covenant 2.0)                          |
 

@@ -1,0 +1,124 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  # npm provenance signs the publish with this run's identity, so the registry
+  # can show which commit and workflow produced the tarball.
+  id-token: write
+
+jobs:
+  release:
+    name: Publish to npm and GitHub Releases
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      # Failing here costs a tag. Failing after npm publish costs a version
+      # number, because npm never lets one be reused.
+      - name: Check the tag matches the package version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pkg=$(node -p "require('./package.json').version")
+          echo "tag=$tag package.json=$pkg"
+          test "$tag" = "$pkg"
+
+      - name: Collect the release notes
+        run: node scripts/changelog-section.mjs "$GITHUB_REF_NAME" > "$RUNNER_TEMP/notes.md"
+
+      - name: Check the npm token is present
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "The NPM_TOKEN secret is not set, so this tag cannot be published." >&2
+            echo "Add a granular access token with publish rights under Settings > Secrets." >&2
+            exit 1
+          fi
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun run lint
+
+      - run: bun run typecheck
+
+      - run: bun run format:check
+
+      - run: bun run test
+
+      - run: bun run build
+
+      - name: Check the built CLI reports the released version
+        run: |
+          expected=$(node -p "require('./package.json').version")
+          actual=$(node dist/index.js --version)
+          echo "package.json=$expected cli=$actual"
+          test "$expected" = "$actual"
+
+      # The Homebrew formula installs this exact tarball, so it is packed once
+      # and the same file is both published and attached to the release.
+      - name: Pack the tarball
+        id: pack
+        run: |
+          file=$(npm pack --silent)
+          version=$(node -p "require('./package.json').version")
+          mv "$file" "portkill-${version}.tgz"
+          {
+            echo "version=$version"
+            echo "tarball=portkill-${version}.tgz"
+            echo "sha256=$(shasum -a 256 "portkill-${version}.tgz" | cut -d' ' -f1)"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish "${{ steps.pack.outputs.tarball }}" --provenance --access public
+
+      - name: Publish the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          prerelease=()
+          case "$GITHUB_REF_NAME" in
+            *-*) prerelease=(--prerelease) ;;
+          esac
+          gh release create "$GITHUB_REF_NAME" \
+            "${{ steps.pack.outputs.tarball }}" \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file "$RUNNER_TEMP/notes.md" \
+            "${prerelease[@]}"
+
+      # The formula lives in burakboduroglu/homebrew-portkill and pins the
+      # tarball checksum, so print the three lines that have to change there.
+      - name: Show the Homebrew formula update
+        run: |
+          {
+            echo '## Homebrew formula'
+            echo
+            echo 'Update `Formula/portkill.rb` in `burakboduroglu/homebrew-portkill`:'
+            echo
+            echo '```ruby'
+            echo '  url "https://github.com/burakboduroglu/portkill/releases/download/${{ github.ref_name }}/${{ steps.pack.outputs.tarball }}"'
+            echo '  sha256 "${{ steps.pack.outputs.sha256 }}"'
+            echo '```'
+            echo
+            echo 'Then run `brew audit --strict --online burakboduroglu/portkill/portkill`.'
+          } >> "$GITHUB_STEP_SUMMARY"

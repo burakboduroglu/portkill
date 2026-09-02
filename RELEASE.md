@@ -1,64 +1,62 @@
-# Release checklist
+# Releasing
 
 Scoped package: **`@burakboduroglu/portkill`** (unscoped `portkill` is blocked by npm as too similar to `port-kill`). The CLI binary remains **`portkill`**.
 
-npm **does not allow** republishing the same version. Before every `npm publish` (README changes, docs, code — anything that needs a new tarball), **bump `package.json`** so it is **greater than** the latest on the registry.
+Releases are cut from a tag. Pushing `vX.Y.Z` runs [`.github/workflows/release.yml`](.github/workflows/release.yml), which checks the release, publishes it to npm with provenance, creates the GitHub Release, and prints the two lines the Homebrew formula needs.
 
-## 1. Bump version (before publish)
+## 1. Prepare the release
 
-Check what npm has:
-
-```bash
-npm view @burakboduroglu/portkill version
-```
-
-If it matches `package.json`, bump:
+Bump the version. npm never allows the same version to be published twice, so anything that needs a new tarball — code, README, docs — needs a bump.
 
 ```bash
-npm run release:bump-patch   # e.g. 0.4.4 → 0.4.5 (typical doc/readme fixes)
-# or
-npm run release:bump-minor   # 0.4.x → 0.5.0
+bun run release:bump-patch   # 0.4.6 → 0.4.7 (fixes, docs)
+bun run release:bump-minor   # 0.4.x → 0.5.0 (new behaviour)
 ```
 
-Then commit the version change (and your other changes) before publishing.
+Move the `Unreleased` entries in [`CHANGELOG.md`](CHANGELOG.md) under a new `## [X.Y.Z] - YYYY-MM-DD` heading and update the link definitions at the bottom. The workflow refuses a tag the changelog does not cover, because those entries become the release notes.
 
-`prepublishOnly` also runs a script that **aborts publish** if the current version is already on npm (when the registry is reachable).
+Commit both as `chore(release): vX.Y.Z` and merge into `main`.
 
-## 2. Pre-flight
-
-```bash
-npm run build && npm test && npm run lint
-```
-
-## 3. Publish to npm
-
-Requires [2FA](https://docs.npmjs.com/configuring-two-factor-authentication) or a granular access token with **publish** permission.
-
-```bash
-npm login          # if needed
-npm publish        # prepublishOnly: version check, build, test
-```
-
-If publish fails with **403** / two-factor: enable 2FA on npm or create a token at [npmjs.com](https://www.npmjs.com/) → Access Tokens (type **Publish**).
-
-## 4. Verify registry
-
-```bash
-npm view @burakboduroglu/portkill version
-npm i -g @burakboduroglu/portkill
-portkill --version
-```
-
-## 5. Git tag & GitHub Release
+## 2. Tag the merge commit
 
 ```bash
 git tag -a vX.Y.Z -m "vX.Y.Z"
 git push origin vX.Y.Z
-gh release create vX.Y.Z --generate-notes
 ```
 
-## 6. Optional: npm link on GitHub “Website”
+The workflow then, in order:
+
+1. Refuses the tag if it disagrees with `package.json`, if the changelog has no section for it, or if the `NPM_TOKEN` secret is missing — all of it before anything is published, because npm never releases a version number back.
+2. Runs lint, types, formatting, the test suite and the build, then asks the built CLI for its version.
+3. Packs the tarball once and publishes that same file to npm with `--provenance`, so the registry records the commit and workflow it came from.
+4. Creates the GitHub Release with the changelog section as its notes and the tarball attached as `portkill-X.Y.Z.tgz`, which is the file the Homebrew formula downloads.
+
+`NPM_TOKEN` is a granular access token with **publish** permission on the package, stored under Settings → Secrets and variables → Actions. It replaces the interactive 2FA prompt; a classic automation token works too.
+
+## 3. Update the Homebrew tap
+
+The workflow's run summary prints the `url` and `sha256` for the new tarball. Put them in `Formula/portkill.rb` in [burakboduroglu/homebrew-portkill](https://github.com/burakboduroglu/homebrew-portkill), and update the `chalk` and `commander` resources if either dependency moved:
 
 ```bash
-gh repo edit burakboduroglu/portkill --homepage "https://www.npmjs.com/package/@burakboduroglu/portkill"
+brew audit --strict --online burakboduroglu/portkill/portkill
+brew install burakboduroglu/portkill/portkill
+portkill --version
+```
+
+## 4. Verify
+
+```bash
+npm view @burakboduroglu/portkill version
+npx @burakboduroglu/portkill@latest --version
+```
+
+## Publishing by hand
+
+Only needed when the workflow itself is broken. `prepublishOnly` re-checks the version against the registry and re-runs the build and tests.
+
+```bash
+bun run lint && bun run typecheck && bun run test && bun run build
+npm login
+npm publish
+gh release create vX.Y.Z --notes-file <(node scripts/changelog-section.mjs vX.Y.Z)
 ```
