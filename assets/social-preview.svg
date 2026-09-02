@@ -1,0 +1,82 @@
+<!--
+  GitHub social preview card, 1280x640. The SVG is the source; regenerate the PNG with:
+    rsvg-convert -w 1280 -h 640 assets/social-preview.svg -o assets/social-preview.png
+  GitHub has no API for the social preview, so the PNG is uploaded by hand under
+  Settings > General > Social preview.
+-->
+<svg width="1280" height="640" viewBox="0 0 1280 640" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="640" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#101A2E"/><stop offset="0.55" stop-color="#0C1424"/><stop offset="1" stop-color="#070C17"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="0" y1="0" x2="96" y2="96" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4ADE80"/><stop offset="1" stop-color="#12A594"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="640" y1="0" x2="1280" y2="640" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2DD4BF" stop-opacity="0.16"/><stop offset="1" stop-color="#2DD4BF" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="termShadow" x="-30%" y="-30%" width="170%" height="170%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="24" stdDeviation="30" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect width="1280" height="640" fill="url(#glow)"/>
+
+  <!-- mark: a terminal prompt in a rounded tile -->
+  <g transform="translate(88, 96)">
+    <rect width="96" height="96" rx="26" fill="url(#mark)"/>
+    <path d="M30 34 L50 48 L30 62" fill="none" stroke="#07231C" stroke-width="9"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="56" y="56" width="24" height="8" rx="4" fill="#07231C"/>
+  </g>
+
+  <text x="88" y="292" font-family="-apple-system, BlinkMacSystemFont, Helvetica Neue, Arial, sans-serif"
+        font-size="80" font-weight="700" fill="#FFFFFF" letter-spacing="-2">.portkill</text>
+
+  <text x="90" y="352" font-family="-apple-system, BlinkMacSystemFont, Helvetica Neue, Arial, sans-serif"
+        font-size="29" font-weight="500" fill="#C7D6EE">Free stuck TCP ports in one command.</text>
+  <text x="90" y="394" font-family="-apple-system, BlinkMacSystemFont, Helvetica Neue, Arial, sans-serif"
+        font-size="29" font-weight="500" fill="#7E93B5">No lsof pipelines. Preview with --dry-run.</text>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, Helvetica Neue, Arial, sans-serif"
+     font-size="22" font-weight="600" fill="#C7F5E9">
+    <rect x="90" y="456" width="176" height="46" rx="23" fill="#FFFFFF" fill-opacity="0.08" stroke="#2DD4BF" stroke-opacity="0.35"/>
+    <text x="178" y="486" text-anchor="middle">macOS · Linux</text>
+    <rect x="282" y="456" width="146" height="46" rx="23" fill="#FFFFFF" fill-opacity="0.08" stroke="#2DD4BF" stroke-opacity="0.35"/>
+    <text x="355" y="486" text-anchor="middle">Node 18+</text>
+    <rect x="444" y="456" width="110" height="46" rx="23" fill="#FFFFFF" fill-opacity="0.08" stroke="#2DD4BF" stroke-opacity="0.35"/>
+    <text x="499" y="486" text-anchor="middle">MIT</text>
+  </g>
+
+  <text x="90" y="566" font-family="SF Mono, Menlo, Consolas, monospace"
+        font-size="19" fill="#4E6485">github.com/burakboduroglu/portkill</text>
+
+  <!-- terminal -->
+  <g filter="url(#termShadow)">
+    <rect x="700" y="140" width="500" height="368" rx="16" fill="#0A0F1A" stroke="#243147" stroke-width="1"/>
+  </g>
+  <rect x="700" y="140" width="500" height="44" rx="16" fill="#151E2F"/>
+  <rect x="700" y="168" width="500" height="16" fill="#151E2F"/>
+  <circle cx="726" cy="162" r="6" fill="#FF5F57"/>
+  <circle cx="748" cy="162" r="6" fill="#FEBC2E"/>
+  <circle cx="770" cy="162" r="6" fill="#28C840"/>
+  <text x="950" y="168" text-anchor="middle" font-family="SF Mono, Menlo, Consolas, monospace"
+        font-size="17" fill="#6C819E">portkill</text>
+
+  <!-- The lines below are what the CLI actually prints; see src/utils/output.ts
+       and src/utils/style.ts for the formats and the colours. -->
+  <g font-family="SF Mono, Menlo, Consolas, monospace" font-size="18" xml:space="preserve">
+    <text x="728" y="238"><tspan fill="#2DD4BF">$</tspan><tspan fill="#E6EDF7"> portkill --list</tspan></text>
+
+    <text x="728" y="292" fill="#E6EDF7">• Port <tspan fill="#E5C07B" font-weight="700">3000</tspan> → node (PID 12345)</text>
+    <text x="728" y="328" fill="#E6EDF7">• Port <tspan fill="#E5C07B" font-weight="700">8080</tspan> → vite (PID 67890)</text>
+
+    <text x="728" y="396"><tspan fill="#2DD4BF">$</tspan><tspan fill="#E6EDF7"> portkill 3000</tspan></text>
+
+    <text x="728" y="450" fill="#4ADE80">✔ Port 3000 → killed (node, PID 12345)</text>
+
+    <text x="728" y="492" fill="#2DD4BF">$</text>
+    <rect x="750" y="478" width="10" height="18" fill="#3E5170"/>
+  </g>
+</svg>
